@@ -2853,8 +2853,342 @@ var TESTS3={
  "Call an API using a bearer token from an environment variable.":{fn:"auth_header",sig:"auth_header(token)",
   cases:[{args:["t1"],out:{Authorization:"Bearer t1"}}],note:"Return the headers dict."}
 };
+/* ---- remaining coverage: other tracks ---- */
+var TESTS4={
+ "Add two numbers.":{fn:"add",sig:"add(a, b)",cases:[{args:[2,3],out:5},{args:[-1,1],out:0},{args:[0,7],out:7}]},
+ "Multiply two numbers.":{fn:"multiply",sig:"multiply(a, b)",cases:[{args:[3,4],out:12},{args:[0,9],out:0},{args:[-2,5],out:-10}]},
+ "Check whether a number is positive or negative.":{fn:"sign",sig:"sign(n)",
+  cases:[{args:[5],out:"positive"},{args:[-5],out:"negative"},{args:[0],out:"zero"}],note:'Return "positive", "negative" or "zero".'},
+ "Print Pass or Fail based on a score.":{fn:"result",sig:"result(score)",
+  cases:[{args:[40],out:"Pass"},{args:[39],out:"Fail"},{args:[100],out:"Pass"}],note:"Pass is >= 40."},
+ "Build a simple calculator with + and -.":{fn:"calc",sig:"calc(a, op, b)",
+  cases:[{args:[4,"+",2],out:6},{args:[4,"-",2],out:2},{args:[0,"+",0],out:0}]},
+ "Add multiply and divide to it.":{fn:"calc",sig:"calc(a, op, b)",
+  cases:[{args:[4,"*",2],out:8},{args:[4,"/",2],out:2.0},{args:[4,"+",2],out:6},{args:[4,"/",0],out:null}],
+  note:"Return None when dividing by zero."},
+ "Build a calculator with add, subtract, multiply and divide.":{fn:"calc",sig:"calc(a, op, b)",
+  cases:[{args:[6,"+",3],out:9},{args:[6,"-",3],out:3},{args:[6,"*",3],out:18},{args:[6,"/",3],out:2.0}]},
+ "Build a calculator that can add, subtract, multiply, and divide.":{fn:"calc",sig:"calc(a, op, b)",
+  cases:[{args:[8,"+",2],out:10},{args:[8,"-",2],out:6},{args:[8,"*",2],out:16},{args:[8,"/",2],out:4.0}]},
+ "Add input validation and a loop to keep going.":{fn:"calc",sig:"calc(a, op, b)",
+  cases:[{args:[5,"+",5],out:10},{args:[5,"?",5],out:null}],note:"Return None for an unknown operator."},
+ "Print numbers 1 to 10 using while.":{fn:"numbers",sig:"numbers(n)",
+  cases:[{args:[10],out:[1,2,3,4,5,6,7,8,9,10]},{args:[3],out:[1,2,3]}],note:"Return the list."},
+ "Print a countdown from any input number.":{fn:"countdown",sig:"countdown(n)",
+  cases:[{args:[5],out:[5,4,3,2,1]},{args:[1],out:[1]},{args:[0],out:[]}]},
+ "Sum numbers 1 to 10 using while.":{fn:"total",sig:"total(n)",cases:[{args:[10],out:55},{args:[1],out:1},{args:[0],out:0}]},
+ "Print even numbers up to 20 using while.":{fn:"evens",sig:"evens(n)",
+  cases:[{args:[20],out:[2,4,6,8,10,12,14,16,18,20]},{args:[5],out:[2,4]}]},
+ "Print odd numbers up to 20 using while.":{fn:"odds",sig:"odds(n)",
+  cases:[{args:[20],out:[1,3,5,7,9,11,13,15,17,19]},{args:[6],out:[1,3,5]}]},
+ "Rewrite one for-loop exercise as a while loop.":{fn:"numbers",sig:"numbers(n)",
+  cases:[{args:[5],out:[1,2,3,4,5]},{args:[1],out:[1]}],note:"Use while, return the list."},
+ "Add a new fruit to the list.":{fn:"add_fruit",sig:"add_fruit(fruits, name)",
+  cases:[{args:[["apple"],"pear"],out:["apple","pear"]},{args:[[],"fig"],out:["fig"]}]},
+ "Remove a fruit from the list.":{fn:"remove_fruit",sig:"remove_fruit(fruits, name)",
+  cases:[{args:[["apple","pear"],"apple"],out:["pear"]},{args:[["fig"],"nope"],out:["fig"]}],
+  note:"Leave the list unchanged if the name is absent."},
+ "Store a name and age in a dictionary.":{fn:"make_person",sig:"make_person(name, age)",
+  cases:[{args:["Sam",30],out:{name:"Sam",age:30}},{args:["A",1],out:{name:"A",age:1}}]},
+ "Add a city key to it.":{fn:"add_city",sig:"add_city(person, city)",
+  cases:[{args:[{name:"Sam"},"Pune"],out:{name:"Sam",city:"Pune"}}]},
+ "Create a dictionary with keys: name, age, city. Print the values.":{fn:"person_values",sig:"person_values(name, age, city)",
+  cases:[{args:["Sam",30,"Pune"],out:["Sam",30,"Pune"]}],note:"Build the dict, return list(d.values())."},
+ "Create a set of numbers.":{fn:"make_set",sig:"make_set(values)",
+  cases:[{args:[[1,2,2,3]],out:[1,2,3]},{args:[[]],out:[]}],note:"Return the unique values sorted."},
+ "Print it and observe that duplicates disappear.":{fn:"make_set",sig:"make_set(values)",
+  cases:[{args:[[5,5,5]],out:[5]},{args:[[1,2]],out:[1,2]}],note:"Return sorted unique values."},
+ "Add an element to a set.":{fn:"add_to_set",sig:"add_to_set(values, item)",
+  cases:[{args:[[1,2],3],out:[1,2,3]},{args:[[1],1],out:[1]}],note:"Return sorted unique values."},
+ "Create a set of numbers and add a new number.":{fn:"add_to_set",sig:"add_to_set(values, item)",
+  cases:[{args:[[1,2],9],out:[1,2,9]}],note:"Return sorted unique values."},
+ "Find the union of {1,2,3} and {3,4,5}.":{fn:"union",sig:"union(a, b)",
+  cases:[{args:[[1,2,3],[3,4,5]],out:[1,2,3,4,5]},{args:[[],[1]],out:[1]}],note:"Return it sorted."},
+ "Try to change a tuple element and observe the error.":{fn:"try_change",sig:"try_change(t)",
+  cases:[{args:[["a","b"]],out:"TypeError"}],
+  note:"Build a tuple, try to assign to an element inside try/except, and return the exception name."},
+ "Call it with three different names.":{fn:"greet_all",sig:"greet_all(names)",
+  cases:[{args:[["A","B","C"]],out:["Hello, A!","Hello, B!","Hello, C!"]}],note:"Return the greetings as a list."},
+ "Create a variable inside a function and try to access it outside.":{fn:"scope_error",sig:"scope_error()",
+  cases:[{args:[],out:"NameError"}],
+  note:"Define a local inside a function, then try to read it outside in try/except. Return the exception name."},
+ "Use a global variable inside a function.":{fn:"bump",sig:"bump()",
+  cases:[{args:[],out:1}],note:"Declare counter = 0 at module level, use global inside bump() to add 1, return it."},
+ "Create a list of squares from 1–10 using list comprehension.":{fn:"squares",sig:"squares(n)",
+  cases:[{args:[10],out:[1,4,9,16,25,36,49,64,81,100]},{args:[3],out:[1,4,9]}]},
+ "Filter even numbers from a list using list comprehension.":{fn:"only_even",sig:"only_even(nums)",
+  cases:[{args:[[1,2,3,4]],out:[2,4]},{args:[[1,3]],out:[]}]},
+ "Use math.pi to calculate the area of a circle.":{fn:"area",sig:"area(r)",
+  cases:[{args:[1],out:3.14},{args:[2],out:12.57}],note:"Round to 2 decimal places."},
+ "Pick a random item from a list.":{fn:"pick",sig:"pick(items)",
+  cases:[{args:[["a"]],out:"a"},{args:[["x"]],out:"x"}],note:"With one item the result is predictable."},
+ "Use random to build a dice roller.":{fn:"roll",sig:"roll()",cases:[{args:[],out:null}],
+  skipCompare:true,rangeCheck:[1,6],note:"Return a number from 1 to 6."},
+ "Roll two dice and print the total.":{fn:"roll_two",sig:"roll_two()",cases:[{args:[],out:null}],
+  skipCompare:true,rangeCheck:[2,12],note:"Return the total of two dice."},
+ "Use math.floor and math.ceil on a float.":{fn:"floor_ceil",sig:"floor_ceil(x)",
+  cases:[{args:[5.7],out:[5,6]},{args:[2.0],out:[2,2]},{args:[-1.5],out:[-2,-1]}],note:"Return [floor, ceil]."},
+ "Round a number to 2 decimal places.":{fn:"round2",sig:"round2(x)",
+  cases:[{args:[3.14159],out:3.14},{args:[2.005],out:2.0},{args:[1.0],out:1.0}]},
+ "Build a Guess the Number game using random.":{fn:"check_guess",sig:"check_guess(guess, target)",
+  cases:[{args:[5,5],out:"correct"},{args:[3,5],out:"higher"},{args:[9,5],out:"lower"}],
+  note:'Return "correct", "higher" (guess too low) or "lower".'},
+ "Add a limited number of attempts to it.":{fn:"play",sig:"play(guesses, target)",
+  cases:[{args:[[1,5],5],out:true},{args:[[1,2,3],5],out:false}],note:"Only the first three guesses count."},
+ "Build the game with random and a while loop.":{fn:"check_guess",sig:"check_guess(guess, target)",
+  cases:[{args:[7,7],out:"correct"},{args:[2,7],out:"higher"}],note:'Return "correct", "higher" or "lower".'},
+ "Add higher/lower hints and an attempt counter.":{fn:"play",sig:"play(guesses, target)",
+  cases:[{args:[[4,7],7],out:2},{args:[[7],7],out:1},{args:[[1],7],out:null}],
+  note:"Return how many guesses it took, or None."},
+ "Count the consonants too.":{fn:"count_consonants",sig:"count_consonants(s)",
+  cases:[{args:["hello"],out:3},{args:["aeiou"],out:0},{args:["xyz"],out:3}],note:"Letters only."},
+ "Capitalise the first letter of every word.":{fn:"titlecase",sig:"titlecase(s)",
+  cases:[{args:["hello world"],out:"Hello World"},{args:["a"],out:"A"},{args:[""],out:""}]},
+ "Convert a string to lowercase and strip whitespace.":{fn:"clean",sig:"clean(s)",
+  cases:[{args:["  HeLLo  "],out:"hello"},{args:["A"],out:"a"}]},
+ "Replace all spaces with underscores.":{fn:"underscore",sig:"underscore(s)",
+  cases:[{args:["a b c"],out:"a_b_c"},{args:["one"],out:"one"}]},
+ "Convert a string to uppercase.":{fn:"shout",sig:"shout(s)",cases:[{args:["hi"],out:"HI"},{args:[""],out:""}]},
+ "Divide two numbers and handle division by zero.":{fn:"safe_div",sig:"safe_div(a, b)",
+  cases:[{args:[9,3],out:3.0},{args:[9,0],out:"Cannot divide by zero"}]},
+ "Handle the file-not-found error.":{fn:"safe_read",sig:"safe_read(path)",
+  cases:[{args:["missing_xyz.txt"],out:null}],note:"Return None rather than crashing."},
+ "Append a line of text to a file.":{fn:"append_note",sig:"append_note(path, text)",
+  setup:"notes",cases:[{args:["notes.txt","added"],out:"added"}],note:"Return the last line afterwards."},
+ "Read it back and print the last line.":{fn:"last_line",sig:"last_line(path)",
+  setup:"notes",cases:[{args:["notes.txt"],out:"line four"}]},
+ "Read a file, count its lines, and handle any error safely.":{fn:"line_count",sig:"line_count(path)",
+  setup:"notes",cases:[{args:["notes.txt"],out:4},{args:["missing_xyz.txt"],out:0}],
+  note:"Return 0 if the file is missing."},
+ "Write a list of names to a file, one per line.":{fn:"write_names",sig:"write_names(path, names)",
+  cases:[{args:["names.txt",["a","b"]],out:2}],note:"Write them, then return the line count you read back."},
+ "Write a program to read a file and print its contents.":{fn:"read_all",sig:"read_all(path)",
+  setup:"notes",cases:[{args:["notes.txt"],out:"line one\nline two\nerror here\nline four"}]},
+ "Write a program to append text to a file.":{fn:"append_note",sig:"append_note(path, text)",
+  setup:"notes",cases:[{args:["notes.txt","extra"],out:"extra"}],note:"Return the last line."},
+ "Read a text file and print its line count.":{fn:"line_count",sig:"line_count(path)",
+  setup:"notes",cases:[{args:["notes.txt"],out:4}]},
+ "Append a timestamped line to a log file.":{fn:"append_note",sig:"append_note(path, text)",
+  setup:"log",cases:[{args:["app.log","INFO done"],out:"INFO done"}],note:"Return the last line."},
+ "Extract all timestamps from a log file into a list.":{fn:"levels",sig:"levels(path)",
+  setup:"log",cases:[{args:["app.log"],out:["INFO","ERROR","INFO","ERROR"]}],
+  note:"app.log has no timestamps, so return the first word of each line instead."},
+ "Use pathlib to list every file in a folder and its size.":{fn:"sizes",sig:"sizes(names)",
+  cases:[{args:[["a.txt"]],out:{"a.txt":0}}],note:"No real folder — return {name: 0} for each name given."},
+ /* --- OOP --- */
+ "Create a class Car with brand and model.":{fn:"car_info",sig:"car_info(brand, model)",
+  cases:[{args:["Tata","Nexon"],out:["Tata","Nexon"]}],note:"Return [car.brand, car.model]."},
+ "Add a method that displays the car details.":{fn:"car_details",sig:"car_details(brand, model)",
+  cases:[{args:["Kia","Seltos"],out:"Kia Seltos"}],note:'Return "<brand> <model>".'},
+ "Create an object of the Car class and print its attributes.":{fn:"car_info",sig:"car_info(brand, model)",
+  cases:[{args:["Honda","City"],out:["Honda","City"]}]},
+ "Create three different car objects.":{fn:"three_cars",sig:"three_cars()",
+  cases:[{args:[],out:null}],skipCompare:true,lenCheck:3,note:"Return a list of 3 brand names."},
+ "Add an __init__ constructor that sets brand, model and year.":{fn:"car_all",sig:"car_all(brand, model, year)",
+  cases:[{args:["Tata","Nexon",2024],out:["Tata","Nexon",2024]}]},
+ "Add a default value for year.":{fn:"car_year",sig:"car_year(brand, model)",
+  cases:[{args:["Tata","Nexon"],out:2024}],note:"The year should default to 2024 when not supplied."},
+ "Add a method to change the car's model.":{fn:"rename",sig:"rename(brand, model, new_model)",
+  cases:[{args:["Tata","Nexon","Punch"],out:"Punch"}],note:"Return the model after changing it."},
+ "Add a method that returns the car's age.":{fn:"car_age",sig:"car_age(year, now)",
+  cases:[{args:[2020,2026],out:6},{args:[2026,2026],out:0}]},
+ "Create an Animal class and a Dog subclass that inherits from it.":{fn:"speak",sig:"speak()",
+  cases:[{args:[],out:"Woof"}],note:"Return Dog().speak()."},
+ "Override a method in Dog.":{fn:"speak",sig:"speak()",cases:[{args:[],out:"Woof"}],note:"Return Dog().speak()."},
+ "Override a method in the Dog class.":{fn:"speak",sig:"speak()",cases:[{args:[],out:"Woof"}],note:"Return Dog().speak()."},
+ "Demonstrate encapsulation by restricting direct access to attributes.":{fn:"get_owner",sig:"get_owner(name)",
+  cases:[{args:["Sam"],out:"Sam"}],note:"Store as self._owner, expose via a getter."},
+ /* --- projects --- */
+ "Build a to-do list that adds and lists tasks.":{fn:"add_task",sig:"add_task(tasks, name)",
+  cases:[{args:[[],"write code"],out:["write code"]},{args:[["a"],"b"],out:["a","b"]}]},
+ "Create a to-do list program that saves tasks to a file.":{fn:"save_tasks",sig:"save_tasks(path, tasks)",
+  cases:[{args:["todo.txt",["a","b"]],out:["a","b"]}],note:"Write them, read them back, return the list."},
+ "Save the tasks to a file so they persist.":{fn:"save_tasks",sig:"save_tasks(path, tasks)",
+  cases:[{args:["t.txt",["x"]],out:["x"]}],note:"Write, read back, return."},
+ "Record expenses with an amount and a category.":{fn:"add_expense",sig:"add_expense(items, amount, category)",
+  cases:[{args:[[],100,"food"],out:[[100,"food"]]},{args:[[[5,"x"]],7,"y"],out:[[5,"x"],[7,"y"]]}]},
+ "Print a total per category.":{fn:"totals_by_category",sig:"totals_by_category(items)",
+  cases:[{args:[[[100,"food"],[50,"food"],[20,"fuel"]]],out:{food:150,fuel:20}},{args:[[]],out:{}}]},
+ "Write a \"Guess the Number\" game where the computer picks a random number.":{fn:"check_guess",sig:"check_guess(guess, target)",
+  cases:[{args:[3,3],out:"correct"},{args:[1,3],out:"higher"},{args:[9,3],out:"lower"}]},
+ /* --- work track --- */
+ "Write a script that takes a folder path and prints every filename in it.":{fn:"names_only",sig:"names_only(paths)",
+  cases:[{args:[["/a/b.txt","/c/d.csv"]],out:["b.txt","d.csv"]},{args:[[]],out:[]}],
+  note:"Return just the filenames."},
+ "Write a function that returns only the .xlsx files from a list of filenames.":{fn:"only_xlsx",sig:"only_xlsx(names)",
+  cases:[{args:[["a.xlsx","b.csv","c.xlsx"]],out:["a.xlsx","c.xlsx"]},{args:[["x.txt"]],out:[]}]},
+ "Store 5 case records as a list of dictionaries and print each one.":{fn:"make_records",sig:"make_records()",
+  cases:[{args:[],out:null}],skipCompare:true,lenCheck:5,note:"Return a list of 5 dicts."},
+ "Filter that list to only cases with status 'Open'.":{fn:"only_open",sig:"only_open(cases)",
+  cases:[{args:[[{id:1,status:"Open"},{id:2,status:"Closed"}]],out:[{id:1,status:"Open"}]},{args:[[]],out:[]}]},
+ "Read and write a CSV file using the csv module.":{fn:"read_csv",sig:"read_csv(path)",
+  setup:"csv",cases:[{args:["cases.csv"],out:3}],note:"Return the data-row count."},
+ "Write a list of dictionaries out to a new CSV.":{fn:"write_csv",sig:"write_csv(path, rows)",
+  cases:[{args:["out.csv",[{a:"1"},{a:"2"}]],out:2}],note:"Write it, read it back, return the row count."},
+ "Filter a CSV to only rows matching a condition and save the result.":{fn:"open_rows",sig:"open_rows(path)",
+  setup:"csv",cases:[{args:["cases.csv"],out:2}],note:'Count rows where status == "Open".'},
+ "Parse a nested JSON file and extract specific fields.":{fn:"read_config",sig:"read_config(path)",
+  setup:"json",cases:[{args:["config.json"],out:{name:"LearnTrack",version:2}}]},
+ "Select specific columns and rows by condition.":{fn:"open_count",sig:"open_count(path)",
+  setup:"csv",cases:[{args:["cases.csv"],out:2}]},
+ "Filter, group and aggregate a DataFrame.":{fn:"by_status",sig:"by_status(path)",
+  setup:"csv",cases:[{args:["cases.csv"],out:{Open:2,Closed:1}}]},
+ "Group by two columns and compute a sum and a mean.":{fn:"by_status",sig:"by_status(path)",
+  setup:"csv",cases:[{args:["cases.csv"],out:{Open:2,Closed:1}}],note:"Group by status and count."},
+ "Clean a messy dataset: handle nulls, duplicates and wrong dtypes.":{fn:"clean_values",sig:"clean_values(values)",
+  cases:[{args:[["1",null,"2","2"]],out:[1,2]}],note:"Drop nulls, convert to int, remove duplicates, keep order."},
+ "Handle missing values: fill some, drop others.":{fn:"fill_missing",sig:"fill_missing(values, default)",
+  cases:[{args:[[1,null,3],0],out:[1,0,3]}]},
+ "Remove duplicate rows and fix a wrongly-typed column.":{fn:"clean_values",sig:"clean_values(values)",
+  cases:[{args:[["5","5","6"]],out:[5,6]}],note:"Convert to int, drop duplicates."},
+ "Merge two DataFrames on a shared key.":{fn:"merge_lists",sig:"merge_lists(a, b)",
+  cases:[{args:[[[1,"x"]],[[1,"y"]]],out:[[1,"x","y"]]},{args:[[[1,"x"]],[[2,"y"]]],out:[]}],
+  note:"Join on the first element."},
+ "Load a CSV into a DataFrame and print .info() and .describe().":{fn:"row_count",sig:"row_count(path)",
+  setup:"csv",cases:[{args:["cases.csv"],out:3}]},
+ "Read an Excel workbook with pandas and print the column names.":{fn:"columns_of",sig:"columns_of(path)",
+  setup:"csv",cases:[{args:["cases.csv"],out:["id","status","product"]}],
+  note:"Excel needs a real file, so use the CSV here — same pandas skill."},
+ "Read a specific sheet by name and show the first 10 rows.":{fn:"head_rows",sig:"head_rows(path, n)",
+  setup:"csv",cases:[{args:["cases.csv",2],out:2},{args:["cases.csv",10],out:3}],
+  note:"Return how many rows you actually get."},
+ "Write a DataFrame to a new Excel file.":{fn:"roundtrip",sig:"roundtrip(rows)",
+  cases:[{args:[[["a",1]]],out:1}],note:"Write to CSV and read it back — return the row count."},
+ "Write two DataFrames to two sheets in the same workbook.":{fn:"sheet_counts",sig:"sheet_counts(a, b)",
+  cases:[{args:[[1,2],[3]],out:[2,1]}],note:"Return the row count of each as a list."},
+ "Use openpyxl to bold the header row of a sheet.":{fn:"header_of",sig:"header_of(path)",
+  setup:"csv",cases:[{args:["cases.csv"],out:["id","status","product"]}],
+  note:"Formatting needs a real file — return the header row instead."},
+ "Auto-size the columns of a generated report.":{fn:"widths",sig:"widths(rows)",
+  cases:[{args:[[["ab","c"],["d","efg"]]],out:[2,3]}],note:"Return the longest string length per column."},
+ "Export a cleaned, grouped result to Excel.":{fn:"summary_rows",sig:"summary_rows(path)",
+  setup:"csv",cases:[{args:["cases.csv"],out:[["Closed",1],["Open",2]]}],note:"Return sorted [status, count] pairs."},
+ "Read an Excel workbook with pandas and write a formatted output sheet.":{fn:"row_count",sig:"row_count(path)",
+  setup:"csv",cases:[{args:["cases.csv"],out:3}],note:"Use the CSV — same skill."},
+ /* --- APIs --- */
+ "Call a public REST API with requests and print the response.":{fn:"parse_response",sig:"parse_response(text)",
+  cases:[{args:['{\"ok\": true}'],out:{ok:true}}],note:"Network calls can't run here — parse the JSON text instead."},
+ "Parse a JSON response and extract nested values.":{fn:"extract",sig:"extract(payload)",
+  cases:[{args:[{data:{user:{name:"Sam"}}}],out:"Sam"}],note:'Return payload["data"]["user"]["name"].'},
+ "Extract three specific fields from a nested response.":{fn:"three_fields",sig:"three_fields(payload)",
+  cases:[{args:[{a:1,b:2,c:3,d:4}],out:[1,2,3]}],note:"Return [a, b, c]."},
+ "Call an API that requires an API key or bearer token.":{fn:"auth_header",sig:"auth_header(token)",
+  cases:[{args:["k1"],out:{Authorization:"Bearer k1"}}]},
+ "Store credentials in environment variables, never in code.":{fn:"get_token",sig:"get_token(env)",
+  cases:[{args:[{TOKEN:"abc"}],out:"abc"},{args:[{}],out:null}],
+  note:"Read it from the dict like os.environ.get would — return None when absent."},
+ "Handle timeouts and non-200 responses gracefully.":{fn:"handle_status",sig:"handle_status(code)",
+  cases:[{args:[200],out:"ok"},{args:[404],out:"error 404"}]},
+ "Write a script that pulls data from an API and saves it to CSV.":{fn:"rows_from_json",sig:"rows_from_json(payload)",
+  cases:[{args:[[{a:1},{a:2}]],out:2},{args:[[]],out:0}],note:"Return how many rows you would write."},
+ "Build a weather app that fetches live data for a city.":{fn:"describe",sig:"describe(payload)",
+  cases:[{args:[{city:"Pune",temp:31}],out:"Pune: 31C"}],note:'Return "<city>: <temp>C".'},
+ "Build a stock price tracker.":{fn:"change",sig:"change(old, new)",
+  cases:[{args:[100,110],out:10.0},{args:[100,90],out:-10.0},{args:[50,50],out:0.0}],
+  note:"Return the percentage change, rounded to 2 places."},
+ /* --- SQL --- */
+ "Write SELECT queries with WHERE, ORDER BY and LIMIT.":{fn:"query",sig:"query()",
+  cases:[{args:[],out:[["B",5],["A",3]]}],
+  note:"Build a sqlite3 table with ('A',3) and ('B',5); return rows ordered by value descending."},
+ "Write SELECT queries with WHERE and ORDER BY.":{fn:"query",sig:"query()",
+  cases:[{args:[],out:[["B",5],["A",3]]}],note:"Same as above."},
+ "Write JOIN queries across two tables.":{fn:"joined",sig:"joined()",
+  cases:[{args:[],out:[[1,"Teams"],[2,"Excel"]]}],note:"Return [case_id, product_name] ordered by id."},
+ "Use GROUP BY with aggregate functions.":{fn:"grouped",sig:"grouped()",
+  cases:[{args:[],out:{Open:2,Closed:1}}],note:"Statuses Open, Open, Closed — return the counts."},
+ "Use GROUP BY with COUNT and SUM.":{fn:"grouped",sig:"grouped()",
+  cases:[{args:[],out:{Open:2,Closed:1}}]},
+ "Create a table using sqlite3 from Python.":{fn:"make_table",sig:"make_table()",
+  cases:[{args:[],out:0}],note:"Create an in-memory table and return its row count (0)."},
+ "Create a SQLite table from Python and insert rows.":{fn:"insert_rows",sig:"insert_rows(names)",
+  cases:[{args:[["a","b"]],out:2},{args:[[]],out:0}],note:"Return the row count afterwards."},
+ "Insert data into the table from a Python script.":{fn:"insert_rows",sig:"insert_rows(names)",
+  cases:[{args:[["x"]],out:1}]},
+ "Read records back and print them.":{fn:"read_rows",sig:"read_rows(names)",
+  cases:[{args:[["a","b"]],out:["a","b"]},{args:[[]],out:[]}],note:"Insert then select them back."},
+ "Update and delete records programmatically.":{fn:"update_delete",sig:"update_delete(names)",
+  cases:[{args:[["a","b"]],out:1}],note:"Insert both, delete one, return the remaining count."},
+ "Update and delete records from a script.":{fn:"update_delete",sig:"update_delete(names)",
+  cases:[{args:[["x","y"]],out:1}]},
+ "Query it from Python and load the result into a DataFrame.":{fn:"read_rows",sig:"read_rows(names)",
+  cases:[{args:[["a"]],out:["a"]}]},
+ "Load a CSV into SQLite and query it.":{fn:"csv_to_sql",sig:"csv_to_sql(path)",
+  setup:"csv",cases:[{args:["cases.csv"],out:3}],note:"Load the rows into sqlite3, return the count."},
+ "Build a small reporting script: query → DataFrame → Excel.":{fn:"report",sig:"report(path)",
+  setup:"csv",cases:[{args:["cases.csv"],out:{Open:2,Closed:1}}],note:"Return the grouped counts."},
+ /* --- testing --- */
+ "Write unit tests for a function using unittest.":{fn:"run_checks",sig:"run_checks()",
+  cases:[{args:[],out:true}],note:"Write a function plus assertions. Return True if they all pass."},
+ "Rewrite the same tests using pytest.":{fn:"run_checks",sig:"run_checks()",
+  cases:[{args:[],out:true}],note:"Same idea — assertions that return True when they pass."},
+ "Write assertions covering edge cases and error conditions.":{fn:"run_checks",sig:"run_checks()",
+  cases:[{args:[],out:true}],note:"Include an empty/zero case and a raises case."},
+ "Add a test suite to one of your existing projects.":{fn:"run_checks",sig:"run_checks()",
+  cases:[{args:[],out:true}],note:"Return True when your assertions pass."},
+ "Practise test-driven development: write the test first, then the code.":{fn:"run_checks",sig:"run_checks()",
+  cases:[{args:[],out:true}],note:"Write the assertion first, then make it pass."},
+ /* --- DSA milestones (self-reported counters) --- */
+ "Implement bubble, merge and quick sort by hand.":{fn:"my_sort",sig:"my_sort(nums)",
+  cases:[{args:[[3,1,2]],out:[1,2,3]},{args:[[]],out:[]},{args:[[5,5,1]],out:[1,5,5]}],
+  note:"Write the algorithm yourself — do not call sorted()."},
+ "Implement binary search and its variations (first/last occurrence).":{fn:"bsearch",sig:"bsearch(nums, target)",
+  cases:[{args:[[1,3,5,7],5],out:2},{args:[[1,3],9],out:-1},{args:[[4],4],out:0}],
+  note:"Return the index, or -1 when absent."},
+ "Solve 8 stack problems (valid parentheses, min stack).":{fn:"is_valid",sig:"is_valid(s)",
+  cases:[{args:["()"],out:true},{args:["(]"],out:false},{args:["([])"],out:true},{args:["("],out:false}],
+  note:"Start with valid parentheses."},
+ "Solve 8 queue / deque problems (sliding window maximum).":{fn:"window_max",sig:"window_max(nums, k)",
+  cases:[{args:[[1,3,2],2],out:[3,3]},{args:[[5],1],out:[5]}],
+  note:"Return the maximum of each window of size k."},
+ "Solve 10 recursion problems (factorial, fibonacci, subsets).":{fn:"factorial",sig:"factorial(n)",
+  cases:[{args:[5],out:120},{args:[0],out:1},{args:[1],out:1}],note:"Start with factorial — use recursion."},
+ "Solve 10 hash map problems (frequency, two-sum patterns).":{fn:"two_sum",sig:"two_sum(nums, target)",
+  cases:[{args:[[2,7,11],9],out:[0,1]},{args:[[3,3],6],out:[0,1]},{args:[[1],5],out:[]}],
+  note:"Return the two indices."},
+ "Solve 15 string manipulation problems.":{fn:"is_anagram",sig:"is_anagram(a, b)",
+  cases:[{args:["listen","silent"],out:true},{args:["ab","abc"],out:false}],note:"Start with anagram detection."},
+ "Solve 15 array problems on LeetCode Easy.":{fn:"max_subarray",sig:"max_subarray(nums)",
+  cases:[{args:[[1,-2,3]],out:3},{args:[[-1,-2]],out:-1},{args:[[2,3]],out:5}],
+  note:"Maximum subarray sum — Kadane's algorithm."},
+ "Milestone: reach 100+ total solved problems across LeetCode / HackerRank / CodeWars.":{fn:"solved",sig:"solved()",
+  cases:[{args:[],out:null}],skipCompare:true,rangeCheck:[100,100000],
+  note:"Return your real total once it is 100 or more."}
+};
 for(var __k in TESTS2) TESTS[__k]=TESTS2[__k];
 for(var __k3 in TESTS3) TESTS[__k3]=TESTS3[__k3];
+for(var __k4 in TESTS4) TESTS[__k4]=TESTS4[__k4];
+
+/* short print-only exercises keep simple output checks */
+var EXPECT2={
+ "Print \"Hello Python\".":{mode:"exact",text:"Hello Python",hint:'print("Hello Python")'},
+ "Print your name.":{mode:"lines",n:1,hint:'print("Your Name")'},
+ "Store your age and print it.":{mode:"lines",n:1,hint:"age = 24 then print(age)"},
+ "Store your city and print it.":{mode:"lines",n:1,hint:"city = \"Pune\" then print(city)"},
+ "Create an integer variable and print its type.":{mode:"contains",text:"int",hint:"print(type(n))"},
+ "Create a string variable and print its type.":{mode:"contains",text:"str",hint:"print(type(s))"},
+ "Ask the user for their name.":{mode:"any",hint:"Put a name in the stdin box below, then use input()"},
+ "Print a greeting using that name.":{mode:"any",hint:'Put a name in the stdin box, then print(f"Hello, {name}!")'},
+ "Print your name, age and city together.":{mode:"lines",n:1,hint:"print(name, age, city)"},
+ "Take age as input and display it.":{mode:"any",hint:"Put a number in the stdin box below"},
+ "Check if 10 > 5 and print the result.":{mode:"exact",text:"True",hint:"print(10 > 5)"},
+ "Push one of your projects to GitHub.":null,
+ "Write a proper README for one of your projects.":null
+};
+for(var __e in EXPECT2){ if(EXPECT2[__e]) EXPECT[__e]=EXPECT2[__e]; }
+
+var MANUAL2={
+ "Initialise a repo and make your first commit.":"Run git init, git add . and git commit -m \"first commit\" in a real terminal.",
+ "Push a local repository to GitHub.":"Create the repo on GitHub, then git remote add origin … and git push -u origin main.",
+ "Create a branch, make changes and merge it back.":"git checkout -b feature, commit, then git checkout main and git merge feature.",
+ "Open a pull request and merge it.":"Push a branch to GitHub, open the PR in the browser, then merge it.",
+ "Resolve a merge conflict deliberately created for practice.":"Edit the same line on two branches, merge, and fix the conflict markers by hand.",
+ "Write a proper README for one of your projects.":"Write it in the repo — problem, features, setup, example input and output.",
+ "Push one of your projects to GitHub.":"Commit and push from a real terminal.",
+ "Automate a recurring Excel report end to end.":"Do this against your real workbook, outside the browser.",
+ "Write a Microsoft Graph API script.":"Needs a real tenant and token — run it locally.",
+ "Write a basic Microsoft Graph API query script.":"Needs a real tenant and token — run it locally against graph.microsoft.com.",
+ "Store credentials in environment variables, never in code.":"Set a real environment variable and read it with os.environ.get()."
+};
 
 /* genuinely hands-on — no browser check is possible or meaningful */
 var MANUAL={
@@ -2874,6 +3208,7 @@ var MANUAL={
  "Write a README for one project.":"Write it in the repo, then tick this off.",
  "Create a venv and a requirements.txt.":"Run python -m venv .venv and pip freeze > requirements.txt locally."
 };
+for(var __m in MANUAL2) if(!TESTS[__m]) MANUAL[__m]=MANUAL2[__m];
 
 /* fixture files created inside the Python sandbox before tests run */
 var FIXTURES={
@@ -3004,18 +3339,31 @@ function normOut(s){
 }
 function checkOutput(out,exp){
   var got=normOut(out);
-  if(!got) return {ok:false,why:"No output — did you use print()?"};
+  if(!got) return {ok:false,why:"Your code ran but printed nothing. Wrap the value in print() — for example print(name) rather than just name."};
   if(!exp||exp.mode==="any") return {ok:true,why:"Output produced"};
   if(exp.mode==="exact"){
     var want=normOut(exp.text);
     if(got===want) return {ok:true,why:"Output matches exactly"};
-    return {ok:false,why:"Expected:\n"+want+"\n\nGot:\n"+got};
+    if(got.toLowerCase()===want.toLowerCase())
+      return {ok:false,why:"Right text, wrong capitalisation. Expected \""+want+"\" but got \""+got+"\" — check your upper and lower case."};
+    if(got.replace(/[^\w]/g,"")===want.replace(/[^\w]/g,""))
+      return {ok:false,why:"The words are right but the punctuation differs. Expected \""+want+"\" but got \""+got+"\" — check commas, exclamation marks and quotes."};
+    if(got.replace(/\s+/g,"")===want.replace(/\s+/g,""))
+      return {ok:false,why:"The characters are right but the spacing differs. Expected \""+want+"\" but got \""+got+"\"."};
+    var gl=got.split("\n"), wl=want.split("\n");
+    if(gl.length!==wl.length)
+      return {ok:false,why:"Wrong number of lines — expected "+wl.length+", got "+gl.length+". "+
+        (gl.length>wl.length?"You are printing something extra.":"You are missing a print(), or printing several values on one line.")};
+    for(var i=0;i<wl.length;i++) if(gl[i]!==wl[i])
+      return {ok:false,why:"Line "+(i+1)+" differs. Expected \""+wl[i]+"\" but got \""+gl[i]+"\"."};
+    return {ok:false,why:"Expected \""+want+"\" but got \""+got+"\"."};
   }
   if(exp.mode==="contains"){
     var lines=normOut(exp.text).split("\n");
     var missing=lines.filter(function(l){ return got.indexOf(l)<0; });
     if(!missing.length) return {ok:true,why:"Output contains everything expected"};
-    return {ok:false,why:"Missing from your output: "+missing.join(", ")};
+    return {ok:false,why:"Your output is missing "+missing.map(function(m){return "\""+m+"\"";}).join(" and ")+
+      ". You printed:\n"+got};
   }
   if(exp.mode==="regex"){
     try{
@@ -3027,7 +3375,8 @@ function checkOutput(out,exp){
   if(exp.mode==="lines"){
     var n=got.split("\n").length;
     if(n>=exp.n) return {ok:true,why:n+" lines of output"};
-    return {ok:false,why:"Expected at least "+exp.n+" lines, got "+n};
+    return {ok:false,why:"Expected at least "+exp.n+" separate lines but got "+n+
+      ". Each value needs its own print() — or use \\n inside one string. You printed:\n"+got};
   }
   return {ok:true,why:"Output produced"};
 }
@@ -4270,11 +4619,14 @@ function runTests(){
       var ok;
       if(r.err) ok=false;
       else if(suite.lenCheck!=null) ok=Array.isArray(r.got)&&r.got.length>=suite.lenCheck;
+      else if(suite.rangeCheck) ok=typeof r.got==="number"&&r.got>=suite.rangeCheck[0]&&r.got<=suite.rangeCheck[1];
       else if(suite.anyReturn) ok=(r.got!==null&&r.got!==undefined);
       else ok=sameValue(r.got,c.out);
       if(ok) passed++;
       return {c:c,got:r.err?null:r.got,err:r.err,ok:ok,
-        want:suite.lenCheck!=null?("a list of at least "+suite.lenCheck+" items"):(suite.anyReturn?"any value returned":null)};
+        want:suite.lenCheck!=null?("a list of at least "+suite.lenCheck+" items")
+            :suite.rangeCheck?("a number from "+suite.rangeCheck[0]+" to "+suite.rangeCheck[1])
+            :(suite.anyReturn?"any value returned":null)};
     });
     cwrite("\n"+passed+" / "+suite.cases.length+" test cases passed\n",passed===suite.cases.length?"ok":"err");
     showTests(t,suite,rows,null);
@@ -4393,10 +4745,41 @@ function afterRun(output,verify){
   box.hidden=false;
   box.className="vbox "+(res.ok?"vok":"vno");
   clr(box);
+  var checks=exp?describeChecks(exp):null;
   var h=document.createElement("div"); h.className="vh";
-  h.textContent=res.ok?"✓ Correct output":"✗ Not matching yet";
-  var p=document.createElement("div"); p.className="vp"; p.textContent=res.why;
-  box.appendChild(h); box.appendChild(p);
+  h.textContent=res.ok?("✓ Accepted — all "+(checks?checks.length:1)+" checks passed")
+                      :"✗ Not passing yet";
+  box.appendChild(h);
+  if(checks){
+    var sum=document.createElement("div"); sum.className="tsum";
+    checks.forEach(function(c,i){
+      var d=document.createElement("span"); d.className="tdot "+(res.ok?"p":(i===0?"p":"f"));
+      d.textContent=(i+1); d.title=c; sum.appendChild(d);
+    });
+    box.appendChild(sum);
+    checks.forEach(function(c,i){
+      var ok=res.ok||i===0;
+      var card=document.createElement("div"); card.className="tcase "+(ok?"tpass":"tfail");
+      var hd=document.createElement("div"); hd.className="tchead";
+      var mk=document.createElement("span"); mk.className="tcmark"; mk.textContent=ok?"✓":"✗";
+      var nm=document.createElement("span"); nm.className="tcname"; nm.textContent=c;
+      hd.appendChild(mk); hd.appendChild(nm);
+      var sp=document.createElement("span"); sp.className="sp"; hd.appendChild(sp);
+      var st=document.createElement("span"); st.className="tag "+(ok?"g":"r"); st.textContent=ok?"passed":"failed";
+      hd.appendChild(st);
+      card.appendChild(hd);
+      if(!ok){
+        var why=document.createElement("div"); why.className="tcwhy";
+        var wb=document.createElement("b"); wb.textContent="Why this failed: ";
+        why.appendChild(wb); why.appendChild(document.createTextNode(res.why));
+        card.appendChild(why);
+      }
+      box.appendChild(card);
+    });
+  } else {
+    var p=document.createElement("div"); p.className="vp"; p.textContent=res.why;
+    box.appendChild(p);
+  }
   if(res.ok){
     var already=t.status==="done";
     t.code=document.getElementById("editor").value;
@@ -4489,7 +4872,9 @@ function renderQPanel(t){
       var a=document.createElement("div"); a.className="tcl"; a.textContent="Case "+(i+1);
       var b=document.createElement("div"); b.className="tcv mono"; b.textContent=suite.fn+"("+c.args.map(pyRepr).join(", ")+")";
       var d=document.createElement("div"); d.className="tcv mono"; d.style.color="var(--muted)";
-      d.textContent="→ "+(suite.lenCheck!=null?("list of "+suite.lenCheck+"+"):suite.anyReturn?"any value":pyRepr(c.out));
+      d.textContent="→ "+(suite.lenCheck!=null?("list of "+suite.lenCheck+"+")
+        :suite.rangeCheck?(suite.rangeCheck[0]+"–"+suite.rangeCheck[1])
+        :suite.anyReturn?"any value":pyRepr(c.out));
       r.appendChild(a); r.appendChild(b); r.appendChild(d); tbl.appendChild(r);
     });
     sw.appendChild(tbl);
@@ -4499,40 +4884,54 @@ function renderQPanel(t){
     p.appendChild(sw);
     return;
   }
-  var exp=expectFor(t);
-  var er=document.createElement("div"); er.className="exp";
-  var eh=document.createElement("div"); eh.className="exph";
-  eh.textContent=exp?(exp.mode==="exact"?"Expected output — must match exactly":
-    exp.mode==="contains"?"Expected output — must contain these":
-    exp.mode==="regex"?"Expected output — must look like this":
-    exp.mode==="lines"?"Expected — at least "+exp.n+" lines of output":
-    "Expected — any correct output"):"Expected output — set your own";
-  er.appendChild(eh);
-  var ta2=document.createElement("textarea"); ta2.className="expbox"; ta2.id="expBox"; ta2.rows=3;
-  ta2.placeholder=exp&&exp.mode==="any"?"Any output counts — run it and submit":"Type the exact output you expect…";
-  ta2.value=(t.expect&&t.expect.text)||(exp&&exp.text)||"";
-  if(exp&&exp.mode!=="any"&&!t.expect) ta2.readOnly=true;
-  er.appendChild(ta2);
   var man=MANUAL[t.title]||MANUAL[t.title.replace(/^Project:\s*/,"").trim()];
   if(man){
-    clr(er);
+    var er0=document.createElement("div"); er0.className="exp";
     var mh=document.createElement("div"); mh.className="exph"; mh.textContent="Hands-on task — done outside the browser";
     var mb=document.createElement("div"); mb.className="vhint"; mb.style.marginBlockStart="0"; mb.textContent=man;
-    er.appendChild(mh); er.appendChild(mb);
+    er0.appendChild(mh); er0.appendChild(mb);
     var mk=document.createElement("button"); mk.type="button"; mk.className="btn xs ok";
     mk.textContent=t.status==="done"?"✓ done":"I've done this — mark complete";
     mk.setAttribute("data-do","toggle"); mk.setAttribute("data-id",t.id);
-    mk.style.marginBlockStart="9px"; er.appendChild(mk);
-    p.appendChild(er); return;
+    mk.style.marginBlockStart="9px"; er0.appendChild(mk);
+    p.appendChild(er0); return;
   }
-  if(!exp&&!t.expect){
+  var exp=expectFor(t);
+  var er=document.createElement("div"); er.className="exp";
+  var checks=exp?describeChecks(exp):null;
+  var eh=document.createElement("div"); eh.className="exph";
+  eh.textContent=checks?(checks.length+" check"+(checks.length===1?"":"s")+" on your output — all must pass")
+    :"No fixed answer — check it yourself";
+  er.appendChild(eh);
+  if(checks){
+    checks.forEach(function(c,i){
+      var card=document.createElement("div"); card.className="tcgrid";
+      card.style.cssText="grid-template-columns:70px 1fr;padding:6px 0;border-block-end:1px solid var(--line)";
+      var a=document.createElement("div"); a.className="tcl"; a.textContent="Check "+(i+1);
+      var b=document.createElement("div"); b.className="tcv"; b.textContent=c;
+      card.appendChild(a); card.appendChild(b); er.appendChild(card);
+    });
+    if(exp.mode!=="any"&&exp.text){
+      var lbl=document.createElement("div"); lbl.className="exph"; lbl.style.marginBlockStart="10px";
+      lbl.textContent=exp.mode==="exact"?"Your output must be exactly this":
+        exp.mode==="contains"?"Your output must contain each of these":"Pattern your output must match";
+      er.appendChild(lbl);
+      var pre=document.createElement("div"); pre.className="vhint"; pre.style.marginBlockStart="0";
+      pre.textContent=exp.text; er.appendChild(pre);
+    }
+  } else {
     var msg=document.createElement("div"); msg.className="vhint"; msg.style.marginBlockStart="0";
-    msg.textContent="This one is open-ended, so there is no fixed answer to check against.\nRun your code, confirm the output looks right, then press Save — or type the exact output you expect below and submit against it.";
+    msg.textContent="This one is open-ended, so there is no single right answer.\nRun it, confirm the output looks right, then press Save — or type the exact output you expect below and submit against it.";
     er.appendChild(msg);
   }
+  var ta2=document.createElement("textarea"); ta2.className="expbox"; ta2.id="expBox"; ta2.rows=2;
+  ta2.placeholder="Optional: type the exact output you expect…";
+  ta2.value=(t.expect&&t.expect.text)||"";
+  ta2.hidden=!!(checks&&!t.expect);
+  er.appendChild(ta2);
   var row=document.createElement("div"); row.className="rowb"; row.style.marginBlockStart="7px";
   var ed=document.createElement("button"); ed.type="button"; ed.className="btn xs";
-  ed.textContent=t.expect?"reset to the built-in check":"set my own expected output";
+  ed.textContent=t.expect?"↺ back to the built-in check":"set my own expected output";
   ed.setAttribute("data-do","expedit"); ed.setAttribute("data-id",t.id);
   row.appendChild(ed);
   if(exp&&exp.hint){
@@ -4542,6 +4941,25 @@ function renderQPanel(t){
   }
   er.appendChild(row);
   p.appendChild(er);
+}
+/* turn an EXPECT rule into human-readable checks */
+function describeChecks(exp){
+  if(!exp) return null;
+  if(exp.mode==="any") return ["Your code runs without an error","It produces some output"];
+  if(exp.mode==="exact"){
+    var lines=normOut(exp.text).split("\n");
+    if(lines.length===1) return ["Your code runs without an error","The output is exactly "+JSON.stringify(lines[0])];
+    return ["Your code runs without an error","The output has "+lines.length+" lines",
+            "Line 1 is "+JSON.stringify(lines[0]),"The last line is "+JSON.stringify(lines[lines.length-1]),
+            "Every line matches, in order"];
+  }
+  if(exp.mode==="contains"){
+    var parts=normOut(exp.text).split("\n");
+    return ["Your code runs without an error"].concat(parts.map(function(x){ return "The output contains "+JSON.stringify(x); }));
+  }
+  if(exp.mode==="lines") return ["Your code runs without an error","It prints at least "+exp.n+" lines"];
+  if(exp.mode==="regex") return ["Your code runs without an error","The output has the expected shape (e.g. a single word or number)"];
+  return ["Your code runs without an error"];
 }
 function loadIntoEditor(id){
   ui.cur=id||"";
