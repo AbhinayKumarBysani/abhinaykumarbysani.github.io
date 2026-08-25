@@ -267,6 +267,40 @@ kbd{font-family:var(--mono); font-size:11px; background:var(--panel2); border:1p
 .rtitle:hover{color:var(--brand); text-decoration:underline}
 .rsrc{font-size:11.5px; color:var(--faint); margin-block-start:5px; font-family:var(--mono)}
 .rnote{inline-size:100%; margin-block-start:8px; font-size:12.5px; padding:6px 9px}
+.qpanel{border:1px solid var(--brand); border-radius:13px; padding:14px; margin-block-end:12px;
+  background:linear-gradient(160deg,var(--panel2),var(--brand-soft))}
+.qlab{font-size:11px; font-weight:800; letter-spacing:.1em; color:var(--brand)}
+.qtext{font-size:15.5px; font-weight:720; line-height:1.45; margin-block-start:7px}
+.qsub{font-size:12.5px; color:var(--muted); margin-block-start:5px}
+.exp{margin-block-start:11px; padding-block-start:11px; border-block-start:1px solid var(--line)}
+.exph{font-size:11.5px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-block-end:6px}
+.expbox{inline-size:100%; font-family:var(--mono); font-size:12.5px}
+.vbox{border-radius:13px; padding:14px; margin-block-end:12px; border:1px solid var(--line)}
+.vbox.vok{border-color:var(--ok); background:var(--ok-soft)}
+.vbox.vno{border-color:var(--bad); background:var(--bad-soft)}
+.vh{font-size:15px; font-weight:800; letter-spacing:-.2px}
+.vbox.vok .vh{color:var(--ok)} .vbox.vno .vh{color:var(--bad)}
+.vp{font-size:13px; color:var(--ink2); margin-block-start:6px; white-space:pre-wrap}
+.vhint{font-family:var(--mono); font-size:12px; background:var(--panel); border:1px solid var(--line);
+  border-radius:9px; padding:9px 11px; margin-block-start:9px; white-space:pre-wrap; color:var(--ink2)}
+.tcase{border:1px solid var(--line); border-radius:11px; margin-block-start:9px; background:var(--panel); overflow:hidden}
+.tcase.tpass{border-inline-start:3px solid var(--ok)}
+.tcase.tfail{border-inline-start:3px solid var(--bad)}
+.tchead{display:flex; align-items:center; gap:8px; padding:9px 12px; background:var(--panel2)}
+.tcmark{font-weight:800; font-size:14px}
+.tcase.tpass .tcmark{color:var(--ok)} .tcase.tfail .tcmark{color:var(--bad)}
+.tcname{font-weight:720; font-size:13px}
+.tcgrid{display:grid; grid-template-columns:88px 1fr; gap:5px 10px; padding:10px 12px; align-items:baseline}
+.tcl{font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.04em}
+.tcv{font-size:12.5px; word-break:break-word; color:var(--ink)}
+.tcv.bad{color:var(--bad)}
+.tcwhy{font-size:12.5px; line-height:1.6; color:var(--ink2); padding:10px 12px; background:var(--bad-soft);
+  border-block-start:1px solid var(--line)}
+.tcwhy b{color:var(--bad)}
+.tsum{display:flex; gap:5px; margin-block-start:9px; flex-wrap:wrap}
+.tdot{inline-size:26px; block-size:26px; border-radius:8px; display:grid; place-items:center; font-size:11.5px;
+  font-weight:800; color:#fff}
+.tdot.p{background:var(--ok)} .tdot.f{background:var(--bad)}
 .wk{background:var(--panel); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow); margin-block:13px; overflow:hidden}
 .wkh{display:flex; gap:12px; align-items:center; padding:14px 16px; flex-wrap:wrap; cursor:pointer}
 .wkh:hover{background:var(--panel2)}
@@ -769,7 +803,8 @@ kbd{font-family:var(--mono); font-size:11px; background:var(--panel2); border:1p
         <div class="runbar">
           <select id="cbTask" style="flex:1 1 220px"><option value="">— scratchpad (not linked to a question) —</option></select>
           <select id="cbLang"><option value="python">Python 3</option><option value="javascript">JavaScript</option><option value="other">Other (save only)</option></select>
-          <button class="btn pri" id="btnRun" type="button">▶ Run</button>
+          <button class="btn" id="btnRun" type="button">▶ Run</button>
+          <button class="btn pri" id="btnSubmit" type="button">✓ Run tests &amp; submit</button>
           <button class="btn" data-act="csave" type="button">💾 Save</button>
           <button class="btn" data-act="cfmt" type="button">⇥ Reindent</button>
           <button class="btn" data-act="cdl" type="button">⬇ Download</button>
@@ -777,6 +812,8 @@ kbd{font-family:var(--mono); font-size:11px; background:var(--panel2); border:1p
           <span class="dot-live" id="pyDot" title="Python engine status"></span>
           <span style="font-size:12px; color:var(--muted)" id="pyStat">Python engine idle</span>
         </div>
+        <div class="qpanel" id="qPanel" hidden></div>
+        <div class="vbox" id="verdictBox" hidden></div>
         <div class="edwrap">
           <div class="edbar">
             <span class="fn mono" id="edName">scratch.py</span>
@@ -795,7 +832,7 @@ kbd{font-family:var(--mono); font-size:11px; background:var(--panel2); border:1p
           <span class="sp"></span>
           <button class="btn xs" data-act="cclear" type="button">clear</button>
         </div>
-        <div class="console" id="console"><span class="dim">Output appears here. Press Run — the Python engine downloads once (about 10 MB) the first time, then stays cached.</span></div>
+        <div class="console" id="console"><span class="dim">Output appears here. Press Run to just execute, or Run tests &amp; submit to check your solution against every test case. The Python engine downloads once (about 10 MB) the first time, then stays cached.</span></div>
       </div>
       <div class="panel">
         <h2>Custom input (stdin)</h2>
@@ -1221,6 +1258,7 @@ function taskCard(t){
     var days=Math.round((pIso(today())-pIso(t.due))/864e5);
     tg.appendChild(tag("out of track · "+days+"d","r"));
   } else if(b==="today") tg.appendChild(tag("due today","c"));
+  if(t.verified) tg.appendChild(tag("✓ tests passed","g"));
   if(t.seconds) tg.appendChild(tag("⏱ "+dur(t.seconds),"n"));
   if(running) tg.appendChild(tag("● session running","g"));
   body.appendChild(tg);
@@ -1236,7 +1274,8 @@ function taskCard(t){
   var list=[];
   if(t.status==="done"&&!(t.rev&&t.rev.length)) list.push(["🧠 Revise later","revadd",""]);
   if(t.status!=="done") list.push([running?"■ Stop":"▶ Start",running?"stop":"start",running?"ok":""]);
-  list.push([t.code&&t.code.trim()?"⌨ Code ●":"⌨ Code","ccode",""]);
+  var hasTests=!!testsFor(t);
+  list.push([t.verified?"⌨ Solved ✓":(hasTests?"⌨ Solve":(t.code&&t.code.trim()?"⌨ Code ●":"⌨ Code")),"ccode",t.verified?"ok":""]);
   list.push(["+1d","d1",""],["+1w","d7",""],["Today","dt",""],["Edit","edit",""],["✕","del","dgr"]);
   list.forEach(function(p){
     var btn=document.createElement("button"); btn.type="button"; btn.className="btn xs"+(p[2]?" "+p[2]:"");
@@ -1686,6 +1725,48 @@ document.addEventListener("click",function(e){
       if(!found) toast("Every week is already loaded");
       return;
     }
+    if(doAct==="force"){
+      var ft=byId(id);
+      if(ft){
+        ft.code=document.getElementById("editor").value;
+        ft.codeLang=document.getElementById("cbLang").value;
+        ft.codeAt=new Date().toISOString();
+        ft.output=normOut(document.getElementById("console").textContent);
+        if(ft.status!=="done"){ ft.status="done"; ft.completedAt=new Date().toISOString(); ft.missed=ft.due<today(); autoRevision(ft); }
+        ev("done","Accepted & saved: "+ft.title);
+        save(); render(); loadIntoEditor(id); toast("Saved and marked complete");
+      }
+      return;
+    }
+    if(doAct==="expedit"){
+      var et=byId(id);
+      if(!et) return;
+      var box=document.getElementById("expBox");
+      if(et.expect){ delete et.expect; save(); loadIntoEditor(id); toast("Reset to the built-in check"); }
+      else {
+        et.expect={mode:"exact",text:box.value,hint:""};
+        box.readOnly=false; box.focus(); save(); loadIntoEditor(id);
+        toast("Type the exact output you expect, then submit");
+      }
+      return;
+    }
+    if(doAct==="stub"){
+      var st3=byId(id), su=st3&&testsFor(st3);
+      if(su){
+        var ed2=document.getElementById("editor");
+        if(ed2.value.trim()&&!confirm("Replace the editor contents with the starting signature?")) return;
+        ed2.value="def "+su.sig+":\n    "+(su.note?"# "+su.note+"\n    ":"")+"\n    return None\n";
+        gutter(); ed2.focus();
+        var pos=ed2.value.indexOf("return None");
+        ed2.setSelectionRange(pos,pos+11);
+      }
+      return;
+    }
+    if(doAct==="hint"){
+      var ht=byId(id), hx=ht&&expectFor(ht);
+      if(hx&&hx.hint){ cclear(); cwrite("💡 "+hx.hint+"\n","dim"); }
+      return;
+    }
     if(doAct==="conf"){
       var cp=id.split("|"), ct=byId(cp[0]);
       if(ct){ ct.conf=+cp[1]; ev("conf","Confidence "+cp[1]+"/5: "+ct.title); save(); render(); toast(CONF[+cp[1]-1][1]); }
@@ -1847,9 +1928,23 @@ document.addEventListener("change",function(e){
 document.addEventListener("input",function(e){
   if(["fSearch","fBucket","fTopic","fDiff"].indexOf(e.target.id)>=0) renderPlanner();
   if(["resSearch","resType"].indexOf(e.target.id)>=0) renderResources();
-  if(e.target.id==="editor") gutter();
+  if(e.target.id==="editor"){
+    gutter();
+    clearTimeout(window.__ltDraft);
+    window.__ltDraft=setTimeout(function(){
+      var v=document.getElementById("editor").value;
+      if(!ui.cur){ S.scratch=v; save(); return; }
+      var dt=byId(ui.cur);
+      if(dt){ dt.draft=v; dt.draftAt=new Date().toISOString(); save();
+        document.getElementById("edMeta").textContent="draft saved "+new Date().toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"}); }
+    },900);
+  }
   var rn=e.target.getAttribute&&e.target.getAttribute("data-resnote");
   if(rn){ S.resNotes=S.resNotes||{}; S.resNotes[rn]=e.target.value; save(); }
+  if(e.target.id==="expBox"&&ui.cur){
+    var xt=byId(ui.cur);
+    if(xt&&xt.expect){ xt.expect.text=e.target.value; save(); }
+  }
 });
 document.getElementById("cbTask").addEventListener("change",function(){
   if(!ui.cur) S.scratch=document.getElementById("editor").value;
@@ -1860,7 +1955,8 @@ document.getElementById("cbLang").addEventListener("change",function(){
   document.getElementById("edName").textContent=n+"."+ext(this.value);
   renderCode();
 });
-document.getElementById("btnRun").addEventListener("click",runCode);
+document.getElementById("btnRun").addEventListener("click",function(){ runCode(false); });
+document.getElementById("btnSubmit").addEventListener("click",function(){ runTests(); });
 document.getElementById("editor").addEventListener("keydown",function(e){
   var ta=this;
   if(e.key==="Tab"){
@@ -1889,7 +1985,7 @@ document.getElementById("editor").addEventListener("keydown",function(e){
       ta.selectionStart=ta.selectionEnd=c+1+ind.length;
       gutter();
     }
-  } else if((e.ctrlKey||e.metaKey)&&e.key==="Enter"){ e.preventDefault(); runCode(); }
+  }   else if((e.ctrlKey||e.metaKey)&&e.key==="Enter"){ e.preventDefault(); runCode(e.shiftKey); }
   else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="s"){ e.preventDefault(); saveCode(); }
 });
 document.getElementById("quickForm").addEventListener("submit",function(e){
@@ -2249,6 +2345,332 @@ var MYPATH=[
    qs:["Polish the Support Log Analyzer with a full README.","Polish the Weekly Case Report Generator.","Polish the File / Handoff Automation Tool.","Link all three from your portfolio page."]}
  ]}
 ];
+/* ---- expected outputs: auto-verify a solution ----
+   mode: "exact"   — output must equal text (whitespace-normalised)
+         "contains"— output must contain every line in text
+         "regex"   — output must match the pattern
+         "lines"   — output must have exactly N non-empty lines
+         "any"     — any non-empty output counts (self-checked)          */
+var EXPECT={
+ /* --- My Path week 1 --- */
+ "Print \"Hello, Python!\"":            {mode:"exact",text:"Hello, Python!",hint:'print("Hello, Python!")'},
+ "Print your name on a second line.":   {mode:"lines",n:2,hint:"Two print() calls, or one with \\n"},
+ "Store your name, city and current learning goal in variables.":{mode:"lines",n:3,hint:"Three variables, then print all three"},
+ "Print all three values.":             {mode:"lines",n:3,hint:"print(name, city, goal) or three prints"},
+ "Create one variable of each basic data type.":{mode:"contains",text:"str\nint\nfloat\nbool",hint:"print(type(x).__name__) for each"},
+ "Print each value and its type.":      {mode:"contains",text:"str\nint\nfloat\nbool",hint:"Use type(x) on each variable"},
+ "Convert \"25\" into an integer.":      {mode:"contains",text:"25",hint:"int(\"25\")"},
+ "Add 5 and print the result.":         {mode:"exact",text:"30",hint:"int(\"25\") + 5"},
+ /* --- basics roadmap phase 1 --- */
+ "Write a program that prints \"Hello, Python!\".":{mode:"exact",text:"Hello, Python!",hint:'print("Hello, Python!")'},
+ "Store your name in a variable and print \"Hello, <name>!\".":{mode:"regex",text:"^Hello, .+!$",hint:'name = "Abhinay"; print(f"Hello, {name}!")'},
+ "Create variables for age, height, and is_student. Print them.":{mode:"lines",n:3,hint:"Three variables, three prints"},
+ "Convert a float (e.g. 5.7) into an integer.":{mode:"exact",text:"5",hint:"int(5.7) truncates toward zero"},
+ "Write a program to check if 15 > 10 and print the result.":{mode:"exact",text:"True",hint:"print(15 > 10)"},
+ "Use logical operators to check if a number is between 10 and 20.":{mode:"regex",text:"^(True|False)$",hint:"10 < n < 20, or use and"},
+ "Take user input for two numbers and print their sum.":{mode:"any",hint:"Put two numbers in the stdin box below"},
+ "Ask for a string input and print its length.":{mode:"any",hint:"Put a word in the stdin box, then len(s)"},
+ "Write a program that checks if a number is positive, negative, or zero.":{mode:"regex",text:"(?i)^(positive|negative|zero)$",hint:"if / elif / else"},
+ "Ask for a score and print \"Pass\" if >= 40, else \"Fail\".":{mode:"regex",text:"(?i)^(pass|fail)$",hint:"Put a score in the stdin box"},
+ /* --- loops --- */
+ "Print numbers from 1 to 10 using a for loop.":{mode:"exact",text:"1\n2\n3\n4\n5\n6\n7\n8\n9\n10",hint:"for i in range(1, 11): print(i)"},
+ "Print numbers from 1 to 10.":        {mode:"exact",text:"1\n2\n3\n4\n5\n6\n7\n8\n9\n10",hint:"for i in range(1, 11): print(i)"},
+ "Print 1 through 10.":                {mode:"exact",text:"1\n2\n3\n4\n5\n6\n7\n8\n9\n10",hint:"for i in range(1, 11): print(i)"},
+ "Print numbers from 1 to 5.":         {mode:"exact",text:"1\n2\n3\n4\n5",hint:"range(1, 6)"},
+ "Print even numbers up to 20 using a while loop.":{mode:"exact",text:"2\n4\n6\n8\n10\n12\n14\n16\n18\n20",hint:"n = 2; while n <= 20:"},
+ "Print even numbers up to 20.":       {mode:"exact",text:"2\n4\n6\n8\n10\n12\n14\n16\n18\n20",hint:"range(2, 21, 2)"},
+ "Print odd numbers up to 20.":        {mode:"exact",text:"1\n3\n5\n7\n9\n11\n13\n15\n17\n19",hint:"range(1, 20, 2)"},
+ "Calculate the sum of 1 through 10.": {mode:"exact",text:"55",hint:"sum(range(1, 11))"},
+ "Sum the numbers from 1 to 10.":      {mode:"exact",text:"55",hint:"sum(range(1, 11))"},
+ "Sum numbers from 1-10.":             {mode:"exact",text:"55",hint:"sum(range(1, 11))"},
+ "Print the multiplication table of 5.":{mode:"contains",text:"5\n10\n15\n20\n25\n30\n35\n40\n45\n50",hint:"for i in range(1, 11): print(5 * i)"},
+ "Print a multiplication table.":      {mode:"lines",n:10,hint:"Ten lines, one per multiple"},
+ "Countdown from 10.":                 {mode:"exact",text:"10\n9\n8\n7\n6\n5\n4\n3\n2\n1",hint:"range(10, 0, -1)"},
+ "Print a countdown from 10 to 1.":    {mode:"exact",text:"10\n9\n8\n7\n6\n5\n4\n3\n2\n1",hint:"range(10, 0, -1)"},
+ "Print a countdown from 10 to 1 using a for loop.":{mode:"exact",text:"10\n9\n8\n7\n6\n5\n4\n3\n2\n1",hint:"range(10, 0, -1)"},
+ "Print the first 5 multiples of 3.":  {mode:"exact",text:"3\n6\n9\n12\n15",hint:"range(3, 16, 3)"},
+ /* --- lists / collections --- */
+ "Create a list of 5 numbers and print the largest.":{mode:"any",hint:"max(nums)"},
+ "Find the largest number in a list.":{mode:"any",hint:"max(nums)"},
+ "Find the smallest number in a list.":{mode:"any",hint:"min(nums)"},
+ "Reverse a list without using slicing.":{mode:"any",hint:"list.reverse() or a loop"},
+ "Create a tuple of 3 colors and print the second one.":{mode:"any",hint:"colors[1]"},
+ "Find the union of two sets {1,2,3} and {3,4,5}.":{mode:"contains",text:"1",hint:"{1,2,3} | {3,4,5}"},
+ "Count the items in a list.":         {mode:"any",hint:"len(items)"},
+ /* --- strings --- */
+ "Reverse a string using slicing.":    {mode:"any",hint:"s[::-1]"},
+ "Count vowels in a string.":          {mode:"any",hint:"sum(1 for c in s if c in 'aeiou')"},
+ "Count the vowels in a string.":      {mode:"any",hint:"sum(1 for c in s if c in 'aeiou')"},
+ "Convert a string to uppercase.":     {mode:"any",hint:"s.upper()"},
+ /* --- functions --- */
+ "Write a function to add two numbers.":{mode:"any",hint:"def add(a, b): return a + b — then print(add(2, 3))"},
+ "Write a function that adds two numbers.":{mode:"any",hint:"def add(a, b): return a + b"},
+ "Add two numbers through a function." :{mode:"any",hint:"def add(a, b): return a + b"},
+ "Write a function to check if a number is prime.":{mode:"any",hint:"Test it: print(is_prime(7))"},
+ "Use len() to find the length of a list.":{mode:"any",hint:"print(len([1,2,3]))"},
+ "Use max() to find the largest number in a list.":{mode:"any",hint:"print(max([1,9,3]))"},
+ "Import the math module and use sqrt().":{mode:"contains",text:".",hint:"import math; print(math.sqrt(16))"},
+ "Import math and use sqrt().":        {mode:"contains",text:".",hint:"import math; print(math.sqrt(16))"},
+ "Import random and generate a random number between 1–100.":{mode:"regex",text:"^\\d{1,3}$",hint:"import random; print(random.randint(1, 100))"},
+ "Import random and generate a number between 1 and 100.":{mode:"regex",text:"^\\d{1,3}$",hint:"random.randint(1, 100)"},
+ /* --- error handling --- */
+ "Write a program that divides two numbers and handles division by zero.":{mode:"any",hint:"try / except ZeroDivisionError"},
+ "Handle division by zero.":           {mode:"any",hint:"try / except ZeroDivisionError"},
+ "Handle invalid integer input.":      {mode:"any",hint:"try: int(x) / except ValueError"}
+};
+/* ---- test suites: every case must pass, LeetCode style ----
+   fn    — name of the function your code must define
+   cases — [{args:[...], out: expected}] compared after repr-normalisation
+   stdin — alternative: [{in:"5\n3", out:"8"}] runs the whole script per case  */
+var TESTS={
+ "Write a function to add two numbers.":{fn:"add",sig:"add(a, b)",
+  cases:[{args:[2,3],out:5},{args:[-1,1],out:0},{args:[0,0],out:0},{args:[100,250],out:350},{args:[-7,-8],out:-15}]},
+ "Write a function that adds two numbers.":{fn:"add",sig:"add(a, b)",
+  cases:[{args:[2,3],out:5},{args:[-1,1],out:0},{args:[10,90],out:100},{args:[-4,-6],out:-10}]},
+ "Add two numbers through a function.":{fn:"add",sig:"add(a, b)",
+  cases:[{args:[2,3],out:5},{args:[0,7],out:7},{args:[-5,5],out:0}]},
+ "Write a function to check if a number is prime.":{fn:"is_prime",sig:"is_prime(n)",
+  cases:[{args:[2],out:true},{args:[7],out:true},{args:[9],out:false},{args:[1],out:false},
+         {args:[97],out:true},{args:[100],out:false},{args:[0],out:false}]},
+ "Write a function that returns the square of a number.":{fn:"square",sig:"square(n)",
+  cases:[{args:[3],out:9},{args:[0],out:0},{args:[-4],out:16},{args:[12],out:144}]},
+ "Write one that returns the cube.":{fn:"cube",sig:"cube(n)",
+  cases:[{args:[3],out:27},{args:[0],out:0},{args:[-2],out:-8}]},
+ "Write a function that finds the maximum of two numbers.":{fn:"maximum",sig:"maximum(a, b)",
+  cases:[{args:[3,9],out:9},{args:[9,3],out:9},{args:[-1,-5],out:-1},{args:[4,4],out:4}]},
+ "Write a function to find the maximum of two numbers.":{fn:"maximum",sig:"maximum(a, b)",
+  cases:[{args:[3,9],out:9},{args:[9,3],out:9},{args:[-2,-8],out:-2}]},
+ "Find maximum of two numbers.":{fn:"maximum",sig:"maximum(a, b)",
+  cases:[{args:[5,2],out:5},{args:[1,8],out:8},{args:[0,0],out:0}]},
+ "Find square.":{fn:"square",sig:"square(n)",
+  cases:[{args:[5],out:25},{args:[-3],out:9},{args:[0],out:0}]},
+ "Create a greeting function that takes a name.":{fn:"greet",sig:"greet(name)",
+  cases:[{args:["Abhinay"],out:"Hello, Abhinay!"},{args:["Sam"],out:"Hello, Sam!"}],
+  note:'Return the string "Hello, <name>!" — return it, do not print it.'},
+ "Create greeting function.":{fn:"greet",sig:"greet(name)",
+  cases:[{args:["Abhinay"],out:"Hello, Abhinay!"},{args:["Ada"],out:"Hello, Ada!"}],
+  note:'Return "Hello, <name>!"'},
+ "Write a function that reverses a string.":{fn:"reverse",sig:"reverse(s)",
+  cases:[{args:["python"],out:"nohtyp"},{args:[""],out:""},{args:["a"],out:"a"},{args:["ab cd"],out:"dc ba"}]},
+ "Reverse a string using slicing.":{fn:"reverse",sig:"reverse(s)",
+  cases:[{args:["python"],out:"nohtyp"},{args:["level"],out:"level"},{args:[""],out:""}],
+  note:"Define reverse(s) that returns s[::-1]"},
+ "Reverse string":{fn:"reverse",sig:"reverse(s)",
+  cases:[{args:["hello"],out:"olleh"},{args:["abc"],out:"cba"}]},
+ "Count vowels in a string.":{fn:"count_vowels",sig:"count_vowels(s)",
+  cases:[{args:["hello"],out:2},{args:["xyz"],out:0},{args:["aeiou"],out:5},{args:["Programming"],out:3}]},
+ "Count the vowels in a string.":{fn:"count_vowels",sig:"count_vowels(s)",
+  cases:[{args:["hello"],out:2},{args:["rhythm"],out:0},{args:["AEIOU"],out:5}],
+  note:"Count both cases — AEIOU too"},
+ "Count vowels":{fn:"count_vowels",sig:"count_vowels(s)",
+  cases:[{args:["hello"],out:2},{args:["aeiou"],out:5}]},
+ "Check whether a word is a palindrome.":{fn:"is_palindrome",sig:"is_palindrome(s)",
+  cases:[{args:["level"],out:true},{args:["python"],out:false},{args:["a"],out:true},{args:["abba"],out:true}]},
+ "Count the words in a sentence.":{fn:"count_words",sig:"count_words(s)",
+  cases:[{args:["hello world"],out:2},{args:["one"],out:1},{args:["a b c d"],out:4}]},
+ "Find the longest word in a sentence.":{fn:"longest_word",sig:"longest_word(s)",
+  cases:[{args:["I love python"],out:"python"},{args:["a bb ccc"],out:"ccc"}]},
+ "Find the largest number in a list.":{fn:"largest",sig:"largest(nums)",
+  cases:[{args:[[1,9,3]],out:9},{args:[[-5,-1,-9]],out:-1},{args:[[7]],out:7},{args:[[2,2,2]],out:2}]},
+ "Create a list of 5 numbers and print the largest.":{fn:"largest",sig:"largest(nums)",
+  cases:[{args:[[1,9,3,4,5]],out:9},{args:[[10,2,30,4,5]],out:30}],
+  note:"Wrap it in a function largest(nums) so it can be tested"},
+ "Find the smallest number in a list.":{fn:"smallest",sig:"smallest(nums)",
+  cases:[{args:[[1,9,3]],out:1},{args:[[-5,-1]],out:-5},{args:[[4]],out:4}]},
+ "Reverse a list without using slicing.":{fn:"reverse_list",sig:"reverse_list(items)",
+  cases:[{args:[[1,2,3]],out:[3,2,1]},{args:[[]],out:[]},{args:[["a","b"]],out:["b","a"]}]},
+ "Remove duplicate values.":{fn:"dedupe",sig:"dedupe(items)",
+  cases:[{args:[[1,2,2,3]],out:[1,2,3]},{args:[[1,1,1]],out:[1]},{args:[[]],out:[]}],
+  note:"Return a list with duplicates removed, original order kept"},
+ "Remove duplicate values from a list.":{fn:"dedupe",sig:"dedupe(items)",
+  cases:[{args:[[1,2,2,3]],out:[1,2,3]},{args:[[5,5]],out:[5]}]},
+ "Count how many times a value appears.":{fn:"count_of",sig:"count_of(items, value)",
+  cases:[{args:[[1,2,2,3],2],out:2},{args:[[1,2,3],9],out:0},{args:[["a","a","b"],"a"],out:2}]},
+ "Count word frequency in a sentence using a dictionary.":{fn:"word_freq",sig:"word_freq(s)",
+  cases:[{args:["a b a"],out:{a:2,b:1}},{args:["hi"],out:{hi:1}}]},
+ "Create a function that calculates completion percentage.":{fn:"percent",sig:"percent(done, total)",
+  cases:[{args:[5,10],out:50.0},{args:[0,10],out:0.0},{args:[10,10],out:100.0},{args:[1,3],out:33.33}],
+  note:"Round to 2 decimal places"},
+ "Write a function to check whether a number is prime.":{fn:"is_prime",sig:"is_prime(n)",
+  cases:[{args:[2],out:true},{args:[11],out:true},{args:[15],out:false},{args:[1],out:false}]},
+ "Check whether a number is even or odd.":{fn:"even_or_odd",sig:"even_or_odd(n)",
+  cases:[{args:[4],out:"even"},{args:[7],out:"odd"},{args:[0],out:"even"}],
+  note:'Return the string "even" or "odd"'},
+ "Odd or even":{fn:"even_or_odd",sig:"even_or_odd(n)",
+  cases:[{args:[2],out:"even"},{args:[3],out:"odd"}],note:'Return "even" or "odd"'},
+ "Positive, negative or zero":{fn:"sign",sig:"sign(n)",
+  cases:[{args:[5],out:"positive"},{args:[-5],out:"negative"},{args:[0],out:"zero"}],
+  note:'Return "positive", "negative" or "zero"'},
+ "Write a program that checks if a number is positive, negative, or zero.":{fn:"sign",sig:"sign(n)",
+  cases:[{args:[3],out:"positive"},{args:[-1],out:"negative"},{args:[0],out:"zero"}],
+  note:'Wrap it in sign(n) returning "positive" / "negative" / "zero"'},
+ "Pass or fail":{fn:"result",sig:"result(score)",
+  cases:[{args:[40],out:"Pass"},{args:[39],out:"Fail"},{args:[100],out:"Pass"},{args:[0],out:"Fail"}],
+  note:'Pass is score >= 40. Return "Pass" or "Fail"'},
+ "Ask for a score and print \"Pass\" if >= 40, else \"Fail\".":{fn:"result",sig:"result(score)",
+  cases:[{args:[40],out:"Pass"},{args:[39],out:"Fail"},{args:[85],out:"Pass"}],
+  note:'Wrap it in result(score) returning "Pass" or "Fail"'},
+ "Calculate the sum of 1 through 10.":{fn:"total",sig:"total(n)",
+  cases:[{args:[10],out:55},{args:[1],out:1},{args:[100],out:5050}],
+  note:"Make it general: total(n) sums 1..n"},
+ "Convert minutes into hours and minutes.":{fn:"hm",sig:"hm(minutes)",
+  cases:[{args:[90],out:"1h 30m"},{args:[45],out:"0h 45m"},{args:[120],out:"2h 0m"},{args:[0],out:"0h 0m"}],
+  note:'Return the string "<h>h <m>m"'},
+ "Create a function that validates an email-like value.":{fn:"is_email",sig:"is_email(s)",
+  cases:[{args:["a@b.com"],out:true},{args:["nope"],out:false},{args:["x@y"],out:false},{args:["a.b@c.co"],out:true}],
+  note:"Must contain @ and a dot after it"},
+ "Add and remove an item.":{fn:"add_remove",sig:"add_remove(items, add, remove)",
+  cases:[{args:[[1,2],3,1],out:[2,3]},{args:[[],5,9],out:[5]}],
+  note:"Append add, remove remove if present, return the list"}
+};
+function testsFor(t){
+  if(t.tests) return t.tests;
+  if(TESTS[t.title]) return TESTS[t.title];
+  var base=t.title.replace(/^Project:\s*/,"").trim();
+  return TESTS[base]||null;
+}
+function pyRepr(v){
+  if(v===null) return "None";
+  if(v===true) return "True";
+  if(v===false) return "False";
+  if(typeof v==="string") return JSON.stringify(v);
+  if(Array.isArray(v)) return "["+v.map(pyRepr).join(", ")+"]";
+  if(typeof v==="object") return "{"+Object.keys(v).map(function(k){return JSON.stringify(k)+": "+pyRepr(v[k]);}).join(", ")+"}";
+  return String(v);
+}
+function buildHarness(suite){
+  var lines=["","import json as __ltjson",""];
+  lines.push("def __lt_norm(v):");
+  lines.push("    if isinstance(v, float):");
+  lines.push("        return round(v, 2)");
+  lines.push("    if isinstance(v, (list, tuple)):");
+  lines.push("        return [__lt_norm(x) for x in v]");
+  lines.push("    if isinstance(v, set):");
+  lines.push("        return sorted(__lt_norm(x) for x in v)");
+  lines.push("    if isinstance(v, dict):");
+  lines.push("        return {str(k): __lt_norm(x) for k, x in v.items()}");
+  lines.push("    return v");
+  lines.push("__lt_results = []");
+  lines.push("if '"+suite.fn+"' not in dir():");
+  lines.push("    __lt_results.append({'err': 'missing'})");
+  lines.push("else:");
+  suite.cases.forEach(function(c){
+    var args=c.args.map(pyRepr).join(", ");
+    lines.push("    try:");
+    lines.push("        __lt_got = "+suite.fn+"("+args+")");
+    lines.push("        __lt_results.append({'got': __lt_norm(__lt_got)})");
+    lines.push("    except Exception as __lt_e:");
+    lines.push("        __lt_results.append({'err': type(__lt_e).__name__ + ': ' + str(__lt_e)})");
+  });
+  lines.push("print('__LT_JSON__' + __ltjson.dumps(__lt_results))");
+  return lines.join("\n");
+}
+function sameValue(a,b){
+  if(typeof b==="number"&&typeof a==="number") return Math.abs(a-b)<0.011;
+  return JSON.stringify(a)===JSON.stringify(b);
+}
+/* Explain, in plain language, WHY a case failed */
+function diagnose(got,want,err,suite,c){
+  if(err){
+    var m=String(err);
+    if(/^TypeError/.test(m)){
+      if(/argument/.test(m)) return "Your function takes the wrong number of arguments. It is called as "+suite.sig+", so it must accept "+c.args.length+" argument"+(c.args.length===1?"":"s")+". Python said: "+m;
+      if(/NoneType/.test(m)) return "Something was None where a value was expected — usually a function that forgot to return. Python said: "+m;
+      if(/unsupported operand|can only concatenate|not supported between/.test(m)) return "You mixed incompatible types — for example adding a string to a number. Convert with int(), float() or str() first. Python said: "+m;
+      return "A type mismatch. Python said: "+m;
+    }
+    if(/^NameError/.test(m)) return "You used a name that doesn't exist — check for a typo, or a variable used before it was created. Python said: "+m;
+    if(/^ZeroDivisionError/.test(m)) return "Division by zero. Guard the divisor before dividing.";
+    if(/^IndexError/.test(m)) return "You indexed past the end of a list or string. With input "+pyRepr(c.args[0])+", check your loop bounds and any -1 offsets.";
+    if(/^KeyError/.test(m)) return "You looked up a dictionary key that isn't there. Use .get(key) or check with 'in' first. Python said: "+m;
+    if(/^ValueError/.test(m)) return "A value had the right type but the wrong content — e.g. int(\"abc\"). Python said: "+m;
+    if(/^AttributeError/.test(m)) return "You called a method that doesn't exist on that type — check whether the value is a list, string or dict. Python said: "+m;
+    if(/^RecursionError/.test(m)) return "Infinite recursion — your function keeps calling itself with no base case.";
+    return "Your code raised "+m;
+  }
+  if(got===null||got===undefined)
+    return "Your function returned None. That almost always means it printed the answer instead of returning it — swap print(x) for return x.";
+  var tg=Array.isArray(got)?"list":typeof got, tw=Array.isArray(want)?"list":typeof want;
+  if(tg!==tw){
+    if(tw==="number"&&tg==="string") return "You returned the text "+pyRepr(got)+" but a number "+pyRepr(want)+" was expected. Wrap it in int() — or don't convert it to a string in the first place.";
+    if(tw==="string"&&tg==="number") return "You returned the number "+pyRepr(got)+" but the text "+pyRepr(want)+" was expected. Use str() or an f-string.";
+    if(tw==="boolean") return "You returned "+pyRepr(got)+" but True or False was expected. Return the comparison itself, not a message about it.";
+    if(tw==="list"&&tg!=="list") return "You returned a single value, but a list "+pyRepr(want)+" was expected. Collect the results and return the whole list.";
+    return "Wrong type — expected a "+tw+" like "+pyRepr(want)+", but got a "+tg+" ("+pyRepr(got)+").";
+  }
+  if(tw==="string"){
+    if(got.trim()===want.trim()) return "The text is right but there is extra whitespace around it. Use .strip(), or remove the extra space in your f-string.";
+    if(got.toLowerCase()===want.toLowerCase()) return "Right word, wrong capitalisation. Expected "+pyRepr(want)+" exactly — check your upper/lower case.";
+    if(got.replace(/\s+/g,"")===want.replace(/\s+/g,"")) return "The characters match but the spacing differs. Compare "+pyRepr(got)+" with "+pyRepr(want)+" carefully.";
+    if(got.length!==want.length) return "The text is the wrong length — expected "+want.length+" characters, got "+got.length+". You may be missing punctuation such as the ! or a space.";
+    return "Expected "+pyRepr(want)+" but got "+pyRepr(got)+".";
+  }
+  if(tw==="number"){
+    var d=got-want;
+    if(Math.abs(d)===1) return "Off by one — you got "+got+" instead of "+want+". This is nearly always a range() boundary: range(1, n) stops at n-1, so you may need range(1, n+1).";
+    if(want!==0&&Math.abs(got/want-2)<0.01) return "Your answer is exactly double the expected value — you are probably counting or adding something twice.";
+    if(want!==0&&Math.abs(got*2-want)<0.01) return "Your answer is exactly half the expected value — you may be skipping every other item.";
+    if(got===0) return "You returned 0. Check that your loop actually runs and that you return the accumulator rather than a fresh variable.";
+    if(Math.round(got)!==got&&Math.round(want)===want) return "You returned a decimal ("+got+") where a whole number ("+want+") was expected. Use // for integer division, or round().";
+    if(Math.round(got)===got&&Math.round(want)!==want) return "You returned a whole number ("+got+") where a decimal ("+want+") was expected. Use / rather than //, and round to 2 places.";
+    return "Expected "+want+" but got "+got+" (a difference of "+(d>0?"+":"")+d.toFixed(2).replace(/\.00$/,"")+").";
+  }
+  if(tw==="boolean") return "Expected "+pyRepr(want)+" but got "+pyRepr(got)+" — your condition is inverted or is missing a case.";
+  if(tw==="list"){
+    if(got.length!==want.length) return "Wrong number of items — expected "+want.length+", got "+got.length+". "+(got.length>want.length?"You are keeping items you should filter out.":"You are dropping items you should keep.");
+    if(JSON.stringify(got.slice().sort())===JSON.stringify(want.slice().sort())) return "The right items, in the wrong order. Expected "+pyRepr(want)+" — check whether you need to reverse or sort.";
+    return "Same length, different contents. Expected "+pyRepr(want)+", got "+pyRepr(got)+".";
+  }
+  if(tw==="object"){
+    var kg=Object.keys(got||{}), kw=Object.keys(want||{});
+    var miss=kw.filter(function(k){return kg.indexOf(k)<0;});
+    if(miss.length) return "Missing keys: "+miss.join(", ")+". Expected "+pyRepr(want)+".";
+    var extra=kg.filter(function(k){return kw.indexOf(k)<0;});
+    if(extra.length) return "Unexpected extra keys: "+extra.join(", ")+".";
+    var bad=kw.filter(function(k){return !sameValue(got[k],want[k]);});
+    return "Right keys, wrong values for: "+bad.join(", ")+". Expected "+pyRepr(want)+".";
+  }
+  return "Expected "+pyRepr(want)+" but got "+pyRepr(got)+".";
+}
+function expectFor(t){
+  if(t.expect) return t.expect;
+  if(EXPECT[t.title]) return EXPECT[t.title];
+  var base=t.title.replace(/^Project:\s*/,"").trim();
+  return EXPECT[base]||null;
+}
+function normOut(s){
+  return String(s).replace(/\r/g,"").split("\n")
+    .map(function(l){return l.trim();}).filter(function(l){return l.length;}).join("\n").trim();
+}
+function checkOutput(out,exp){
+  var got=normOut(out);
+  if(!got) return {ok:false,why:"No output — did you use print()?"};
+  if(!exp||exp.mode==="any") return {ok:true,why:"Output produced"};
+  if(exp.mode==="exact"){
+    var want=normOut(exp.text);
+    if(got===want) return {ok:true,why:"Output matches exactly"};
+    return {ok:false,why:"Expected:\n"+want+"\n\nGot:\n"+got};
+  }
+  if(exp.mode==="contains"){
+    var lines=normOut(exp.text).split("\n");
+    var missing=lines.filter(function(l){ return got.indexOf(l)<0; });
+    if(!missing.length) return {ok:true,why:"Output contains everything expected"};
+    return {ok:false,why:"Missing from your output: "+missing.join(", ")};
+  }
+  if(exp.mode==="regex"){
+    try{
+      var rx=new RegExp(exp.text.replace(/^\(\?i\)/,""), /^\(\?i\)/.test(exp.text)?"i":"");
+      if(got.split("\n").some(function(l){return rx.test(l);})) return {ok:true,why:"Output is in the right shape"};
+      return {ok:false,why:"Output doesn't match the expected pattern"};
+    }catch(e){ return {ok:true,why:"Output produced"}; }
+  }
+  if(exp.mode==="lines"){
+    var n=got.split("\n").length;
+    if(n>=exp.n) return {ok:true,why:n+" lines of output"};
+    return {ok:false,why:"Expected at least "+exp.n+" lines, got "+n};
+  }
+  return {ok:true,why:"Output produced"};
+}
 var CONF=[
  [1,"I do not understand it yet","var(--bad)"],
  [2,"I recognize the concept","var(--warn)"],
@@ -3412,14 +3834,14 @@ function loadPyodide_(){
   });
   return PY.loading;
 }
-function runCode(){
+function runCode(verify){
   var lang=document.getElementById("cbLang").value;
   var code=document.getElementById("editor").value;
   var stdin=document.getElementById("stdinBox").value;
   cclear();
   if(lang==="other"){ cwrite("This language can only be saved here, not executed.\nUse the editor to keep your solution with the question.\n","dim"); return; }
   if(!code.trim()){ cwrite("Nothing to run — the editor is empty.\n","dim"); return; }
-  if(lang==="javascript"){ runJS(code); return; }
+  if(lang==="javascript"){ runJS(code,verify); return; }
   var t0=performance.now();
   loadPyodide_().then(function(py){
     cwrite("▶ running\n","in");
@@ -3437,16 +3859,215 @@ function runCode(){
       if(txt.trim()) cwrite(txt.replace(/\n+$/,"")+"\n");
       else cwrite("(no output — did you forget print()?)\n","dim");
       cwrite("\n✓ finished in "+((performance.now()-t0)/1000).toFixed(2)+"s\n","ok");
+      afterRun(txt,verify);
     }catch(err){
       var txt2=out.join("\n"); if(txt2.trim()) cwrite(txt2+"\n");
       cwrite("\n"+String(err.message||err).split("\n").filter(function(l){
         return l.indexOf("pyodide")<0 && l.indexOf("/lib/python")<0; }).join("\n")+"\n","err");
+      if(verify) cwrite("\nFix the error, then submit again.\n","dim");
     }
   }).catch(function(){
     cwrite("Could not load the Python engine.\nCheck your internet connection — the engine is fetched from a CDN the first time.\n","err");
   });
 }
-function runJS(code){
+function runTests(){
+  var t=ui.cur?byId(ui.cur):null;
+  var suite=t&&testsFor(t);
+  if(!t||!suite){ runCode(true); return; }
+  var code=document.getElementById("editor").value;
+  if(!code.trim()){ cclear(); cwrite("Nothing to run — the editor is empty.\n","dim"); return; }
+  if(document.getElementById("cbLang").value!=="python"){
+    cclear(); cwrite("Test cases currently run against Python only.\n","dim"); return;
+  }
+  cclear(); cwrite("▶ running "+suite.cases.length+" test cases\n","in");
+  loadPyodide_().then(function(py){
+    var out=[];
+    py.setStdout({batched:function(s){ out.push(s); }});
+    py.setStderr({batched:function(s){ out.push(s); }});
+    var results=null, userOut="", fatal=null;
+    try{
+      py.runPython(code+"\n"+buildHarness(suite));
+      var joined=out.join("\n");
+      var idx=joined.lastIndexOf("__LT_JSON__");
+      if(idx>=0){
+        userOut=joined.slice(0,idx).trim();
+        results=JSON.parse(joined.slice(idx+11).trim());
+      }
+    }catch(err){
+      fatal=String(err.message||err).split("\n").filter(function(l){
+        return l.indexOf("pyodide")<0 && l.indexOf("/lib/python")<0; }).join("\n");
+    }
+    if(userOut) cwrite(userOut+"\n","dim");
+    if(fatal){ cwrite("\n"+fatal+"\n","err"); showTests(t,suite,null,"error"); return; }
+    if(!results){ cwrite("\nCould not evaluate the tests.\n","err"); showTests(t,suite,null,"error"); return; }
+    if(results.length===1&&results[0].err==="missing"){
+      cwrite("\nYour code doesn't define a function called "+suite.fn+"().\n","err");
+      showTests(t,suite,null,"missing"); return;
+    }
+    var passed=0;
+    var rows=suite.cases.map(function(c,i){
+      var r=results[i]||{err:"no result"};
+      var ok=!r.err && sameValue(r.got,c.out);
+      if(ok) passed++;
+      return {c:c,got:r.err?null:r.got,err:r.err,ok:ok};
+    });
+    cwrite("\n"+passed+" / "+suite.cases.length+" test cases passed\n",passed===suite.cases.length?"ok":"err");
+    showTests(t,suite,rows,null);
+    if(passed===suite.cases.length) acceptSolution(t,userOut,"All "+passed+" test cases passed");
+  }).catch(function(){
+    cwrite("Could not load the Python engine.\n","err");
+  });
+}
+function showTests(t,suite,rows,fail){
+  var box=document.getElementById("verdictBox");
+  box.hidden=false; clr(box);
+  var allOk=rows&&rows.every(function(r){return r.ok;});
+  box.className="vbox "+(allOk?"vok":"vno");
+  var h=document.createElement("div"); h.className="vh";
+  if(fail==="missing") h.textContent="✗ Function "+suite.fn+"() not found";
+  else if(fail) h.textContent="✗ Your code raised an error";
+  else h.textContent=allOk?("✓ Accepted — "+rows.length+"/"+rows.length+" test cases passed")
+    :("✗ "+rows.filter(function(r){return r.ok;}).length+"/"+rows.length+" test cases passed");
+  box.appendChild(h);
+  if(rows){
+    var sum=document.createElement("div"); sum.className="tsum";
+    rows.forEach(function(r,i){
+      var d=document.createElement("span"); d.className="tdot "+(r.ok?"p":"f");
+      d.textContent=(i+1); d.title="Test case "+(i+1)+(r.ok?" passed":" failed");
+      sum.appendChild(d);
+    });
+    box.appendChild(sum);
+  }
+  if(fail==="missing"){
+    var p=document.createElement("div"); p.className="vp";
+    p.textContent="Define it like this, and return the value rather than printing it:";
+    box.appendChild(p);
+    var pre=document.createElement("div"); pre.className="vhint";
+    pre.textContent="def "+suite.sig+":\n    ...\n    return result";
+    box.appendChild(pre);
+    if(suite.note){ var n=document.createElement("div"); n.className="vp"; n.textContent=suite.note; box.appendChild(n); }
+    return;
+  }
+  if(!rows) return;
+  var note=document.createElement("div"); note.className="vp";
+  note.textContent="All test cases are shown — nothing is hidden.";
+  box.appendChild(note);
+  rows.forEach(function(r,i){
+    var card=document.createElement("div"); card.className="tcase"+(r.ok?" tpass":" tfail");
+    var hd=document.createElement("div"); hd.className="tchead";
+    var mk=document.createElement("span"); mk.className="tcmark"; mk.textContent=r.ok?"✓":"✗";
+    var nm=document.createElement("span"); nm.className="tcname"; nm.textContent="Test case "+(i+1);
+    var st=document.createElement("span"); st.className="tag "+(r.ok?"g":"r"); st.textContent=r.ok?"passed":"failed";
+    hd.appendChild(mk); hd.appendChild(nm);
+    var sp=document.createElement("span"); sp.className="sp"; hd.appendChild(sp); hd.appendChild(st);
+    card.appendChild(hd);
+    var grid=document.createElement("div"); grid.className="tcgrid";
+    [["Input",suite.fn+"("+r.c.args.map(pyRepr).join(", ")+")",""],
+     ["Expected",pyRepr(r.c.out),""],
+     ["Your result",r.err?r.err:pyRepr(r.got),r.ok?"":"bad"]
+    ].forEach(function(p){
+      var l=document.createElement("div"); l.className="tcl"; l.textContent=p[0];
+      var v=document.createElement("div"); v.className="tcv mono"+(p[2]?" "+p[2]:""); v.textContent=p[1];
+      grid.appendChild(l); grid.appendChild(v);
+    });
+    card.appendChild(grid);
+    if(!r.ok){
+      var why=document.createElement("div"); why.className="tcwhy";
+      var wl=document.createElement("b"); wl.textContent="Why this failed: ";
+      why.appendChild(wl);
+      why.appendChild(document.createTextNode(diagnose(r.got,r.c.out,r.err,suite,r.c)));
+      card.appendChild(why);
+    }
+    box.appendChild(card);
+  });
+  if(!allOk){
+    if(suite.note){ var nn=document.createElement("div"); nn.className="vhint"; nn.textContent="Note: "+suite.note; box.appendChild(nn); }
+    var fails=rows.filter(function(r){return !r.ok;});
+    var pass=rows.filter(function(r){return r.ok;});
+    if(pass.length&&fails.length){
+      var pat=document.createElement("div"); pat.className="vhint";
+      var edge=fails.every(function(r){ return r.c.args.some(function(a){
+        return a===0||a===1||a===""||(Array.isArray(a)&&a.length<=1); }); });
+      pat.textContent=edge
+        ? "Pattern: your main logic works — every failure is an edge case (0, 1, empty). Add a guard for those at the top of your function."
+        : "Pattern: "+pass.length+" case"+(pass.length===1?"":"s")+" passed, so the shape is right. Compare the failing inputs above against the passing ones to spot what differs.";
+      box.appendChild(pat);
+    }
+  } else {
+    var okn=document.createElement("div"); okn.className="vp"; okn.style.marginBlockStart="8px";
+    okn.textContent="Solution saved automatically and the question is marked complete ✓";
+    box.appendChild(okn);
+  }
+}
+function acceptSolution(t,output,why){
+  var already=t.status==="done";
+  t.code=document.getElementById("editor").value;
+  t.codeLang=document.getElementById("cbLang").value;
+  t.codeAt=new Date().toISOString();
+  t.output=normOut(output||"");
+  t.verified=true;
+  if(!already){
+    t.status="done"; t.completedAt=new Date().toISOString(); t.missed=t.due<today();
+    ev("done","Solved & verified: "+t.title+" ("+why+")");
+    autoRevision(t);
+  } else ev("code","Solution updated: "+t.title);
+  save();
+  cwrite("\n✓ Saved and marked complete.\n","ok");
+  render();
+  toast(already?"Solution saved":"Accepted! Saved and ticked off 🎉");
+}
+function afterRun(output,verify){
+  if(!ui.cur) return;
+  var t=byId(ui.cur); if(!t) return;
+  var exp=expectFor(t);
+  var res=checkOutput(output,exp);
+  var box=document.getElementById("verdictBox");
+  box.hidden=false;
+  box.className="vbox "+(res.ok?"vok":"vno");
+  clr(box);
+  var h=document.createElement("div"); h.className="vh";
+  h.textContent=res.ok?"✓ Correct output":"✗ Not matching yet";
+  var p=document.createElement("div"); p.className="vp"; p.textContent=res.why;
+  box.appendChild(h); box.appendChild(p);
+  if(res.ok){
+    var already=t.status==="done";
+    t.code=document.getElementById("editor").value;
+    t.codeLang=document.getElementById("cbLang").value;
+    t.codeAt=new Date().toISOString();
+    t.output=normOut(output);
+    if(!already){
+      t.status="done"; t.completedAt=new Date().toISOString(); t.missed=t.due<today();
+      ev("done","Solved & verified: "+t.title);
+      autoRevision(t);
+    } else ev("code","Solution updated: "+t.title);
+    save();
+    var note=document.createElement("div"); note.className="vp";
+    note.style.marginBlockStart="6px";
+    note.textContent=already
+      ? "Code saved. This question was already marked done."
+      : "Code saved automatically and the question is now marked complete ✓";
+    box.appendChild(note);
+    cwrite("\n✓ Verified — saved and marked complete.\n","ok");
+    render();
+    loadIntoEditor(ui.cur);
+    document.getElementById("verdictBox").hidden=false;
+    toast(already?"Solution saved":"Correct! Saved and ticked off 🎉");
+  } else if(verify){
+    if(exp&&exp.hint){
+      var hint=document.createElement("div"); hint.className="vhint";
+      hint.textContent="Hint: "+exp.hint;
+      box.appendChild(hint);
+    }
+    var sv=document.createElement("button"); sv.type="button"; sv.className="btn xs";
+    sv.textContent="Save anyway"; sv.setAttribute("data-act","csave");
+    sv.style.marginBlockStart="9px"; box.appendChild(sv);
+    var ok=document.createElement("button"); ok.type="button"; ok.className="btn xs ok";
+    ok.textContent="It's correct — accept it"; ok.setAttribute("data-do","force");
+    ok.setAttribute("data-id",t.id); ok.style.marginInlineStart="6px"; ok.style.marginBlockStart="9px";
+    box.appendChild(ok);
+  }
+}
+function runJS(code,verify){
   var t0=performance.now(), buf=[];
   var orig={log:console.log,error:console.error,warn:console.warn};
   function cap(){ buf.push(Array.prototype.map.call(arguments,function(a){
@@ -3458,6 +4079,7 @@ function runJS(code){
     if(r!==undefined) buf.push(String(r));
     if(buf.length) cwrite(buf.join("\n")+"\n"); else cwrite("(no output — try console.log)\n","dim");
     cwrite("\n✓ finished in "+((performance.now()-t0)/1000).toFixed(3)+"s\n","ok");
+    afterRun(buf.join("\n"),verify);
   }catch(e){ if(buf.length) cwrite(buf.join("\n")+"\n"); cwrite("\n"+(e.name+": "+e.message)+"\n","err"); }
   finally{ console.log=orig.log; console.error=orig.error; console.warn=orig.warn; }
 }
@@ -3467,17 +4089,87 @@ function gutter(){
   for(i=1;i<=n;i++) a.push(i);
   document.getElementById("gutter").textContent=a.join("\n");
 }
+function renderQPanel(t){
+  var p=document.getElementById("qPanel");
+  document.getElementById("verdictBox").hidden=true;
+  if(!t){ p.hidden=true; return; }
+  p.hidden=false; clr(p);
+  var top=document.createElement("div"); top.className="rowb";
+  var lb=document.createElement("span"); lb.className="qlab";
+  lb.textContent=t.type==="learn"?"📖 LEARN":t.type==="project"?"🚀 PROJECT":"✍️ QUESTION";
+  top.appendChild(lb);
+  var sp=document.createElement("span"); sp.className="sp"; top.appendChild(sp);
+  if(t.status==="done"){ var dn=document.createElement("span"); dn.className="tag g"; dn.textContent="✓ completed "+stamp(t.completedAt); top.appendChild(dn); }
+  if(t.est){ var es=document.createElement("span"); es.className="tag c"; es.textContent="⏱ ~"+t.est+" min"; top.appendChild(es); }
+  p.appendChild(top);
+  var q=document.createElement("div"); q.className="qtext"; q.textContent=t.title;
+  p.appendChild(q);
+  if(t.notes){ var n=document.createElement("div"); n.className="qsub"; n.textContent=t.notes; p.appendChild(n); }
+  var suite=testsFor(t);
+  if(suite){
+    var sw=document.createElement("div"); sw.className="exp";
+    var sh=document.createElement("div"); sh.className="exph";
+    sh.textContent=suite.cases.length+" public test cases — all must pass";
+    sw.appendChild(sh);
+    var sig=document.createElement("div"); sig.className="vhint"; sig.style.marginBlockStart="0";
+    sig.textContent="def "+suite.sig+":\n    ...\n    return result"+(suite.note?"\n\n# "+suite.note:"");
+    sw.appendChild(sig);
+    var tbl=document.createElement("div"); tbl.style.marginBlockStart="9px";
+    suite.cases.forEach(function(c,i){
+      var r=document.createElement("div"); r.className="tcgrid";
+      r.style.cssText="grid-template-columns:64px 1fr auto;padding:5px 0;border-block-end:1px solid var(--line)";
+      var a=document.createElement("div"); a.className="tcl"; a.textContent="Case "+(i+1);
+      var b=document.createElement("div"); b.className="tcv mono"; b.textContent=suite.fn+"("+c.args.map(pyRepr).join(", ")+")";
+      var d=document.createElement("div"); d.className="tcv mono"; d.style.color="var(--muted)"; d.textContent="→ "+pyRepr(c.out);
+      r.appendChild(a); r.appendChild(b); r.appendChild(d); tbl.appendChild(r);
+    });
+    sw.appendChild(tbl);
+    var st2=document.createElement("button"); st2.type="button"; st2.className="btn xs";
+    st2.textContent="↧ start from this signature"; st2.setAttribute("data-do","stub"); st2.setAttribute("data-id",t.id);
+    st2.style.marginBlockStart="9px"; sw.appendChild(st2);
+    p.appendChild(sw);
+    return;
+  }
+  var exp=expectFor(t);
+  var er=document.createElement("div"); er.className="exp";
+  var eh=document.createElement("div"); eh.className="exph";
+  eh.textContent=exp?(exp.mode==="exact"?"Expected output — must match exactly":
+    exp.mode==="contains"?"Expected output — must contain these":
+    exp.mode==="regex"?"Expected output — must look like this":
+    exp.mode==="lines"?"Expected — at least "+exp.n+" lines of output":
+    "Expected — any correct output"):"Expected output — set your own";
+  er.appendChild(eh);
+  var ta2=document.createElement("textarea"); ta2.className="expbox"; ta2.id="expBox"; ta2.rows=3;
+  ta2.placeholder=exp&&exp.mode==="any"?"Any output counts — run it and submit":"Type the exact output you expect…";
+  ta2.value=(t.expect&&t.expect.text)||(exp&&exp.text)||"";
+  if(exp&&exp.mode!=="any"&&!t.expect) ta2.readOnly=true;
+  er.appendChild(ta2);
+  var row=document.createElement("div"); row.className="rowb"; row.style.marginBlockStart="7px";
+  var ed=document.createElement("button"); ed.type="button"; ed.className="btn xs";
+  ed.textContent=t.expect?"reset to default":"set my own expected output";
+  ed.setAttribute("data-do","expedit"); ed.setAttribute("data-id",t.id);
+  row.appendChild(ed);
+  if(exp&&exp.hint){
+    var hb=document.createElement("button"); hb.type="button"; hb.className="btn xs";
+    hb.textContent="💡 hint"; hb.setAttribute("data-do","hint"); hb.setAttribute("data-id",t.id);
+    row.appendChild(hb);
+  }
+  er.appendChild(row);
+  p.appendChild(er);
+}
 function loadIntoEditor(id){
   ui.cur=id||"";
   var ta=document.getElementById("editor"), sel=document.getElementById("cbTask");
   var lang=document.getElementById("cbLang");
+  renderQPanel(id?byId(id):null);
   if(id){
     var t=byId(id);
     if(t){
-      ta.value=t.code||"";
+      ta.value=t.code||t.draft||"";
       lang.value=t.codeLang||(t.lang==="JavaScript"?"javascript":t.lang==="Python"?"python":t.lang?"other":"python");
       document.getElementById("edName").textContent=(t.title.toLowerCase().replace(/[^a-z0-9]+/g,"_").replace(/^_|_$/g,"").slice(0,40)||"solution")+"."+ext(lang.value);
-      document.getElementById("edMeta").textContent=t.codeAt?("saved "+stamp(t.codeAt)):"not saved yet";
+      document.getElementById("edMeta").textContent=t.codeAt?((t.verified?"✓ verified ":"saved ")+stamp(t.codeAt))
+        :(t.draftAt?("draft from "+stamp(t.draftAt)):"not saved yet");
     }
   } else {
     ta.value=S.scratch||"";
