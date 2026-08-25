@@ -114,7 +114,14 @@ section.tab{animation:fade .32s ease}
 .kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(178px,1fr)); gap:13px; margin-block:14px}
 .kpi{background:var(--panel); border:1px solid var(--line); border-radius:var(--r); padding:15px 16px; box-shadow:var(--shadow);
   position:relative; overflow:hidden; transition:.18s}
-.kpi:hover{transform:translateY(-2px); border-color:var(--brand)}
+.kpi{animation:rise .4s ease backwards}
+.kpi:nth-child(2){animation-delay:.05s} .kpi:nth-child(3){animation-delay:.1s}
+.kpi:nth-child(4){animation-delay:.15s} .kpi:nth-child(5){animation-delay:.2s} .kpi:nth-child(6){animation-delay:.25s}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.kpi:hover{transform:translateY(-3px); border-color:var(--brand); box-shadow:0 10px 28px var(--ring)}
+.kpi::after{content:""; position:absolute; inset-block-start:0; inset-inline:0; block-size:2px;
+  background:linear-gradient(90deg,var(--brand),var(--brand2)); transform:scaleX(0); transform-origin:left; transition:.3s}
+.kpi:hover::after{transform:scaleX(1)}
 .kpi .lab{font-size:11.5px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.06em}
 .kpi .val{font-size:29px; font-weight:800; letter-spacing:-1px; margin-block-start:4px; line-height:1.1}
 .kpi .sub{font-size:12px; color:var(--faint); margin-block-start:3px}
@@ -224,6 +231,55 @@ dialog::backdrop{background:rgba(6,9,18,.62); backdrop-filter:blur(3px)}
 footer.f{text-align:center; color:var(--faint); font-size:12.5px; padding-block:26px 0; border-block-start:1px solid var(--line); margin-block-start:28px}
 kbd{font-family:var(--mono); font-size:11px; background:var(--panel2); border:1px solid var(--line); border-block-end-width:2px;
   border-radius:5px; padding:1px 5px; color:var(--muted)}
+/* ---------------- xp / level ---------------- */
+.pill.lvl .v{color:var(--brand2)}
+.xpcard{background:linear-gradient(120deg,var(--panel),var(--brand-soft)); border-color:var(--brand)}
+.xptop{display:flex; align-items:center; gap:10px}
+.xpic{font-size:24px; line-height:1}
+.xpname{font-weight:800; font-size:16px; letter-spacing:-.3px}
+.xppts{font-family:var(--mono); font-weight:800; font-size:15px; color:var(--brand)}
+.xpbar{block-size:11px; border-radius:99px; background:var(--panel2); border:1px solid var(--line);
+  overflow:hidden; margin-block-start:10px; position:relative}
+.xpbar i{display:block; block-size:100%; border-radius:99px;
+  background:linear-gradient(90deg,var(--brand),var(--brand2),var(--cyan));
+  background-size:200% 100%; animation:shimmer 3s linear infinite; transition:inline-size .8s cubic-bezier(.2,.8,.2,1)}
+@keyframes shimmer{to{background-position:200% 0}}
+.xpsub{font-size:12px; color:var(--muted); margin-block-start:6px}
+.xpfloat{position:fixed; inset-block-end:80px; inset-inline:0; margin-inline:auto; inline-size:max-content;
+  background:linear-gradient(135deg,var(--brand),var(--brand2)); color:#fff; font-weight:800; font-size:14px;
+  padding:9px 18px; border-radius:999px; opacity:0; transform:translateY(14px) scale(.9);
+  pointer-events:none; z-index:70; box-shadow:0 10px 30px var(--ring)}
+.xpfloat.show{animation:xppop 2.2s ease forwards}
+@keyframes xppop{
+  0%{opacity:0;transform:translateY(14px) scale(.9)}
+  12%{opacity:1;transform:translateY(0) scale(1.06)}
+  20%{transform:translateY(0) scale(1)}
+  78%{opacity:1;transform:translateY(0) scale(1)}
+  100%{opacity:0;transform:translateY(-18px) scale(.96)}
+}
+/* ---------------- skill map ---------------- */
+.mapwrap{position:relative; inline-size:100%; aspect-ratio:16/11; min-block-size:380px;
+  background:radial-gradient(circle at 50% 30%, var(--brand-soft), transparent 65%), var(--panel2);
+  border:1px solid var(--line); border-radius:16px; overflow:hidden}
+svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; pointer-events:none}
+.mapnode{position:absolute; transform:translate(-50%,-50%); inline-size:118px; padding:9px 8px;
+  border-radius:13px; border:1px solid var(--line); background:var(--panel); cursor:pointer;
+  display:flex; flex-direction:column; align-items:center; gap:2px; transition:.2s ease; text-align:center}
+.mapnode:hover{transform:translate(-50%,-50%) scale(1.07); z-index:5; border-color:var(--brand); box-shadow:0 10px 26px var(--ring)}
+.mapnode .mi{font-size:19px; line-height:1}
+.mapnode .mn{font-size:11.5px; font-weight:750; line-height:1.25}
+.mapnode .mp{font-size:10px; color:var(--muted); font-family:var(--mono)}
+.mapnode .mbar{display:block; inline-size:100%; block-size:4px; border-radius:99px; background:var(--panel2);
+  overflow:hidden; margin-block-start:3px}
+.mapnode .mbar i{display:block; block-size:100%; background:var(--brand); border-radius:99px; transition:inline-size .6s}
+.mapnode.mdone{border-color:var(--ok); background:linear-gradient(160deg,var(--panel),var(--ok-soft))}
+.mapnode.mdone .mi{color:var(--ok)}
+.mapnode.mdone .mbar i{background:var(--ok)}
+.mapnode.mprog{border-color:var(--brand); box-shadow:0 0 0 3px var(--brand-soft)}
+.mapnode.mready{border-color:var(--cyan)}
+.mapnode.mlock{opacity:.5}
+@media (max-width:720px){ .mapwrap{aspect-ratio:auto; min-block-size:620px} .mapnode{inline-size:92px; padding:7px 5px} .mapnode .mn{font-size:10.5px} }
+
 /* ---------------- today / badges / recos ---------------- */
 .focusCard{border-color:var(--brand); box-shadow:0 0 0 3px var(--brand-soft),var(--shadow);
   background:linear-gradient(160deg,var(--panel),var(--brand-soft))}
@@ -231,7 +287,25 @@ kbd{font-family:var(--mono); font-size:11px; background:var(--panel2); border:1p
 .badge{position:relative; border:1px solid var(--line); border-radius:14px; padding:14px 11px; text-align:center;
   background:var(--panel2); opacity:.42; filter:grayscale(1); transition:.2s}
 .badge.got{opacity:1; filter:none; border-color:var(--brand); background:linear-gradient(160deg,var(--panel2),var(--brand-soft))}
-.badge.got:hover{transform:translateY(-3px)}
+.badge.got:hover{transform:translateY(-4px) rotate(-2deg)}
+.badge.got .bi{animation:bob 3s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.task{transition:.2s ease}
+.task:hover{transform:translateX(3px)}
+.tick{position:relative}
+.task.done .tick{animation:pop2 .4s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pop2{0%{transform:scale(.4)}60%{transform:scale(1.25)}100%{transform:scale(1)}}
+.vbox.vok{animation:okpop .45s cubic-bezier(.25,1.4,.5,1)}
+@keyframes okpop{0%{transform:scale(.97);opacity:.5}100%{transform:scale(1);opacity:1}}
+.tcase{animation:rise .3s ease backwards}
+.tcase:nth-child(3){animation-delay:.04s} .tcase:nth-child(4){animation-delay:.08s}
+.tcase:nth-child(5){animation-delay:.12s} .tcase:nth-child(6){animation-delay:.16s}
+.tdot{animation:pop2 .35s cubic-bezier(.3,1.6,.5,1) backwards}
+.tdot:nth-child(2){animation-delay:.05s} .tdot:nth-child(3){animation-delay:.1s}
+.tdot:nth-child(4){animation-delay:.15s} .tdot:nth-child(5){animation-delay:.2s}
+.tdot:nth-child(6){animation-delay:.25s} .tdot:nth-child(7){animation-delay:.3s}
+.bar i{transition:inline-size .7s cubic-bezier(.2,.8,.2,1)}
+@media (prefers-reduced-motion:reduce){ *{animation:none!important; transition:none!important} }
 .badge .bi{font-size:27px; line-height:1}
 .badge .bn{font-weight:750; font-size:12.5px; margin-block-start:7px}
 .badge .bd{font-size:11px; color:var(--muted); margin-block-start:3px; line-height:1.4}
@@ -275,6 +349,13 @@ kbd{font-family:var(--mono); font-size:11px; background:var(--panel2); border:1p
 .exp{margin-block-start:11px; padding-block-start:11px; border-block-start:1px solid var(--line)}
 .exph{font-size:11.5px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-block-end:6px}
 .expbox{inline-size:100%; font-family:var(--mono); font-size:12.5px}
+.spec{margin-block-start:11px; padding:11px 12px; border-radius:11px; background:var(--panel);
+  border:1px solid var(--line)}
+.specl{font-size:11px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:var(--brand)}
+.spect{font-size:13.5px; line-height:1.6; margin-block-start:5px; white-space:pre-wrap; color:var(--ink)}
+.specout{font-family:var(--mono); font-size:12.5px; line-height:1.6; margin-block-start:5px; white-space:pre;
+  background:var(--panel2); border:1px solid var(--line); border-inline-start:3px solid var(--ok);
+  border-radius:8px; padding:9px 11px; overflow-x:auto; color:var(--ink)}
 .vbox{border-radius:13px; padding:14px; margin-block-end:12px; border:1px solid var(--line)}
 .vbox.vok{border-color:var(--ok); background:var(--ok-soft)}
 .vbox.vno{border-color:var(--bad); background:var(--bad-soft)}
@@ -403,6 +484,7 @@ kbd{font-family:var(--mono); font-size:11px; background:var(--panel2); border:1p
       <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove</span></span>
     </button>
     <span class="sp"></span>
+    <span class="pill lvl"><span class="l">level</span><span class="v" id="pLevel">L1</span></span>
     <span class="pill fire"><span class="l">streak</span><span class="v" id="pStreak">0d</span></span>
     <span class="pill"><span class="l">today</span><span class="v" id="pToday">0</span></span>
     <span class="pill"><span class="l">week</span><span class="v" id="pWeek">0%</span></span>
@@ -449,7 +531,25 @@ kbd{font-family:var(--mono); font-size:11px; background:var(--panel2); border:1p
     </div>
   </div>
 
+  <div class="panel xpcard" id="xpBar"></div>
+
   <div class="panel focusCard" id="todayCard"></div>
+
+  <div class="panel">
+    <div class="rowb" style="margin-block-end:4px">
+      <h2 style="margin:0">Your skill map</h2>
+      <span class="sp"></span>
+      <span style="font-size:12.5px;color:var(--muted)">Click any skill to see its questions</span>
+    </div>
+    <p class="hint">Lines light up as you unlock what comes next.</p>
+    <div class="mapwrap" id="skillmap"></div>
+    <div class="legend">
+      <span><i style="background:var(--ok)"></i>Complete</span>
+      <span><i style="background:var(--brand)"></i>In progress</span>
+      <span><i style="background:var(--cyan)"></i>Ready</span>
+      <span><i style="background:var(--line)"></i>Not loaded</span>
+    </div>
+  </div>
 
   <div class="grid2">
     <div class="panel">
@@ -987,7 +1087,19 @@ kbd{font-family:var(--mono); font-size:11px; background:var(--panel2); border:1p
   </form>
 </dialog>
 
+<dialog id="nodeDlg">
+  <form method="dialog" class="db">
+    <div class="rowb" style="margin-block-end:12px">
+      <h2 id="ndTitle" style="margin:0">Skill</h2>
+      <span class="sp"></span>
+      <button class="btn xs" value="close" type="submit">✕</button>
+    </div>
+    <div id="ndBody"></div>
+  </form>
+</dialog>
+
 <div class="toast" id="toast"></div>
+<div class="xpfloat" id="xpFloat"></div>
 
 <script>
 (function(){
@@ -1323,7 +1435,7 @@ function renderDash(){
     ["Study time",dur(secs)||"0m","across "+S.tasks.filter(function(t){return t.seconds;}).length+" timed sessions","⏱"],
     ["This week",wd+"/"+w.length,"questions completed","📈"]
   ]);
-  drawRing(); draw14(); drawHeat(); renderToday(); renderMicro(); renderCatchup(); renderBadges(); renderWeak(); renderMonthly();
+  drawRing(); draw14(); drawHeat(); renderXP(); renderMap(); renderToday(); renderMicro(); renderCatchup(); renderBadges(); renderWeak(); renderMonthly();
   var at=document.getElementById("attention"); clr(at);
   var l=S.tasks.filter(isLate).sort(function(a,b){return a.due.localeCompare(b.due);}).slice(0,5);
   if(!l.length){
@@ -1607,9 +1719,18 @@ function toggle(id){
   if(t.status==="done"){ t.status="planned"; t.completedAt=null; t.missed=false; ev("undo","Reopened: "+t.title); }
   else{
     if(S.timer&&S.timer.id===id) stopTimer(true);
+    var before=levelOf(totalXP());
     t.status="done"; t.completedAt=new Date().toISOString(); t.missed=t.due<today();
     ev("done","Completed: "+t.title+(t.missed?" (recovered)":""));
     autoRevision(t);
+    var gain=XP_RULES[t.type||"practice"]||20;
+    setTimeout(function(){
+      awardXP(gain,t.type==="learn"?"lesson complete":t.type==="project"?"project step":"question solved");
+      var after=levelOf(totalXP());
+      if(after.n>before.n) setTimeout(function(){
+        toast("🎉 Level "+after.n+" — "+after.name+"!");
+      },1200);
+    },120);
   }
   save(); render();
   if(t.status==="done") toast((t.missed?"Recovered — ":"Nice — ")+"logged at "+new Date().toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"}));
@@ -1710,6 +1831,7 @@ document.addEventListener("click",function(e){
   if(doAct){
     var id=n.getAttribute("data-id");
     if(doAct==="goalrm"){ delete S.goals.topics[id]; save(); renderGoals(); return; }
+    if(doAct==="mapnode"){ showNode(id); return; }
     if(doAct==="rdtoggle"){ rdOpen[id]=!rdOpen[id]; renderRoad(); return; }
     if(doAct==="slload"){ rdOpen["sl:"+id]=true; slowLoad(+id,false); return; }
     if(doAct==="mpload"){ rdOpen["mp:"+id]=true; mpLoad(+id,false); return; }
@@ -3158,7 +3280,114 @@ for(var __k in TESTS2) TESTS[__k]=TESTS2[__k];
 for(var __k3 in TESTS3) TESTS[__k3]=TESTS3[__k3];
 for(var __k4 in TESTS4) TESTS[__k4]=TESTS4[__k4];
 
-/* short print-only exercises keep simple output checks */
+/* ---- SPEC: precise restatement of vague questions ----
+   task     — exactly what to write, with the variable names and values to use
+   out      — the exact output required, line by line                       */
+var SPEC={
+ "Print \"Hello, Python!\"":{
+  task:"Print the text Hello, Python! — including the comma and the exclamation mark.",
+  out:"Hello, Python!"},
+ "Print your name on a second line.":{
+  task:"Print two lines. Line 1 must be Hello, Python! and line 2 must be Abhinay.\nUse the name Abhinay so the check has a fixed answer.",
+  out:"Hello, Python!\nAbhinay"},
+ "Store your name, city and current learning goal in variables.":{
+  task:"Create three variables:\n  name = \"Abhinay\"\n  city = \"Hyderabad\"\n  goal = \"Learn Python\"\nThen print each one on its own line, in that order.",
+  out:"Abhinay\nHyderabad\nLearn Python"},
+ "Print all three values.":{
+  task:"Using name = \"Abhinay\", city = \"Hyderabad\" and goal = \"Learn Python\",\nprint all three on ONE line separated by single spaces.",
+  out:"Abhinay Hyderabad Learn Python"},
+ "Create one variable of each basic data type.":{
+  task:"Create exactly these four variables:\n  s = \"hello\"\n  n = 42\n  f = 3.5\n  b = True\nThen print each value on its own line, in that order.",
+  out:"hello\n42\n3.5\nTrue"},
+ "Print each value and its type.":{
+  task:"Using s = \"hello\", n = 42, f = 3.5 and b = True,\nprint the TYPE NAME of each on its own line, in that order.\nUse type(x).__name__ so you get str rather than <class 'str'>.",
+  out:"str\nint\nfloat\nbool"},
+ "Convert \"25\" into an integer.":{
+  task:"Take the string \"25\", convert it to an integer with int(), and print it.",
+  out:"25"},
+ "Add 5 and print the result.":{
+  task:"Take the string \"25\", convert it to an integer, add 5, and print the result.",
+  out:"30"},
+ "Write a program that prints \"Hello, Python!\".":{
+  task:"Print the text Hello, Python! exactly.",out:"Hello, Python!"},
+ "Store your name in a variable and print \"Hello, <name>!\".":{
+  task:"Set name = \"Abhinay\", then print Hello, Abhinay! using that variable.",
+  out:"Hello, Abhinay!"},
+ "Create variables for age, height, and is_student. Print them.":{
+  task:"Create exactly:\n  age = 24\n  height = 5.9\n  is_student = True\nPrint each on its own line, in that order.",
+  out:"24\n5.9\nTrue"},
+ "Convert a float (e.g. 5.7) into an integer.":{
+  task:"Convert 5.7 to an integer with int() and print it. Note int() truncates — it does not round.",
+  out:"5"},
+ "Write a program to check if 15 > 10 and print the result.":{
+  task:"Print the result of the comparison 15 > 10.",out:"True"},
+ "Use logical operators to check if a number is between 10 and 20.":{
+  task:"Set n = 15. Print True if n is strictly between 10 and 20, otherwise False.",
+  out:"True"},
+ "Take user input for two numbers and print their sum.":{
+  task:"Read two numbers with input(), add them, and print the total.\nThe stdin box below already contains 7 and 3, so your output must be 10.",
+  out:"10",stdin:"7\n3"},
+ "Ask for a string input and print its length.":{
+  task:"Read one line with input() and print its length.\nThe stdin box below contains python, so your output must be 6.",
+  out:"6",stdin:"python"},
+ "Write a program that checks if a number is positive, negative, or zero.":{
+  task:"Set n = -4. Print exactly one of: positive, negative or zero (lowercase).",
+  out:"negative"},
+ "Ask for a score and print \"Pass\" if >= 40, else \"Fail\".":{
+  task:"Read a score with input(). Print Pass when it is 40 or more, otherwise Fail.\nThe stdin box contains 55, so your output must be Pass.",
+  out:"Pass",stdin:"55"},
+ "Print numbers from 1 to 10 using a for loop.":{
+  task:"Print the numbers 1 to 10, one per line, using a for loop.",
+  out:"1\n2\n3\n4\n5\n6\n7\n8\n9\n10"},
+ "Print numbers from 1 to 10.":{task:"Print 1 to 10, one number per line.",out:"1\n2\n3\n4\n5\n6\n7\n8\n9\n10"},
+ "Print 1 through 10.":{task:"Print 1 to 10, one number per line.",out:"1\n2\n3\n4\n5\n6\n7\n8\n9\n10"},
+ "Print numbers from 1 to 5.":{task:"Print 1 to 5, one number per line.",out:"1\n2\n3\n4\n5"},
+ "Print even numbers up to 20 using a while loop.":{
+  task:"Using a while loop, print every even number from 2 to 20, one per line.",
+  out:"2\n4\n6\n8\n10\n12\n14\n16\n18\n20"},
+ "Print even numbers up to 20.":{task:"Print every even number from 2 to 20, one per line.",
+  out:"2\n4\n6\n8\n10\n12\n14\n16\n18\n20"},
+ "Print odd numbers up to 20.":{task:"Print every odd number from 1 to 19, one per line.",
+  out:"1\n3\n5\n7\n9\n11\n13\n15\n17\n19"},
+ "Calculate the sum of 1 through 10.":{task:"Print the sum of the numbers 1 to 10.",out:"55"},
+ "Sum the numbers from 1 to 10.":{task:"Print the sum of 1 to 10.",out:"55"},
+ "Sum numbers from 1-10.":{task:"Print the sum of 1 to 10.",out:"55"},
+ "Print the multiplication table of 5.":{
+  task:"Print the first ten multiples of 5, one per line — the numbers only, not 5 x 1 = 5.",
+  out:"5\n10\n15\n20\n25\n30\n35\n40\n45\n50"},
+ "Print a multiplication table.":{
+  task:"Print the first ten multiples of 5, one per line — numbers only.",
+  out:"5\n10\n15\n20\n25\n30\n35\n40\n45\n50"},
+ "Countdown from 10.":{task:"Print 10 down to 1, one number per line.",out:"10\n9\n8\n7\n6\n5\n4\n3\n2\n1"},
+ "Print a countdown from 10 to 1.":{task:"Print 10 down to 1, one per line.",out:"10\n9\n8\n7\n6\n5\n4\n3\n2\n1"},
+ "Print a countdown from 10 to 1 using a for loop.":{task:"Using a for loop, print 10 down to 1, one per line.",
+  out:"10\n9\n8\n7\n6\n5\n4\n3\n2\n1"},
+ "Print the first 5 multiples of 3.":{task:"Print the first five multiples of 3, one per line.",out:"3\n6\n9\n12\n15"},
+ "Print \"Hello Python\".":{task:"Print the text Hello Python — no comma, no exclamation mark.",out:"Hello Python"},
+ "Print your name.":{task:"Print the name Abhinay.",out:"Abhinay"},
+ "Store your age and print it.":{task:"Set age = 24 and print it.",out:"24"},
+ "Store your city and print it.":{task:"Set city = \"Hyderabad\" and print it.",out:"Hyderabad"},
+ "Create an integer variable and print its type.":{
+  task:"Set n = 42 and print its type name using type(n).__name__.",out:"int"},
+ "Create a string variable and print its type.":{
+  task:"Set s = \"hello\" and print its type name using type(s).__name__.",out:"str"},
+ "Ask the user for their name.":{
+  task:"Read a name with input() and print it back.\nThe stdin box contains Abhinay, so your output must be Abhinay.",
+  out:"Abhinay",stdin:"Abhinay"},
+ "Print a greeting using that name.":{
+  task:"Read a name with input() and print Hello, <name>!\nThe stdin box contains Abhinay, so your output must be Hello, Abhinay!",
+  out:"Hello, Abhinay!",stdin:"Abhinay"},
+ "Print your name, age and city together.":{
+  task:"Using name = \"Abhinay\", age = 24 and city = \"Hyderabad\",\nprint all three on one line separated by single spaces.",
+  out:"Abhinay 24 Hyderabad"},
+ "Take age as input and display it.":{
+  task:"Read an age with input() and print it.\nThe stdin box contains 24, so your output must be 24.",
+  out:"24",stdin:"24"},
+ "Check if 10 > 5 and print the result.":{task:"Print the result of 10 > 5.",out:"True"},
+ "Print it and observe that duplicates disappear.":{
+  task:"Build a set from [1, 2, 2, 3] and print its length.",out:"3"}
+};
+/* every SPEC becomes a strict exact-output check */
 var EXPECT2={
  "Print \"Hello Python\".":{mode:"exact",text:"Hello Python",hint:'print("Hello Python")'},
  "Print your name.":{mode:"lines",n:1,hint:'print("Your Name")'},
@@ -3175,6 +3404,10 @@ var EXPECT2={
  "Write a proper README for one of your projects.":null
 };
 for(var __e in EXPECT2){ if(EXPECT2[__e]) EXPECT[__e]=EXPECT2[__e]; }
+/* SPEC overrides everything — it is the precise version */
+for(var __s in SPEC){
+  EXPECT[__s]={mode:"exact",text:SPEC[__s].out,hint:SPEC[__s].hint||"",stdin:SPEC[__s].stdin||""};
+}
 
 var MANUAL2={
  "Initialise a repo and make your first commit.":"Run git init, git add . and git commit -m \"first commit\" in a real terminal.",
@@ -3887,6 +4120,163 @@ function renderProjects(){
   document.getElementById("projSummary").textContent=shipped+" of "+PROJECTS.length+" shipped · "+tot+"/"+all+" steps done";
 }
 
+/* ============ visual skill map ============ */
+var SKILLMAP=[
+ {id:"basics",name:"Python Basics",icon:"🐍",x:50,y:8,topics:["print()","Variables","Data Types","Type conversion","Input"],deps:[]},
+ {id:"flow", name:"Control Flow", icon:"🔀",x:22,y:24,topics:["Operators","if","elif","else","Nested conditions"],deps:["basics"]},
+ {id:"loops",name:"Loops",        icon:"🔁",x:78,y:24,topics:["For Loops","While Loops","range()","break","continue"],deps:["basics"]},
+ {id:"coll", name:"Collections",  icon:"📦",x:50,y:40,topics:["Lists","Tuples","Dictionaries","Sets"],deps:["loops"]},
+ {id:"func", name:"Functions",    icon:"🧩",x:20,y:40,topics:["Functions","Scope","Modules","math module","random module"],deps:["flow"]},
+ {id:"str",  name:"Strings",      icon:"🔤",x:80,y:40,topics:["Strings"],deps:["loops"]},
+ {id:"err",  name:"Errors & Files",icon:"🛡️",x:22,y:57,topics:["Error Handling","File Handling","try","except"],deps:["func"]},
+ {id:"oop",  name:"OOP",          icon:"🏗️",x:50,y:57,topics:["Classes","Objects","Constructor","Methods","Inheritance","Encapsulation"],deps:["coll","func"]},
+ {id:"data", name:"CSV & JSON",   icon:"🗂️",x:78,y:57,topics:["csv module","json module","DictReader"],deps:["err"]},
+ {id:"pandas",name:"Pandas & NumPy",icon:"📊",x:30,y:74,topics:["Series","DataFrame","groupby()","Missing values","Arrays","Data cleaning"],deps:["data"]},
+ {id:"sql",  name:"SQL",          icon:"🗄️",x:70,y:74,topics:["SELECT","JOIN","GROUP BY","sqlite3"],deps:["data"]},
+ {id:"api",  name:"APIs",         icon:"🌐",x:50,y:88,topics:["requests","REST","JSON responses","Authentication concepts"],deps:["data"]},
+ {id:"proj", name:"Projects",     icon:"🚀",x:15,y:88,topics:["Projects"],deps:["oop"]},
+ {id:"git",  name:"Git & Quality",icon:"🔧",x:85,y:88,topics:["Repository creation","Commits","pytest","Type hints","Logging"],deps:["proj"]}
+];
+function nodeStats(n){
+  var rel=S.tasks.filter(function(t){
+    var tp=(t.topic||"");
+    return n.topics.some(function(x){ return tp===x || tp.indexOf(x)>=0 || x.indexOf(tp)>=0; });
+  });
+  var done=rel.filter(function(t){return t.status==="done";}).length;
+  return {total:rel.length,done:done,pct:rel.length?Math.round(done/rel.length*100):0};
+}
+function renderMap(){
+  var host=document.getElementById("skillmap"); if(!host) return; clr(host);
+  var svg=sv("svg",{viewBox:"0 0 100 100",preserveAspectRatio:"none",class:"maplines"},host);
+  SKILLMAP.forEach(function(n){
+    n.deps.forEach(function(d){
+      var p=SKILLMAP.filter(function(x){return x.id===d;})[0]; if(!p) return;
+      var st=nodeStats(n);
+      var ln=sv("line",{x1:p.x,y1:p.y+3,x2:n.x,y2:n.y-3,
+        stroke:st.pct>0?"var(--brand)":"var(--line)","stroke-width":.35,
+        "stroke-dasharray":st.pct>0?"":"1.2 1.2"},svg);
+      void ln;
+    });
+  });
+  SKILLMAP.forEach(function(n){
+    var st=nodeStats(n);
+    var el=document.createElement("button"); el.type="button";
+    el.className="mapnode"+(st.pct>=100?" mdone":st.pct>0?" mprog":st.total?" mready":" mlock");
+    el.style.insetInlineStart=n.x+"%"; el.style.insetBlockStart=n.y+"%";
+    el.setAttribute("data-do","mapnode"); el.setAttribute("data-id",n.id);
+    var ic=document.createElement("span"); ic.className="mi"; ic.textContent=st.pct>=100?"✓":n.icon;
+    var nm=document.createElement("span"); nm.className="mn"; nm.textContent=n.name;
+    var pc=document.createElement("span"); pc.className="mp";
+    pc.textContent=st.total?(st.done+"/"+st.total):"not started";
+    el.appendChild(ic); el.appendChild(nm); el.appendChild(pc);
+    if(st.total){
+      var rb=document.createElement("span"); rb.className="mbar";
+      var ri=document.createElement("i"); ri.style.inlineSize=st.pct+"%"; rb.appendChild(ri);
+      el.appendChild(rb);
+    }
+    host.appendChild(el);
+  });
+}
+function showNode(id){
+  var n=SKILLMAP.filter(function(x){return x.id===id;})[0]; if(!n) return;
+  var st=nodeStats(n);
+  var d=document.getElementById("nodeDlg");
+  document.getElementById("ndTitle").textContent=n.icon+"  "+n.name;
+  var b=document.getElementById("ndBody"); clr(b);
+  var pr=document.createElement("div"); pr.className="goal";
+  var pl=document.createElement("div"); pl.className="gl";
+  var a=document.createElement("span"); a.textContent="Progress";
+  var c=document.createElement("span"); c.textContent=st.done+" / "+st.total+" · "+st.pct+"%";
+  pl.appendChild(a); pl.appendChild(c); pr.appendChild(pl); pr.appendChild(bar(st.pct));
+  b.appendChild(pr);
+  var tl=document.createElement("div"); tl.className="topics"; tl.style.marginBlockStart="12px";
+  n.topics.forEach(function(x){ tl.appendChild(tag(x)); });
+  b.appendChild(tl);
+  var rel=S.tasks.filter(function(t){
+    var tp=(t.topic||"");
+    return n.topics.some(function(x){ return tp===x||tp.indexOf(x)>=0||x.indexOf(tp)>=0; });
+  }).sort(function(x,y){ return (x.status==="done"?1:0)-(y.status==="done"?1:0)||x.due.localeCompare(y.due); });
+  if(!rel.length){
+    var e=document.createElement("div"); e.className="empty"; e.style.marginBlockStart="12px";
+    e.textContent="Nothing loaded for this skill yet — open the Roadmap tab and load a week that covers it.";
+    b.appendChild(e);
+  }
+  rel.slice(0,12).forEach(function(t){
+    var row=document.createElement("div"); row.className="q"+(t.status==="done"?" qdone":"");
+    row.style.marginBlockStart="7px";
+    var ic=document.createElement("span"); ic.className="qn";
+    ic.textContent=t.type==="learn"?"📖":t.type==="project"?"🚀":"✍️";
+    var tx=document.createElement("span"); tx.className="qt"; tx.textContent=t.title;
+    row.appendChild(ic); row.appendChild(tx);
+    var bb=document.createElement("div"); bb.className="qb";
+    var go=document.createElement("button"); go.type="button"; go.className="btn xs"+(t.status==="done"?" ok":" pri");
+    go.textContent=t.status==="done"?"✓":"solve";
+    go.setAttribute("data-do","ccode"); go.setAttribute("data-id",t.id);
+    bb.appendChild(go); row.appendChild(bb);
+    b.appendChild(row);
+  });
+  d.showModal();
+}
+
+/* ============ XP, levels, gamification ============ */
+var XP_RULES={learn:10,practice:20,project:50,revision:8,note:15,verified:10,session:5};
+var LEVELS=[
+ [0,"Beginner","🌱"],[100,"Novice","🌿"],[250,"Apprentice","📗"],[500,"Explorer","🧭"],
+ [900,"Practitioner","⚙️"],[1400,"Coder","💻"],[2100,"Developer","🚀"],[3000,"Engineer","🛠️"],
+ [4200,"Specialist","🎯"],[5800,"Craftsman","🔨"],[8000,"Architect","🏛️"],[12000,"Master","👑"]
+];
+function totalXP(){
+  var xp=0;
+  S.tasks.forEach(function(t){
+    if(t.status==="done"){
+      xp+=XP_RULES[t.type||"practice"]||20;
+      if(t.verified) xp+=XP_RULES.verified;
+      if(t.conf>=4) xp+=5;
+    }
+    (t.rev||[]).forEach(function(r){ if(r.done) xp+=XP_RULES.revision; });
+    if(t.seconds) xp+=Math.min(30,Math.floor(t.seconds/600)*XP_RULES.session);
+  });
+  xp+=Object.keys(S.notes).filter(function(k){return S.notes[k];}).length*XP_RULES.note;
+  var st=streaks();
+  xp+=st.best*5;
+  return xp;
+}
+function levelOf(xp){
+  var i=0;
+  for(var k=0;k<LEVELS.length;k++) if(xp>=LEVELS[k][0]) i=k;
+  var cur=LEVELS[i], next=LEVELS[i+1]||null;
+  return {n:i+1,name:cur[1],icon:cur[2],xp:xp,base:cur[0],
+    next:next?next[0]:cur[0],nextName:next?next[1]:"Max level",
+    pct:next?Math.round((xp-cur[0])/(next[0]-cur[0])*100):100};
+}
+function awardXP(amount,reason){
+  var el=document.getElementById("xpFloat");
+  if(!el) return;
+  el.textContent="+"+amount+" XP · "+reason;
+  el.classList.remove("show"); void el.offsetWidth; el.classList.add("show");
+  setTimeout(function(){ el.classList.remove("show"); },2200);
+}
+function renderXP(){
+  var lv=levelOf(totalXP());
+  var host=document.getElementById("xpBar"); if(!host) return; clr(host);
+  var top=document.createElement("div"); top.className="xptop";
+  var ic=document.createElement("span"); ic.className="xpic"; ic.textContent=lv.icon;
+  var nm=document.createElement("span"); nm.className="xpname";
+  nm.textContent="Level "+lv.n+" · "+lv.name;
+  var sp=document.createElement("span"); sp.className="sp";
+  var pts=document.createElement("span"); pts.className="xppts"; pts.textContent=lv.xp.toLocaleString()+" XP";
+  top.appendChild(ic); top.appendChild(nm); top.appendChild(sp); top.appendChild(pts);
+  host.appendChild(top);
+  var bar=document.createElement("div"); bar.className="xpbar";
+  var fill=document.createElement("i"); fill.style.inlineSize=lv.pct+"%"; bar.appendChild(fill);
+  host.appendChild(bar);
+  var sub=document.createElement("div"); sub.className="xpsub";
+  sub.textContent=lv.pct>=100?"Maximum level reached":(lv.next-lv.xp)+" XP to Level "+(lv.n+1)+" · "+lv.nextName;
+  host.appendChild(sub);
+  var pill=document.getElementById("pLevel");
+  if(pill) pill.textContent="L"+lv.n;
+}
+
 /* ============ insights ============ */
 function badgeStats(){
   var st=streaks();
@@ -4573,7 +4963,7 @@ function runCode(verify){
       var txt2=out.join("\n"); if(txt2.trim()) cwrite(txt2+"\n");
       cwrite("\n"+String(err.message||err).split("\n").filter(function(l){
         return l.indexOf("pyodide")<0 && l.indexOf("/lib/python")<0; }).join("\n")+"\n","err");
-      if(verify) cwrite("\nFix the error, then submit again.\n","dim");
+      if(verify) afterRun(txt2,verify,true);
     }
   }).catch(function(){
     cwrite("Could not load the Python engine.\nCheck your internet connection — the engine is fetched from a CDN the first time.\n","err");
@@ -4736,42 +5126,49 @@ function acceptSolution(t,output,why){
   render();
   toast(already?"Solution saved":"Accepted! Saved and ticked off 🎉");
 }
-function afterRun(output,verify){
+function afterRun(output,verify,erred){
   if(!ui.cur) return;
   var t=byId(ui.cur); if(!t) return;
   var exp=expectFor(t);
-  var res=checkOutput(output,exp);
   var box=document.getElementById("verdictBox");
-  box.hidden=false;
+  box.hidden=false; clr(box);
+  var checks=buildChecks(exp);
+  var results=[], passed=0;
+  if(checks){
+    checks.forEach(function(c){
+      var r;
+      try{ r=c.run(output,!!erred); }catch(e){ r={ok:false,why:"Could not evaluate this check."}; }
+      if(r.ok) passed++;
+      results.push({label:c.label,ok:r.ok,why:r.why});
+    });
+  }
+  var total=checks?checks.length:1;
+  var res=checks?{ok:passed===total,why:""}:checkOutput(output,exp);
+  if(!checks){ passed=res.ok?1:0; }
   box.className="vbox "+(res.ok?"vok":"vno");
-  clr(box);
-  var checks=exp?describeChecks(exp):null;
   var h=document.createElement("div"); h.className="vh";
-  h.textContent=res.ok?("✓ Accepted — all "+(checks?checks.length:1)+" checks passed")
-                      :"✗ Not passing yet";
+  h.textContent=(res.ok?"✓ Accepted — ":"✗ ")+passed+"/"+total+" checks passed";
   box.appendChild(h);
   if(checks){
     var sum=document.createElement("div"); sum.className="tsum";
-    checks.forEach(function(c,i){
-      var d=document.createElement("span"); d.className="tdot "+(res.ok?"p":(i===0?"p":"f"));
-      d.textContent=(i+1); d.title=c; sum.appendChild(d);
+    results.forEach(function(r,i){
+      var d=document.createElement("span"); d.className="tdot "+(r.ok?"p":"f");
+      d.textContent=(i+1); d.title=r.label; sum.appendChild(d);
     });
     box.appendChild(sum);
-    checks.forEach(function(c,i){
-      var ok=res.ok||i===0;
-      var card=document.createElement("div"); card.className="tcase "+(ok?"tpass":"tfail");
+    results.forEach(function(r,i){
+      var card=document.createElement("div"); card.className="tcase "+(r.ok?"tpass":"tfail");
       var hd=document.createElement("div"); hd.className="tchead";
-      var mk=document.createElement("span"); mk.className="tcmark"; mk.textContent=ok?"✓":"✗";
-      var nm=document.createElement("span"); nm.className="tcname"; nm.textContent=c;
+      var mk=document.createElement("span"); mk.className="tcmark"; mk.textContent=r.ok?"✓":"✗";
+      var nm=document.createElement("span"); nm.className="tcname"; nm.textContent="Check "+(i+1)+" — "+r.label;
       hd.appendChild(mk); hd.appendChild(nm);
       var sp=document.createElement("span"); sp.className="sp"; hd.appendChild(sp);
-      var st=document.createElement("span"); st.className="tag "+(ok?"g":"r"); st.textContent=ok?"passed":"failed";
-      hd.appendChild(st);
-      card.appendChild(hd);
-      if(!ok){
+      var st=document.createElement("span"); st.className="tag "+(r.ok?"g":"r"); st.textContent=r.ok?"passed":"failed";
+      hd.appendChild(st); card.appendChild(hd);
+      if(!r.ok&&r.why){
         var why=document.createElement("div"); why.className="tcwhy";
         var wb=document.createElement("b"); wb.textContent="Why this failed: ";
-        why.appendChild(wb); why.appendChild(document.createTextNode(res.why));
+        why.appendChild(wb); why.appendChild(document.createTextNode(r.why));
         card.appendChild(why);
       }
       box.appendChild(card);
@@ -4855,7 +5252,24 @@ function renderQPanel(t){
   p.appendChild(top);
   var q=document.createElement("div"); q.className="qtext"; q.textContent=t.title;
   p.appendChild(q);
-  if(t.notes){ var n=document.createElement("div"); n.className="qsub"; n.textContent=t.notes; p.appendChild(n); }
+  var spec=SPEC[t.title]||SPEC[t.title.replace(/^Project:\s*/,"").trim()];
+  if(spec){
+    var sb=document.createElement("div"); sb.className="spec";
+    var sl=document.createElement("div"); sl.className="specl"; sl.textContent="What to write";
+    var st=document.createElement("div"); st.className="spect"; st.textContent=spec.task;
+    sb.appendChild(sl); sb.appendChild(st);
+    var ol=document.createElement("div"); ol.className="specl"; ol.style.marginBlockStart="10px";
+    ol.textContent="Required output";
+    var ob=document.createElement("div"); ob.className="specout"; ob.textContent=spec.out;
+    sb.appendChild(ol); sb.appendChild(ob);
+    p.appendChild(sb);
+    if(spec.stdin){
+      var sd=document.getElementById("stdinBox");
+      if(!sd.value.trim()) sd.value=spec.stdin;
+    }
+  } else if(t.notes){
+    var n=document.createElement("div"); n.className="qsub"; n.textContent=t.notes; p.appendChild(n);
+  }
   var suite=testsFor(t);
   if(suite){
     var sw=document.createElement("div"); sw.className="exp";
@@ -4925,13 +5339,13 @@ function renderQPanel(t){
     er.appendChild(msg);
   }
   var ta2=document.createElement("textarea"); ta2.className="expbox"; ta2.id="expBox"; ta2.rows=2;
-  ta2.placeholder="Optional: type the exact output you expect…";
+  ta2.placeholder="Type the exact output you expect, line by line…";
   ta2.value=(t.expect&&t.expect.text)||"";
-  ta2.hidden=!!(checks&&!t.expect);
+  ta2.hidden=!t.expect;
   er.appendChild(ta2);
   var row=document.createElement("div"); row.className="rowb"; row.style.marginBlockStart="7px";
   var ed=document.createElement("button"); ed.type="button"; ed.className="btn xs";
-  ed.textContent=t.expect?"↺ back to the built-in check":"set my own expected output";
+  ed.textContent=t.expect?"↺ use the built-in check instead":"⚙ set my own expected output";
   ed.setAttribute("data-do","expedit"); ed.setAttribute("data-id",t.id);
   row.appendChild(ed);
   if(exp&&exp.hint){
@@ -4942,24 +5356,80 @@ function renderQPanel(t){
   er.appendChild(row);
   p.appendChild(er);
 }
-/* turn an EXPECT rule into human-readable checks */
-function describeChecks(exp){
+/* build discrete, independently-evaluated checks from an EXPECT rule */
+function buildChecks(exp){
   if(!exp) return null;
-  if(exp.mode==="any") return ["Your code runs without an error","It produces some output"];
+  var list=[{label:"Your code runs without an error",
+    run:function(got,erred){ return {ok:!erred,why:"Python raised an error before producing output."}; }}];
+  list.push({label:"It prints something",
+    run:function(got){ return {ok:!!normOut(got),why:"Your code ran but printed nothing. Wrap the value in print()."}; }});
+  if(exp.mode==="any") return list;
   if(exp.mode==="exact"){
-    var lines=normOut(exp.text).split("\n");
-    if(lines.length===1) return ["Your code runs without an error","The output is exactly "+JSON.stringify(lines[0])];
-    return ["Your code runs without an error","The output has "+lines.length+" lines",
-            "Line 1 is "+JSON.stringify(lines[0]),"The last line is "+JSON.stringify(lines[lines.length-1]),
-            "Every line matches, in order"];
+    var wl=normOut(exp.text).split("\n");
+    list.push({label:"It prints exactly "+wl.length+" line"+(wl.length===1?"":"s"),
+      run:function(got){
+        var n=normOut(got).split("\n").filter(function(x){return x.length;}).length;
+        return {ok:n===wl.length,why:"Expected "+wl.length+" line"+(wl.length===1?"":"s")+" but got "+n+". "+
+          (n>wl.length?"You are printing something extra — check for a stray print().":
+           "Each value needs its own print(), or use \\n inside the string.")};
+      }});
+    wl.forEach(function(w,i){
+      list.push({label:"Line "+(i+1)+" is "+JSON.stringify(w),
+        run:function(got){
+          var gl=normOut(got).split("\n").filter(function(x){return x.length;});
+          var g=gl[i];
+          if(g===undefined) return {ok:false,why:"There is no line "+(i+1)+" — your code printed only "+gl.length+" line"+(gl.length===1?"":"s")+"."};
+          if(g===w) return {ok:true};
+          if(g.toLowerCase()===w.toLowerCase())
+            return {ok:false,why:"Right text, wrong capitalisation. Expected "+JSON.stringify(w)+" but got "+JSON.stringify(g)+"."};
+          if(g.replace(/[^\w]/g,"")===w.replace(/[^\w]/g,""))
+            return {ok:false,why:"The words are right but the punctuation differs. Expected "+JSON.stringify(w)+" but got "+JSON.stringify(g)+" — check commas, exclamation marks and quotes."};
+          if(g.replace(/\s+/g,"")===w.replace(/\s+/g,""))
+            return {ok:false,why:"The characters are right but the spacing differs. Expected "+JSON.stringify(w)+" but got "+JSON.stringify(g)+"."};
+          if(/^<class /.test(g))
+            return {ok:false,why:"You printed "+JSON.stringify(g)+". Use type(x).__name__ to get just "+JSON.stringify(w)+"."};
+          if(!isNaN(+g)&&!isNaN(+w)){
+            var d=+g-+w;
+            if(Math.abs(d)===1) return {ok:false,why:"Off by one — expected "+w+" but got "+g+". Check your range() bounds: range(1, n) stops at n-1."};
+            return {ok:false,why:"Expected "+w+" but got "+g+" (a difference of "+(d>0?"+":"")+d+")."};
+          }
+          return {ok:false,why:"Expected "+JSON.stringify(w)+" but got "+JSON.stringify(g)+"."};
+        }});
+    });
+    return list;
   }
   if(exp.mode==="contains"){
-    var parts=normOut(exp.text).split("\n");
-    return ["Your code runs without an error"].concat(parts.map(function(x){ return "The output contains "+JSON.stringify(x); }));
+    normOut(exp.text).split("\n").forEach(function(w){
+      list.push({label:"The output contains "+JSON.stringify(w),
+        run:function(got){ return {ok:normOut(got).indexOf(w)>=0,
+          why:"Your output does not contain "+JSON.stringify(w)+". You printed:\n"+normOut(got)}; }});
+    });
+    return list;
   }
-  if(exp.mode==="lines") return ["Your code runs without an error","It prints at least "+exp.n+" lines"];
-  if(exp.mode==="regex") return ["Your code runs without an error","The output has the expected shape (e.g. a single word or number)"];
-  return ["Your code runs without an error"];
+  if(exp.mode==="lines"){
+    list.push({label:"It prints at least "+exp.n+" lines",
+      run:function(got){
+        var n=normOut(got).split("\n").filter(function(x){return x.length;}).length;
+        return {ok:n>=exp.n,why:"Expected at least "+exp.n+" separate lines but got "+n+". Each value needs its own print()."};
+      }});
+    return list;
+  }
+  if(exp.mode==="regex"){
+    list.push({label:"The output has the expected shape",
+      run:function(got){
+        try{
+          var rx=new RegExp(exp.text.replace(/^\(\?i\)/,""), /^\(\?i\)/.test(exp.text)?"i":"");
+          return {ok:normOut(got).split("\n").some(function(l){return rx.test(l);}),
+            why:"Your output does not match the expected pattern. You printed:\n"+normOut(got)};
+        }catch(e){ return {ok:true}; }
+      }});
+    return list;
+  }
+  return list;
+}
+function describeChecks(exp){
+  var c=buildChecks(exp);
+  return c?c.map(function(x){return x.label;}):null;
 }
 function loadIntoEditor(id){
   ui.cur=id||"";
