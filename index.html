@@ -353,12 +353,35 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   border:1px solid var(--line)}
 .specl{font-size:11px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:var(--brand)}
 .spect{font-size:13.5px; line-height:1.6; margin-block-start:5px; white-space:pre-wrap; color:var(--ink)}
+.tcards{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:12px}
+.tcard{border:1px solid var(--line); border-radius:14px; padding:14px; background:var(--panel2); transition:.2s}
+.tcard:hover{border-color:var(--brand); transform:translateY(-2px); box-shadow:0 8px 22px var(--ring)}
+.tcard.tcdone{border-color:var(--ok); background:linear-gradient(160deg,var(--panel2),var(--ok-soft))}
+.tchd{display:flex; align-items:center; gap:8px}
+.tct{font-weight:750; font-size:14.5px; letter-spacing:-.2px}
+.tcd{font-size:12.5px; color:var(--muted); margin-block-start:6px; line-height:1.5}
+.tcp{font-size:11.5px; color:var(--faint); margin-block-start:5px; font-family:var(--mono)}
+.okwrap{margin-block-start:10px; padding:11px 12px; border-radius:10px; background:var(--panel); border:1px solid var(--ok)}
+.okrow{display:flex; gap:9px; align-items:baseline; font-size:13px; padding-block:3px; flex-wrap:wrap}
+.okrow b{color:var(--ok); min-inline-size:170px}
+.okrow span{color:var(--muted)}
+.lesson{margin-block-start:12px; padding:14px 15px; border-radius:12px; background:var(--panel);
+  border:1px solid var(--line); border-inline-start:3px solid var(--cyan)}
+.lwhat{font-size:14.5px; line-height:1.6; font-weight:600; color:var(--ink)}
+.lpts{margin:6px 0 0; padding-inline-start:20px; font-size:13.5px; line-height:1.75; color:var(--ink2)}
+.lpts li{margin-block-end:3px}
+.lpts.lbad li::marker{color:var(--warn)}
+.egrid{display:grid; grid-template-columns:84px 1fr; gap:4px 10px; align-items:baseline;
+  padding:6px 9px; background:var(--panel2); border:1px solid var(--line); border-radius:8px; margin-block-start:5px}
 .specout{font-family:var(--mono); font-size:12.5px; line-height:1.6; margin-block-start:5px; white-space:pre;
   background:var(--panel2); border:1px solid var(--line); border-inline-start:3px solid var(--ok);
   border-radius:8px; padding:9px 11px; overflow-x:auto; color:var(--ink)}
 .vbox{border-radius:13px; padding:14px; margin-block-end:12px; border:1px solid var(--line)}
 .vbox.vok{border-color:var(--ok); background:var(--ok-soft)}
 .vbox.vno{border-color:var(--bad); background:var(--bad-soft)}
+.vbox.vrun{border-color:var(--brand); background:var(--brand-soft)}
+.vbox.vrun .vh{color:var(--brand)}
+.btn:disabled{opacity:.5; cursor:wait}
 .vh{font-size:15px; font-weight:800; letter-spacing:-.2px}
 .vbox.vok .vh{color:var(--ok)} .vbox.vno .vh{color:var(--bad)}
 .vp{font-size:13px; color:var(--ink2); margin-block-start:6px; white-space:pre-wrap}
@@ -497,7 +520,8 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
 <div class="wrap">
 <nav class="tabs" role="tablist">
   <button role="tab" data-tab="dash" aria-selected="true" type="button">◆ Dashboard</button>
-  <button role="tab" data-tab="plan" aria-selected="false" type="button">▤ Planner</button>
+  <button role="tab" data-tab="plan" aria-selected="false" type="button">📖 Learning</button>
+  <button role="tab" data-tab="basics" aria-selected="false" type="button">🎓 Learn from Basics</button>
   <button role="tab" data-tab="goals" aria-selected="false" type="button">◎ Goals</button>
   <button role="tab" data-tab="rep" aria-selected="false" type="button">▲ Reports</button>
   <button role="tab" data-tab="road" aria-selected="false" type="button">📘 Roadmap</button>
@@ -519,7 +543,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
         <p>Plan questions by date, time your practice sessions, capture what you learned, and build a timestamped record of your progress you can show a recruiter.</p>
         <div class="cta">
           <button class="btn" data-act="new" type="button">+ Plan a question</button>
-          <button class="btn" data-tab="plan" type="button">Open planner</button>
+          <button class="btn" data-tab="plan" type="button">Continue learning</button>
           <button class="btn" data-tab="rep" type="button">See reports</button>
         </div>
       </div>
@@ -558,7 +582,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
       <div id="micro"></div>
     </div>
     <div class="panel" id="catchupBox" hidden>
-      <h2>Catch-up</h2>
+      <h2>Still open</h2>
       <div id="catchup"></div>
     </div>
   </div>
@@ -619,8 +643,8 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
       <div class="legend"><span><i style="background:var(--line)"></i>Planned</span><span><i style="background:var(--brand)"></i>Completed</span></div>
     </div>
     <div class="panel">
-      <h2>Needs attention</h2>
-      <p class="hint">Out-of-track items, oldest first.</p>
+      <h2>Ready to start</h2>
+      <p class="hint">Unlocked and waiting — pick any one.</p>
       <div id="attention"></div>
     </div>
   </div>
@@ -637,16 +661,35 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
 <section class="tab" id="tab-plan" hidden>
   <div class="panel">
     <div class="rowb">
-      <div><h2>Learning planner</h2><p class="hint" style="margin-block-end:0">Anything planned for a past date and still open is flagged automatically. Completed items stay visible with their timestamp.</p></div>
+      <div><h2>Learning</h2><p class="hint" style="margin-block-end:0">Everything you have opened, always available. Nothing here is ever late — pick up wherever you stopped.</p></div>
       <span class="sp"></span>
       <input id="fSearch" placeholder="Search title, topic, language…" style="flex:1 1 200px">
-      <select id="fBucket"><option value="all">All periods</option><option value="late">Out of track</option><option value="today">Today</option><option value="week">This week</option><option value="next">Next week</option><option value="later">Later</option><option value="done">Completed</option></select>
+      <select id="fBucket"><option value="all">All periods</option><option value="ready">Ready now</option><option value="week">This week</option><option value="next">Next week</option><option value="later">Later</option><option value="done">Completed</option></select>
       <select id="fTopic"><option value="">All topics</option></select>
       <select id="fDiff"><option value="">All levels</option><option>Easy</option><option>Medium</option><option>Hard</option></select>
       <button class="btn" data-act="new" type="button">+ New</button>
     </div>
   </div>
   <div id="groups"></div>
+</section>
+
+<!-- ================= LEARN FROM BASICS ================= -->
+<section class="tab" id="tab-basics" hidden>
+  <div class="panel">
+    <div class="rowb">
+      <div style="flex:1 1 300px">
+        <h2>Learn from Basics</h2>
+        <p class="hint" style="margin-block-end:0">Every topic, directly accessible. Read the theory first, or jump straight to the questions — your choice, every time.</p>
+      </div>
+      <input id="bSearch" placeholder="Search topics…" style="flex:1 1 180px">
+    </div>
+    <div class="rowb" style="margin-block-start:12px">
+      <button class="btn pri" data-lang="python" type="button">🐍 Python</button>
+      <button class="btn" data-lang="c" type="button">📘 C</button>
+      <button class="btn" data-lang="cpp" type="button">📗 C++</button>
+    </div>
+  </div>
+  <div id="basicsBody"></div>
 </section>
 
 <!-- ================= GOALS ================= -->
@@ -664,7 +707,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
     </div>
     <div class="panel">
       <h2>Study time goal</h2>
-      <p class="hint">Tracked from your timed sessions in the planner.</p>
+      <p class="hint">Tracked from your timed practice sessions.</p>
       <div id="timeGoal"></div>
       <form class="quick" id="hourForm" style="margin-block-start:14px">
         <div class="field grow"><label for="gHours">Hours per week</label><input type="number" id="gHours" min="1" max="80" step="0.5" value="8"></div>
@@ -709,7 +752,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   </div>
   <div class="panel">
     <h2 id="wrTitle">Weekly report</h2>
-    <p class="hint">Generated automatically from your planner data.</p>
+    <p class="hint">Generated automatically from what you have completed.</p>
     <div class="kpis" id="wrKpis"></div>
     <div id="wrNarrative"></div>
   </div>
@@ -729,13 +772,13 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
       <svg class="chart" id="cPres" viewBox="0 0 620 120" role="img" aria-label="Login and update tracker"></svg></div>
   </div>
   <div class="panel">
-    <h2>Out-of-track report</h2>
-    <p class="hint">Planned for a date that has passed and still not completed.</p>
+    <h2>Still open</h2>
+    <p class="hint">Everything you have opened that is not finished yet. No deadlines — these simply wait for you.</p>
     <div id="lateReport"></div>
   </div>
   <div class="panel">
     <h2>Completed log</h2>
-    <p class="hint">Every solved question with its exact completion time, newest first. Items marked <span class="tag y">recovered</span> were finished after their planned date.</p>
+    <p class="hint">Every solved question with its exact completion time, newest first. </p>
     <div class="tblwrap"><table>
       <thead><tr><th>Question</th><th>Topic</th><th>Level</th><th>Planned</th><th>Completed at</th><th class="num">Time</th></tr></thead>
       <tbody id="doneRows"></tbody>
@@ -749,11 +792,11 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
     <div class="rowb">
       <div style="flex:1 1 300px">
         <h2>Python basics roadmap — 12 weeks</h2>
-        <p class="hint" style="margin-block-end:0">Six phases, 48 practice questions. Load a phase (or the whole thing) into your planner and every question gets its own scheduled date automatically.</p>
+        <p class="hint" style="margin-block-end:0">Six phases, 48 practice questions. Start a phase (or the whole thing) and every question becomes available straight away.</p>
       </div>
       <div class="field"><label for="rdStart">Start from week of</label><input type="date" id="rdStart"></div>
       <button class="btn pri" data-act="rdall" type="button">Load entire roadmap</button>
-      <button class="btn dgr" data-act="rdclear" type="button">Remove roadmap tasks</button>
+      <button class="btn dgr" data-act="rdclear" type="button">Reset roadmap items</button>
     </div>
     <div id="rdOverall" style="margin-block-start:14px"></div>
     <div class="rowb" style="margin-block-start:12px">
@@ -793,7 +836,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
       <h2>Portfolio projects — build 8 to 10, not 3</h2>
       <p class="hint">These teach more than dozens of tutorials. Load them as tasks and tick them off as you ship each one.</p>
       <div class="rowb" style="margin-block-end:12px">
-        <button class="btn pri" data-act="rdproj" type="button">Load all 10 projects into planner</button>
+        <button class="btn pri" data-act="rdproj" type="button">Open all 10 projects</button>
       </div>
       <div id="projList"></div>
     </div>
@@ -841,7 +884,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   <div class="panel">
     <div class="rowb">
       <div style="flex:1 1 300px">
-        <h2>Revision planner</h2>
+        <h2>Revision</h2>
         <p class="hint" style="margin-block-end:0">Spaced repetition — questions come back after 1 day, 7 days and 30 days. This is the single biggest thing you can do for retention.</p>
       </div>
       <label class="pill" style="flex-direction:row; align-items:center; gap:7px; padding:8px 13px">
@@ -882,7 +925,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
     <div class="rowb">
       <div style="flex:1 1 300px">
         <h2>Project tracker</h2>
-        <p class="hint" style="margin-block-end:0">Ten portfolio projects, each broken into steps. Start one and every step becomes a task in your planner.</p>
+        <p class="hint" style="margin-block-end:0">Ten portfolio projects, each broken into steps. Start one and every step becomes available to work on.</p>
       </div>
       <span style="font-size:12.5px;color:var(--muted)" id="projSummary"></span>
     </div>
@@ -1051,8 +1094,8 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
     <p class="hint">A quick tour.</p>
     <ul style="font-size:14px; line-height:1.85; padding-inline-start:20px; margin:0; color:var(--ink2)">
       <li><b>Plan by date.</b> Give a question any date — tomorrow, Friday, next Monday. It moves into <i>Today</i> by itself when that date arrives.</li>
-      <li><b>Out of track is automatic.</b> Planned date passed and still open → flagged red. No manual marking.</li>
-      <li><b>Recovered items.</b> Finish a missed question later and it is logged as recovered, keeping both the planned and actual dates.</li>
+      <li><b>No deadlines.</b> Nothing is ever late. Come back after a week away and pick up exactly where you stopped.</li>
+      <li><b>No penalties.</b> Take a week off and nothing changes — your XP, streak record, badges and completed work all stay exactly as they were.</li>
       <li><b>Timestamps.</b> Ticking a box stores the exact date and time forever.</li>
       <li><b>Sessions.</b> Start/stop a timer per question; minutes feed the topic table and weekly report.</li>
       <li><b>Streaks.</b> A day counts when you complete a question or save a journal entry.</li>
@@ -1154,14 +1197,13 @@ function clock(sec){ var m=Math.floor(sec/60), s=sec%60;
 function bucket(t){
   if(t.status==="done") return "done";
   var td=today();
-  if(t.due<td) return "late";
-  if(t.due===td) return "today";
-  var ws=iso(sow()), ns=wkey(1), n2=wkey(2);
-  if(t.due>=ws && t.due<ns) return "week";
-  if(t.due>=ns && t.due<n2) return "next";
+  if(t.due<=td) return "ready";
+  var ns=wkey(1), n2=wkey(2);
+  if(t.due<ns) return "week";
+  if(t.due<n2) return "next";
   return "later";
 }
-function isLate(t){ return bucket(t)==="late"; }
+function isLate(){ return false; }
 function dday(t){ return t.status==="done"&&t.completedAt ? t.completedAt.slice(0,10) : null; }
 function doneByDay(){ var m={},i,d; for(i=0;i<S.tasks.length;i++){ d=dday(S.tasks[i]); if(d) m[d]=(m[d]||0)+1; } return m; }
 function planByDay(){ var m={},i; for(i=0;i<S.tasks.length;i++){ m[S.tasks[i].due]=(m[S.tasks[i].due]||0)+1; } return m; }
@@ -1345,14 +1387,15 @@ function tag(txt,cls){ var s=document.createElement("span"); s.className="tag"+(
 function taskCard(t){
   var b=bucket(t), running=S.timer&&S.timer.id===t.id;
   var el=document.createElement("div");
-  el.className="task"+(t.status==="done"?" done":"")+(b==="late"?" late":"")+(b==="today"?" today":"")+(running?" running":"");
+  el.className="task"+(t.status==="done"?" done":"")+(b==="ready"?" today":"")+(running?" running":"");
   var tk=document.createElement("button"); tk.type="button"; tk.className="tick"; tk.textContent="✓";
   tk.setAttribute("data-do","toggle"); tk.setAttribute("data-id",t.id); tk.setAttribute("aria-label","Toggle complete");
   el.appendChild(tk);
   var body=document.createElement("div"); body.className="tbody";
   var h=document.createElement("div"); h.className="ttl";
-  if(t.url){ var a=document.createElement("a"); a.href=t.url; a.target="_blank"; a.rel="noopener noreferrer"; a.textContent=t.title; h.appendChild(a); }
-  else h.textContent=t.title;
+  var dt0=displayTitle(t);
+  if(t.url){ var a=document.createElement("a"); a.href=t.url; a.target="_blank"; a.rel="noopener noreferrer"; a.textContent=dt0; h.appendChild(a); }
+  else h.textContent=dt0;
   body.appendChild(h);
   var tg=document.createElement("div"); tg.className="tags";
   if(t.type) tg.appendChild(tag(
@@ -1362,14 +1405,9 @@ function taskCard(t){
   if(t.topic) tg.appendChild(tag(t.topic));
   if(t.lang) tg.appendChild(tag(t.lang,"c"));
   if(t.diff) tg.appendChild(tag(t.diff,t.diff==="Easy"?"g":t.diff==="Hard"?"r":"y"));
-  tg.appendChild(tag("📅 "+short(pIso(t.due)),"n"));
   if(t.status==="done"){
     tg.appendChild(tag("✓ "+stamp(t.completedAt),"g"));
-    if(t.missed) tg.appendChild(tag("recovered","y"));
-  } else if(b==="late"){
-    var days=Math.round((pIso(today())-pIso(t.due))/864e5);
-    tg.appendChild(tag("out of track · "+days+"d","r"));
-  } else if(b==="today") tg.appendChild(tag("due today","c"));
+  } else if(b==="ready") tg.appendChild(tag("ready","c"));
   if(t.verified) tg.appendChild(tag("✓ tests passed","g"));
   if(t.seconds) tg.appendChild(tag("⏱ "+dur(t.seconds),"n"));
   if(running) tg.appendChild(tag("● session running","g"));
@@ -1425,23 +1463,23 @@ function renderDash(){
   var wd=w.filter(function(t){return t.status==="done";}).length;
   var td=S.tasks.filter(function(t){return t.due===today();});
   var tdone=td.filter(function(t){return t.status==="done";}).length;
-  var late=S.tasks.filter(isLate);
+  var ready=S.tasks.filter(function(t){return bucket(t)==="ready";});
   var secs=S.tasks.reduce(function(s,t){return s+(t.seconds||0);},0);
   kpi("kpis",[
     ["Completed",done.length,S.tasks.length+" planned all-time","✅"],
-    ["Today",(td.length?Math.round(tdone/td.length*100):0)+"%",tdone+" of "+td.length+" due today","🎯"],
+    ["Today",(td.length?Math.round(tdone/td.length*100):0)+"%",tdone+" of "+td.length+" opened for today","🎯"],
     ["Login streak",st.cur+"d","longest "+st.best+"d · "+st.days+" active days","🔥",""],
-    ["Out of track",late.length,"past due and open","⚠️",late.length?"var(--bad)":""],
+    ["Ready now",ready.length,"unlocked and waiting","▶"],
     ["Study time",dur(secs)||"0m","across "+S.tasks.filter(function(t){return t.seconds;}).length+" timed sessions","⏱"],
     ["This week",wd+"/"+w.length,"questions completed","📈"]
   ]);
   drawRing(); draw14(); drawHeat(); renderXP(); renderMap(); renderToday(); renderMicro(); renderCatchup(); renderBadges(); renderWeak(); renderMonthly();
   var at=document.getElementById("attention"); clr(at);
-  var l=S.tasks.filter(isLate).sort(function(a,b){return a.due.localeCompare(b.due);}).slice(0,5);
+  var l=S.tasks.filter(function(t){return bucket(t)==="ready";}).sort(function(a,b){return a.due.localeCompare(b.due);}).slice(0,5);
   if(!l.length){
     var e=document.createElement("div"); e.className="empty";
     var big=document.createElement("span"); big.className="big"; big.textContent="🏆"; e.appendChild(big);
-    e.appendChild(document.createTextNode("You're on track — nothing overdue."));
+    e.appendChild(document.createTextNode("Nothing queued up right now — load a week from the Roadmap to keep going."));
     at.appendChild(e);
   } else l.forEach(function(t){ at.appendChild(taskCard(t)); });
 }
@@ -1458,12 +1496,11 @@ function renderPlanner(){
     return true;
   });
   var groups=[
-    ["late","Out of track","Missed planned dates — still completable"],
-    ["today","Today","Due today"],
-    ["week","This week","Rest of the current week"],
-    ["next","Next week","Upcoming plan"],
-    ["later","Later","Future backlog"],
-    ["done","Completed","Solved and timestamped"]
+    ["ready","Ready now","Unlocked and waiting for you"],
+    ["week","Coming up","Next in your path"],
+    ["next","Later","Further along the path"],
+    ["later","Beyond","The rest of your path"],
+    ["done","Completed","Solved, with the time you finished"]
   ];
   var any=false;
   groups.forEach(function(g){
@@ -1560,7 +1597,7 @@ function renderGoals(){
 function renderReports(){
   var off=ui.week, w=weekTasks(off), a=pIso(wkey(off)), b=addD(a,6);
   var done=w.filter(function(t){return t.status==="done";});
-  var late=w.filter(function(t){return t.status!=="done" && t.due<today();});
+  var openN=w.filter(function(t){return t.status!=="done";}).length;
   var rate=w.length?Math.round(done.length/w.length*100):0;
   var secs=weekSeconds(off);
   var dm=doneByDay(), ld=0,i;
@@ -1570,7 +1607,7 @@ function renderReports(){
     ["Planned",w.length,"questions scheduled","🗓"],
     ["Completed",done.length,"finished this week","✅"],
     ["Completion rate",rate+"%","of the weekly plan","📊"],
-    ["Out of track",late.length,"missed and still open","⚠️",late.length?"var(--bad)":""],
+    ["Still open",openN,"waiting whenever you are","▶"],
     ["Learning days",ld+"/7","days with activity","🔥"],
     ["Study time",dur(secs)||"0m","from timed sessions","⏱"]
   ]);
@@ -1585,11 +1622,7 @@ function renderReports(){
     var worst=names.slice().sort(function(x,y){ return (byTopic[x].d/byTopic[x].q)-(byTopic[y].d/byTopic[y].q) || byTopic[x].d-byTopic[y].d; })[0];
     if(best) lines.push("Strongest area: "+best+" — "+byTopic[best].d+" of "+byTopic[best].q+" completed ("+Math.round(byTopic[best].d/byTopic[best].q*100)+"%).");
     if(worst&&worst!==best) lines.push("Weakest area: "+worst+" — "+byTopic[worst].d+" of "+byTopic[worst].q+" completed ("+Math.round(byTopic[worst].d/byTopic[worst].q*100)+"%).");
-    var missDays={};
-    late.forEach(function(t){ var d=pIso(t.due).toLocaleDateString(undefined,{weekday:"long"}); missDays[d]=(missDays[d]||0)+1; });
-    var md=Object.keys(missDays);
-    if(md.length) lines.push("You missed "+late.length+" planned "+(late.length===1?"task":"tasks")+" on "+md.join(", ")+".");
-    lines.push(rate>=80?"Great consistency — you cleared most of the plan.":rate>=50?"Solid effort. Trim next week's plan slightly or protect more study time.":"The plan was heavier than the week allowed. Try planning fewer, more specific questions.");
+    lines.push(rate>=80?"Great week — you covered nearly everything you opened.":rate>=50?"Solid progress. Whatever is still open simply carries forward.":"A lighter week. Nothing is lost — everything still open is waiting for you.");
   }
   lines.forEach(function(t){
     var p=document.createElement("p"); p.style.margin="7px 0"; p.style.fontSize="14px"; p.style.color="var(--ink2)";
@@ -1603,11 +1636,11 @@ function renderReports(){
   drawDonut("cDiff",["Easy","Medium","Hard"].filter(function(n){return dc[n];}).map(function(n){return [n,dc[n]];}),"Complete questions to build this report");
 
   var lr=document.getElementById("lateReport"); clr(lr);
-  var all=S.tasks.filter(isLate).sort(function(x,y){return x.due.localeCompare(y.due);});
+  var all=S.tasks.filter(function(t){return bucket(t)==="ready";}).sort(function(x,y){return x.due.localeCompare(y.due);});
   if(!all.length){
     var e=document.createElement("div"); e.className="empty";
     var big=document.createElement("span"); big.className="big"; big.textContent="🎉";
-    e.appendChild(big); e.appendChild(document.createTextNode("Nothing overdue. Everything you planned is either done or still ahead."));
+    e.appendChild(big); e.appendChild(document.createTextNode("Everything you have opened is complete. Load more from the Roadmap whenever you want."));
     lr.appendChild(e);
   } else {
     var wrap=document.createElement("div"); wrap.className="tblwrap";
@@ -1634,9 +1667,7 @@ function renderReports(){
   } else dl.forEach(function(t){
     var tr=document.createElement("tr");
     function c(txt,cls){ var td=document.createElement("td"); if(cls) td.className=cls; td.textContent=txt; tr.appendChild(td); return td; }
-    var first=c(t.title);
-    if(t.missed){ var sp=document.createElement("span"); sp.className="tag y"; sp.textContent="recovered";
-      sp.style.marginInlineStart="6px"; first.appendChild(sp); }
+    var first=c(displayTitle(t));
     c(t.topic||"—"); c(t.diff||"—"); c(short(pIso(t.due))); c(stamp(t.completedAt)); c(dur(t.seconds),"num");
     dr.appendChild(tr);
   });
@@ -1675,7 +1706,7 @@ function fillPickers(){
   list.forEach(function(t){ var o=document.createElement("option"); o.value=t; o.textContent=t; sel.appendChild(o); });
   sel.value=cur;
 }
-function render(){ fillPickers(); renderTop(); renderDash(); renderPlanner(); renderGoals(); renderReports(); renderRoad(); renderResources(); renderRevision(); renderProjects(); renderCode(); renderJournal(); tickTimer(); }
+function render(){ fillPickers(); renderTop(); renderDash(); renderPlanner(); renderBasics(); renderGoals(); renderReports(); renderRoad(); renderResources(); renderRevision(); renderProjects(); renderCode(); renderJournal(); tickTimer(); }
 
 /* ============ timer ============ */
 function tickTimer(){
@@ -1709,7 +1740,7 @@ function addTask(o){
   var now=new Date().toISOString();
   var t={id:uid(),title:o.title,topic:o.topic||"",lang:o.lang||"",diff:o.diff||"Medium",url:o.url||"",
     due:o.due||today(),notes:o.notes||"",status:o.done?"done":"planned",createdAt:now,
-    completedAt:o.done?now:null,missed:o.done?(o.due<today()):false,seconds:0,lastSession:null};
+    completedAt:o.done?now:null,missed:false,seconds:0,lastSession:null};
   S.tasks.push(t);
   ev(o.done?"done":"add",(o.done?"Completed: ":"Planned: ")+t.title);
   return t;
@@ -1720,8 +1751,8 @@ function toggle(id){
   else{
     if(S.timer&&S.timer.id===id) stopTimer(true);
     var before=levelOf(totalXP());
-    t.status="done"; t.completedAt=new Date().toISOString(); t.missed=t.due<today();
-    ev("done","Completed: "+t.title+(t.missed?" (recovered)":""));
+    t.status="done"; t.completedAt=new Date().toISOString();
+    ev("done","Completed: "+t.title);
     autoRevision(t);
     var gain=XP_RULES[t.type||"practice"]||20;
     setTimeout(function(){
@@ -1733,7 +1764,7 @@ function toggle(id){
     },120);
   }
   save(); render();
-  if(t.status==="done") toast((t.missed?"Recovered — ":"Nice — ")+"logged at "+new Date().toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"}));
+  if(t.status==="done") toast("Nice — logged at "+new Date().toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"}));
 }
 function openDlg(id){
   var t=id?byId(id):null;
@@ -1754,7 +1785,8 @@ function setTab(name){
   ui.tab=name;
   var els=document.querySelectorAll("nav.tabs button");
   for(var i=0;i<els.length;i++) els[i].setAttribute("aria-selected", els[i].getAttribute("data-tab")===name?"true":"false");
-  ["dash","plan","goals","rep","road","res","rev","proj","code","jrnl","data"].forEach(function(n){ document.getElementById("tab-"+n).hidden=(n!==name); });
+  ["dash","plan","basics","goals","rep","road","res","rev","proj","code","jrnl","data"].forEach(function(n){ document.getElementById("tab-"+n).hidden=(n!==name); });
+  if(name==="basics") renderBasics();
   if(name==="rep") renderReports();
   if(name==="road") renderRoad();
   if(name==="res") renderResources();
@@ -1775,7 +1807,7 @@ function exportJSON(){ dl(new Blob([JSON.stringify(S,null,2)],{type:"application
 function exportCSV(){
   var head=["Title","Topic","Language","Difficulty","Planned date","Status","Recovered","Created","Completed at","Seconds","Link","Notes"];
   var rows=S.tasks.map(function(t){ return [t.title,t.topic||"",t.lang||"",t.diff||"",t.due,
-    t.status==="done"?"Completed":(isLate(t)?"Out of track":"Planned"),t.missed?"Yes":"No",
+    t.status==="done"?"Completed":"Open","No",
     t.createdAt,t.completedAt||"",t.seconds||0,t.url||"",(t.notes||"").replace(/\n/g," ")]; });
   var csv=[head].concat(rows).map(function(r){ return r.map(function(c){ return '"'+String(c).replace(/"/g,'""')+'"'; }).join(","); }).join("\n");
   dl(new Blob([csv],{type:"text/csv"}),"learntrack-"+today()+".csv");
@@ -1808,7 +1840,7 @@ function sample(){
     if(r[5]){
       var d=addD(ws,r[4]); d.setHours(19,(r[0].length*7)%60,0,0);
       if(d>new Date()) d=new Date();
-      t.completedAt=d.toISOString(); t.missed=false;
+      t.completedAt=d.toISOString();
     }
     if(r[6]){ t.seconds=r[6]; t.lastSession=(t.completedAt||new Date().toISOString()); }
   });
@@ -1821,6 +1853,8 @@ function sample(){
 
 /* ============ events ============ */
 document.addEventListener("click",function(e){
+  var lg=e.target.closest?e.target.closest("[data-lang]"):null;
+  if(lg){ ui.lang=lg.getAttribute("data-lang"); ui.openMod=null; renderBasics(); return; }
   var tr=e.target.closest?e.target.closest("[data-track]"):null;
   if(tr){ rdTrack=tr.getAttribute("data-track"); renderRoad(); return; }
   var n=e.target.closest?e.target.closest("[data-act],[data-do],[data-tab]"):null;
@@ -1832,11 +1866,46 @@ document.addEventListener("click",function(e){
     var id=n.getAttribute("data-id");
     if(doAct==="goalrm"){ delete S.goals.topics[id]; save(); renderGoals(); return; }
     if(doAct==="mapnode"){ showNode(id); return; }
+    if(doAct==="modtheory"){ ui.openMod=(ui.openMod===id)?null:id; renderBasics(); return; }
+    if(doAct==="toggletheory"){
+      ui.theoryOpen=(ui.theoryOpen===id)?null:id;
+      renderQPanel(byId(id)); return;
+    }
+    if(doAct==="nextq"){
+      var cu=byId(id);
+      var pool=S.tasks.filter(function(x){ return x.status!=="done" && (x.type==="practice"||!x.type); })
+        .sort(function(a,b){ return a.due.localeCompare(b.due); });
+      var nx2=pool[0];
+      if(nx2){ setTab("code"); loadIntoEditor(nx2.id); toast("Next question loaded"); }
+      else toast("Nothing else open — start another week from the Roadmap");
+      void cu; return;
+    }
+    if(doAct==="loadles"){
+      var lt2=byId(id), ls=lt2&&lessonFor(lt2);
+      if(ls&&ls.syntax){
+        var ed4=document.getElementById("editor");
+        if(ed4.value.trim()&&!confirm("Replace the editor contents with this example?")) return;
+        ed4.value=ls.syntax+"\n"; gutter(); ed4.focus();
+        cclear(); cwrite("Example loaded — press ▶ Run to see it work.\n","dim");
+      }
+      return;
+    }
+    if(doAct==="loadsnip"){
+      var lt=byId(id);
+      var sn=lt&&(LEARN_SNIPPETS[lt.title]||LEARN_SNIPPETS[lt.title.replace(/^Learn:\s*/,"").trim()]);
+      if(sn){
+        var ed3=document.getElementById("editor");
+        if(ed3.value.trim()&&!confirm("Replace the editor contents with this example?")) return;
+        ed3.value=sn; gutter(); ed3.focus();
+        cclear(); cwrite("Example loaded — press ▶ Run to see what it does.\n","dim");
+      }
+      return;
+    }
     if(doAct==="rdtoggle"){ rdOpen[id]=!rdOpen[id]; renderRoad(); return; }
     if(doAct==="slload"){ rdOpen["sl:"+id]=true; slowLoad(+id,false); return; }
     if(doAct==="mpload"){ rdOpen["mp:"+id]=true; mpLoad(+id,false); return; }
     if(doAct==="mpall"){ var na=mpLoad(null,true); ev("road","Loaded My Path"); save(); render(); renderRoad();
-      toast(na?("Added "+na+" items across 24 weeks"):"Already loaded"); return; }
+      toast(na?("Opened "+na+" items across 24 weeks"):"Already open"); return; }
     if(doAct==="mpnext"){
       var found=false;
       MYPATH.forEach(function(M){ M.weeks.forEach(function(W){
@@ -1854,9 +1923,9 @@ document.addEventListener("click",function(e){
         ft.codeLang=document.getElementById("cbLang").value;
         ft.codeAt=new Date().toISOString();
         ft.output=normOut(document.getElementById("console").textContent);
-        if(ft.status!=="done"){ ft.status="done"; ft.completedAt=new Date().toISOString(); ft.missed=ft.due<today(); autoRevision(ft); }
+        if(ft.status!=="done"){ ft.status="done"; ft.completedAt=new Date().toISOString(); autoRevision(ft); }
         ev("done","Accepted & saved: "+ft.title);
-        save(); render(); loadIntoEditor(id); toast("Saved and marked complete");
+        save(); render(); loadIntoEditor(id,true); toast("Saved and marked complete");
       }
       return;
     }
@@ -1937,12 +2006,12 @@ document.addEventListener("click",function(e){
           due:iso(addD(base,i*2)),notes:"Project: "+P.name});
         t3.proj=id+":"+i; added++;
       });
-      save(); render(); toast(added?("Added "+added+" steps to your planner"):"Already started");
+      save(); render(); toast(added?("Opened "+added+" steps"):"Already started");
       return;
     }
     if(doAct==="slall"){ var n=0; SLOW.forEach(function(W){ n+=slowLoad(W.w,true); });
       ev("road","Loaded the 6-month slow plan"); save(); render(); renderRoad();
-      toast(n?("Added "+n+" questions across 6 months"):"Already in your planner"); return; }
+      toast(n?("Opened "+n+" questions across 6 months"):"Already open"); return; }
     if(doAct==="slnext"){
       for(var si=0;si<SLOW.length;si++){
         var W2=SLOW[si], has=false;
@@ -1966,7 +2035,7 @@ document.addEventListener("click",function(e){
           due:iso(addD(base,Math.min(ph2.span*7-1,gi*2+qi))),
           notes:"Phase "+ph2.n+" · "+ph2.title+" ("+ROAD[tk2].name+")"});
         t2.road=rdKey(tk2,pn2,gi,qi);
-        save(); render(); renderRoad(); toast("Added to your planner");
+        save(); render(); renderRoad(); toast("Opened");
       }
       return;
     }
@@ -2050,6 +2119,7 @@ document.addEventListener("change",function(e){
 document.addEventListener("input",function(e){
   if(["fSearch","fBucket","fTopic","fDiff"].indexOf(e.target.id)>=0) renderPlanner();
   if(["resSearch","resType"].indexOf(e.target.id)>=0) renderResources();
+  if(e.target.id==="bSearch") renderBasics();
   if(e.target.id==="editor"){
     gutter();
     clearTimeout(window.__ltDraft);
@@ -2171,7 +2241,7 @@ document.getElementById("dlgForm").addEventListener("submit",function(e){
 });
 document.addEventListener("keydown",function(e){
   if(e.target.matches&&e.target.matches("input,textarea,select")) return;
-  var tabs=["dash","plan","goals","rep","road","res","rev","proj","code","jrnl","data"];
+  var tabs=["dash","plan","basics","goals","rep","road","res","rev","proj","code","jrnl","data"];
   if(e.key==="n"||e.key==="N"){ e.preventDefault(); openDlg(""); }
   else if(e.key==="/"){ e.preventDefault(); setTab("plan"); document.getElementById("fSearch").focus(); }
   else if(/^[1-9]$/.test(e.key)) setTab(tabs[+e.key-1]);
@@ -3387,6 +3457,1333 @@ var SPEC={
  "Print it and observe that duplicates disappear.":{
   task:"Build a set from [1, 2, 2, 3] and print its length.",out:"3"}
 };
+/* ================= LESSONS: theory before practice ================= */
+var LESSONS={
+ "print()":{
+  what:"print() displays a value on the screen. It is how your program talks to you.",
+  points:["print(x) writes x, then moves to a new line.",
+    "print(a, b) writes several values separated by a single space.",
+    "print() with nothing inside prints an empty line.",
+    "Text must be wrapped in quotes: print(\"hello\"). Without quotes Python looks for a variable called hello."],
+  syntax:"print(\"Hello\")\nprint(\"a\", \"b\")        # a b\nprint(\"a\", \"b\", sep=\"-\") # a-b\nprint(\"x\", end=\"\")      # no newline after",
+  mistakes:["Forgetting the quotes around text.","Using Print() — Python is case sensitive.",
+    "Expecting print() to return a value. It displays; it does not hand anything back."],
+  real:"Every script you write will print results, log progress, or show a summary. It is your first debugging tool."},
+ "Variables":{
+  what:"A variable is a name that holds a value so you can use it later.",
+  points:["Create one with name = value. The = means 'assign', not 'equals'.",
+    "The name goes on the left, the value on the right.",
+    "You can reassign a variable at any time; the old value is replaced.",
+    "Python figures out the type for you — you never declare it."],
+  syntax:"name = \"Abhinay\"\nage = 24\nage = 25            # reassigned\nprint(name, age)",
+  mistakes:["Writing 25 = age instead of age = 25.",
+    "Using a variable before assigning it — Python raises NameError.",
+    "Confusing = (assign) with == (compare)."],
+  real:"Variables hold the case ID you are processing, the file path you are reading, the running total of a report."},
+ "Naming rules":{
+  what:"Python has hard rules and soft conventions for naming things.",
+  points:["Must start with a letter or underscore — never a digit.",
+    "May contain letters, digits and underscores. No spaces, no hyphens.",
+    "Case matters: age and Age are two different variables.",
+    "Convention: snake_case for variables, ALL_CAPS for constants.",
+    "Avoid reusing built-in names like list, str, sum or id."],
+  syntax:"case_id = 101       # good\n_internal = True    # legal\nvalue2 = 5          # legal\n# 2value = 5        # error: starts with a digit\n# my-name = 5       # error: hyphen means minus",
+  mistakes:["Naming a variable list or str, which hides the built-in.",
+    "Using camelCase — legal, but not the Python convention."],
+  real:"Clear names are the cheapest documentation you will ever write. minutes_worked beats x every time."},
+ "str":{what:"A str is text — a sequence of characters.",
+  points:["Write it in single or double quotes: \"hi\" and 'hi' are identical.",
+    "len(s) gives the number of characters.",
+    "Strings are immutable — methods return a NEW string rather than changing the original.",
+    "s[0] is the first character; s[-1] is the last."],
+  syntax:"s = \"hello\"\nprint(len(s), s.upper(), s[0], s[-1])\nprint(s[1:3])        # el",
+  mistakes:["Expecting s.upper() to change s — it returns a new string you must store.",
+    "Forgetting that \"5\" is text, not the number 5."],
+  real:"Case IDs, product names, file paths, log lines — most of the data you handle at work is text."},
+ "int":{what:"An int is a whole number, positive or negative, with no decimal part.",
+  points:["No size limit in Python — integers can be enormous.",
+    "/ always gives a float; // gives an integer (floor division).",
+    "% gives the remainder, which is how you test divisibility.",
+    "int(\"42\") converts text to a number; int(5.9) truncates to 5."],
+  syntax:"n = 42\nprint(n + 8, n * 2)\nprint(n / 5)    # 8.4  float\nprint(n // 5)   # 8    int\nprint(n % 5)    # 2    remainder",
+  mistakes:["Adding a str to an int — \"5\" + 5 raises TypeError.",
+    "Assuming int() rounds. It truncates: int(5.9) is 5."],
+  real:"Counts, IDs, minutes worked, number of open cases."},
+ "float":{what:"A float is a number with a decimal part.",
+  points:["Any division with / produces a float, even 10 / 2 which gives 5.0.",
+    "round(x, 2) rounds to two decimal places.",
+    "Floats are approximate: 0.1 + 0.2 gives 0.30000000000000004.",
+    "For money, round at the point of display rather than mid-calculation."],
+  syntax:"f = 3.5\nprint(f + 0.5)\nprint(round(3.14159, 2))\nprint(0.1 + 0.2)      # not exactly 0.3",
+  mistakes:["Comparing floats with == and being surprised.",
+    "Printing a raw float in a report without rounding it."],
+  real:"Percentages, averages, response times, completion rates."},
+ "bool":{what:"A bool is either True or False. It is what every comparison produces.",
+  points:["Capital T and F — true and false are not valid Python.",
+    "Comparisons (>, <, ==, !=) produce a bool.",
+    "and, or and not combine booleans.",
+    "Empty values (0, \"\", [], {}) count as False in a condition."],
+  syntax:"b = True\nprint(5 > 3)          # True\nprint(5 == 3)         # False\nprint(b and False)    # False\nprint(not b)          # False",
+  mistakes:["Writing true instead of True.","Writing if x == True instead of just if x."],
+  real:"Is this case still open? Did the file exist? Has the threshold been crossed?"},
+ "Type conversion":{
+  what:"Converting a value from one type to another — most often text to a number.",
+  points:["input() ALWAYS returns text, even when the user types a number.",
+    "int(x) converts to a whole number; float(x) to a decimal; str(x) to text.",
+    "int(\"abc\") raises ValueError — the text must actually look like a number.",
+    "int() truncates toward zero: int(5.9) is 5 and int(-5.9) is -5."],
+  syntax:"n = int(\"25\")\nprint(n + 5)        # 30\nprint(\"25\" + \"5\")   # 255  string joining\nprint(float(\"2.5\"))\nprint(str(25) + \"!\")",
+  mistakes:["Forgetting int() after input(), then getting \"255\" instead of 30.",
+    "Assuming int() rounds — it does not."],
+  real:"Every value read from a file, a form or a CSV starts as text and needs converting."},
+ "Input/Output":{
+  what:"input() reads a line from the user; print() writes a line back.",
+  points:["input() waits for one line and returns it as text, without the newline.",
+    "Call input() once per line you need to read.",
+    "Wrap it in int() or float() when you need a number.",
+    "In this Code lab, the stdin box supplies the input lines."],
+  syntax:"name = input()\nage = int(input())\nprint(f\"{name} is {age}\")",
+  mistakes:["Calling input() more times than there are lines available — that raises EOFError.",
+    "Putting a prompt inside input(\"Enter name: \") — the prompt becomes part of your output and breaks exact-match checks."],
+  real:"Reading a case number to look up, or a date range for a report."},
+ "input()":{
+  what:"input() reads one line of text from the user.",
+  points:["It always returns a str — convert with int() or float() when you need a number.",
+    "It reads exactly one line per call.",
+    "Do not pass a prompt when your output is being checked exactly — it would be printed."],
+  syntax:"name = input()\nn = int(input())\nprint(name, n)",
+  mistakes:["Forgetting to convert, then getting text concatenation instead of addition.",
+    "Reading more lines than the input provides."],
+  real:"Command-line tools and scripts that take parameters interactively."},
+ "Operators":{
+  what:"Symbols that combine values: arithmetic, comparison and logical.",
+  points:["Arithmetic: + - * / // % **",
+    "/ gives a float, // gives a floor-divided integer, % gives the remainder.",
+    "Comparison: > < >= <= == != — each produces True or False.",
+    "Logical: and, or, not.",
+    "Python allows chaining: 10 < n < 20 works exactly as it reads."],
+  syntax:"print(7 + 2, 7 - 2, 7 * 2)\nprint(7 / 2, 7 // 2, 7 % 2, 7 ** 2)\nprint(5 > 3 and 2 < 4)\nprint(10 < 15 < 20)",
+  mistakes:["Using = instead of == in a condition.",
+    "Expecting / to give a whole number — use // for that."],
+  real:"% tests divisibility, // splits minutes into hours, comparisons drive every branch."},
+ "Control Flow":{
+  what:"Running different code depending on a condition.",
+  points:["if runs its block when the condition is True.",
+    "elif checks another condition only if the previous ones were False.",
+    "else runs when nothing above matched.",
+    "The block must be indented — four spaces is the convention.",
+    "Only the FIRST matching branch runs."],
+  syntax:"n = 0\nif n > 0:\n    print(\"positive\")\nelif n < 0:\n    print(\"negative\")\nelse:\n    print(\"zero\")",
+  mistakes:["Forgetting the colon at the end of the if line.",
+    "Inconsistent indentation — Python raises IndentationError.",
+    "Using several separate ifs where elif was meant, so more than one branch runs."],
+  real:"Route a case by priority, decide whether a value passes a threshold, pick a message to display."},
+ "Conditions":{
+  what:"Expressions that evaluate to True or False and steer your program.",
+  points:["if / elif / else covers mutually exclusive cases.",
+    "Order matters — put the most specific condition first.",
+    "Conditions can nest, but deep nesting is hard to read.",
+    "Cover every case, including the boundary and zero."],
+  syntax:"age = 15\nif age <= 12:\n    print(\"child\")\nelif age <= 19:\n    print(\"teen\")\nelse:\n    print(\"adult\")",
+  mistakes:["Missing the boundary — is 40 a pass, or only 41?",
+    "Forgetting the zero case when checking positive/negative."],
+  real:"Any rule with thresholds: SLA breached, score passed, age band."},
+ "For & While loops":{
+  what:"Loops repeat a block of code.",
+  points:["for repeats a known number of times, or over a collection.",
+    "while repeats as long as a condition stays True.",
+    "range(a, b) counts from a up to b-1 — the end is excluded.",
+    "range(a, b, step) lets you skip or count backwards.",
+    "break exits the loop; continue skips to the next pass."],
+  syntax:"for i in range(1, 4):\n    print(i)          # 1 2 3\n\nn = 3\nwhile n > 0:\n    print(n)\n    n -= 1            # must change, or it never ends",
+  mistakes:["Off by one: range(1, 10) stops at 9, not 10.",
+    "Forgetting to change the counter in a while loop — an infinite loop.",
+    "Indenting a line that should sit outside the loop."],
+  real:"Process every row in a CSV, retry until a call succeeds, total a column."},
+ "For Loops":{
+  what:"A for loop repeats once for each item in a sequence.",
+  points:["range(n) gives 0 to n-1.","range(a, b) gives a to b-1.",
+    "range(a, b, step) skips by step; a negative step counts down.",
+    "You can loop directly over a list or a string."],
+  syntax:"for i in range(1, 11):\n    print(i)\n\nfor c in \"abc\":\n    print(c)\n\ntotal = 0\nfor n in [1, 2, 3]:\n    total += n",
+  mistakes:["Expecting range(1, 10) to include 10.",
+    "Resetting the accumulator inside the loop instead of before it."],
+  real:"Iterate over every case, file or row you need to process."},
+ "While Loops":{
+  what:"A while loop repeats for as long as its condition stays True.",
+  points:["Use it when you do not know the number of repetitions in advance.",
+    "Something inside must eventually make the condition False.",
+    "break exits immediately; continue skips to the next check.",
+    "Set up the counter BEFORE the loop."],
+  syntax:"n = 1\nwhile n <= 5:\n    print(n)\n    n += 1\n\nwhile True:\n    line = input()\n    if line == \"quit\":\n        break",
+  mistakes:["Forgetting n += 1, which loops forever.",
+    "Checking the wrong boundary: < 5 stops at 4, <= 5 stops at 5."],
+  real:"Keep asking until valid input arrives; keep polling until a job finishes."},
+ "Lists":{
+  what:"A list is an ordered, changeable collection of values.",
+  points:["Create with square brackets: [1, 2, 3].",
+    "Index from 0; the last item is [-1].",
+    "append() adds to the end, remove() deletes by value, pop() removes by position.",
+    "len(), max(), min() and sum() all work on lists.",
+    "Slicing takes a section: items[1:3]."],
+  syntax:"nums = [3, 1, 2]\nnums.append(4)\nnums.remove(1)\nprint(nums, len(nums), max(nums))\nprint(sorted(nums), nums[::-1])",
+  mistakes:["Off-by-one on indexes — the first item is [0], not [1].",
+    "Expecting sorted(nums) to change nums; it returns a new list. nums.sort() changes it in place.",
+    "Removing items while looping over the same list."],
+  real:"A list of case IDs, filenames, or rows read from a CSV."},
+ "Dictionaries":{
+  what:"A dictionary stores key–value pairs for fast lookup by name.",
+  points:["Create with braces: {\"id\": 101, \"status\": \"Open\"}.",
+    "Read with d[\"key\"], which raises KeyError if the key is missing.",
+    "d.get(\"key\", default) is the safe version.",
+    "Assigning to a new key adds it.",
+    ".items() gives key–value pairs for looping."],
+  syntax:"case = {\"id\": 101, \"status\": \"Open\"}\nprint(case[\"status\"])\nprint(case.get(\"owner\", \"none\"))\ncase[\"owner\"] = \"Abhinay\"\nfor k, v in case.items():\n    print(k, v)",
+  mistakes:["Using d[\"missing\"] instead of d.get() and hitting KeyError.",
+    "Forgetting that counting needs a default: d[k] = d.get(k, 0) + 1."],
+  real:"A case record, a config file, counting statuses — the single most useful structure at work."},
+ "Sets":{
+  what:"A set is an unordered collection with no duplicates.",
+  points:["Create with braces: {1, 2, 3}, or set(list) to deduplicate.",
+    "Duplicates disappear automatically.",
+    "No order and no indexing — you cannot write s[0].",
+    "| union, & intersection, - difference."],
+  syntax:"s = {1, 2, 2, 3}\nprint(s)            # {1, 2, 3}\na, b = {1,2,3}, {3,4,5}\nprint(a | b, a & b, a - b)",
+  mistakes:["Expecting a set to keep its order.","Using {} for an empty set — that creates a dict. Use set()."],
+  real:"Unique product names, which users appear in both lists, deduplicating an export."},
+ "Tuples":{
+  what:"A tuple is like a list, but it cannot be changed after creation.",
+  points:["Create with parentheses: (1, 2, 3).",
+    "Immutable — assigning to an element raises TypeError.",
+    "Useful for values that belong together and should not change.",
+    "Can be unpacked: x, y = point."],
+  syntax:"colors = (\"red\", \"green\")\nprint(colors[0], len(colors))\nx, y = (1, 2)\n# colors[0] = \"pink\"  # TypeError",
+  mistakes:["Trying to append to a tuple.","Forgetting the trailing comma for a single-item tuple: (5,)."],
+  real:"Coordinates, fixed configuration pairs, returning several values from a function."},
+ "Error handling":{
+  what:"Catching problems so your program reports them instead of crashing.",
+  points:["try holds the risky code; except handles the failure.",
+    "Catch the specific exception you expect, not a bare except.",
+    "else runs when nothing went wrong; finally always runs.",
+    "Common ones: ValueError, ZeroDivisionError, FileNotFoundError, KeyError."],
+  syntax:"try:\n    n = int(input())\nexcept ValueError:\n    print(\"not a number\")\nelse:\n    print(n)\nfinally:\n    print(\"done\")",
+  mistakes:["Using a bare except:, which hides real bugs.",
+    "Wrapping too much code in one try, so you cannot tell what failed."],
+  real:"A missing file, a malformed row in an export, a timed-out API call."},
+ "File handling":{
+  what:"Reading from and writing to files on disk.",
+  points:["Always use with open(...) — it closes the file for you.",
+    "Modes: \"r\" read, \"w\" write (overwrites!), \"a\" append.",
+    "f.read() gives the whole file; f.readlines() gives a list of lines.",
+    "Looping over the file object reads it line by line, which is memory-friendly."],
+  syntax:"with open(\"notes.txt\", \"w\") as f:\n    f.write(\"line one\\n\")\n\nwith open(\"notes.txt\") as f:\n    for line in f:\n        print(line.strip())",
+  mistakes:["Using \"w\" when you meant \"a\" — it silently wipes the file.",
+    "Forgetting .strip(), leaving a trailing newline on every line."],
+  real:"Reading a log, appending to a daily note, writing out a report."},
+ "Strings":{
+  what:"Text values, and the many methods for working with them.",
+  points:[".upper() .lower() .strip() .split() .replace() .join()",
+    "All of them return a NEW string — the original never changes.",
+    "s[::-1] reverses; s[a:b] takes a slice.",
+    "f-strings insert values: f\"Hello, {name}!\"",
+    "in tests for a substring: \"err\" in line."],
+  syntax:"s = \"  Hello World  \"\nprint(s.strip().lower())\nprint(s.split())\nprint(s.replace(\"World\", \"Python\"))\nprint(s.strip()[::-1])",
+  mistakes:["Calling s.upper() and not storing the result.",
+    "Forgetting that split() with no argument also collapses repeated spaces."],
+  real:"Cleaning exported data, parsing log lines, building report headings."}
+};
+function lessonFor(t){
+  if(!t) return null;
+  var key=t.title.replace(/^Learn:\s*/,"").trim();
+  return LESSONS[t.title]||LESSONS[key]||LESSONS[t.topic]||null;
+}
+function renderLesson(les,host){
+  var b=document.createElement("div"); b.className="lesson";
+  function blk(label,txt,cls){
+    var l=document.createElement("div"); l.className="specl"; l.style.marginBlockStart="12px"; l.textContent=label;
+    var v=document.createElement("div"); v.className=cls||"spect"; v.textContent=txt;
+    b.appendChild(l); b.appendChild(v);
+  }
+  var w=document.createElement("div"); w.className="lwhat"; w.textContent=les.what;
+  b.appendChild(w);
+  if(les.points&&les.points.length){
+    var pl=document.createElement("div"); pl.className="specl"; pl.style.marginBlockStart="12px";
+    pl.textContent="Key points"; b.appendChild(pl);
+    var ul=document.createElement("ul"); ul.className="lpts";
+    les.points.forEach(function(x){ var li=document.createElement("li"); li.textContent=x; ul.appendChild(li); });
+    b.appendChild(ul);
+  }
+  if(les.syntax){ blk("Syntax",les.syntax,"specout"); }
+  if(les.mistakes&&les.mistakes.length){
+    var ml=document.createElement("div"); ml.className="specl"; ml.style.marginBlockStart="12px";
+    ml.textContent="Common mistakes"; b.appendChild(ml);
+    var ul2=document.createElement("ul"); ul2.className="lpts lbad";
+    les.mistakes.forEach(function(x){ var li=document.createElement("li"); li.textContent=x; ul2.appendChild(li); });
+    b.appendChild(ul2);
+  }
+  if(les.real) blk("Where you will use it",les.real);
+  host.appendChild(b);
+}
+
+/* ---- runnable snippets for reading topics ---- */
+var LEARN_SNIPPETS={
+ "What Python is":"# Python runs top to bottom, one line at a time.\nprint(\"I am running Python\")\nprint(2 + 2)\n",
+ "Running a Python file":"# Everything you type here runs the same way a .py file does.\nprint(\"file started\")\nprint(\"file finished\")\n",
+ "print()":"print(\"one value\")\nprint(\"two\", \"values\")\nprint(\"a\", \"b\", sep=\"-\")\nprint(\"no newline\", end=\" \")\nprint(\"same line\")\n",
+ "Variables":"name = \"Abhinay\"\nage = 24\nprint(name)\nprint(age)\n\nage = 25          # variables can be reassigned\nprint(age)\n",
+ "Naming rules":"my_name = \"ok\"        # snake_case is the Python convention\n_hidden = \"ok\"        # may start with underscore\nvalue2 = \"ok\"         # may contain digits\nprint(my_name, _hidden, value2)\n\n# 2value = \"bad\"      # cannot start with a digit\n# my-name = \"bad\"     # no hyphens\n",
+ "str":"s = \"hello\"\nprint(s, type(s).__name__, len(s))\nprint(s.upper(), s[0], s[-1])\n",
+ "int":"n = 42\nprint(n, type(n).__name__)\nprint(n + 8, n * 2, n // 5, n % 5)\n",
+ "float":"f = 3.5\nprint(f, type(f).__name__)\nprint(f + 0.5, round(3.14159, 2))\n",
+ "bool":"b = True\nprint(b, type(b).__name__)\nprint(5 > 3, 5 == 3, not b)\n",
+ "Type conversion":"print(int(\"25\") + 5)      # str -> int\nprint(str(25) + \"5\")      # int -> str\nprint(float(\"2.5\") * 2)   # str -> float\nprint(int(5.9))           # truncates, does not round\n",
+ "input()":"# Put a value in the stdin box below, then run.\nname = input()\nprint(\"Hello,\", name)\n",
+ "Arithmetic operators":"a, b = 7, 2\nprint(a + b, a - b, a * b)\nprint(a / b)    # 3.5  true division\nprint(a // b)   # 3    floor division\nprint(a % b)    # 1    remainder\nprint(a ** b)   # 49   power\n",
+ "Comparison operators":"print(5 > 3, 5 < 3, 5 == 5, 5 != 3, 5 >= 5, 5 <= 4)\n",
+ "Logical operators":"age = 25\nprint(age > 18 and age < 65)\nprint(age < 18 or age > 65)\nprint(not (age > 18))\nprint(18 < age < 65)     # Python allows chaining\n",
+ "if":"n = 5\nif n > 0:\n    print(\"positive\")\n",
+ "elif":"n = 0\nif n > 0:\n    print(\"positive\")\nelif n < 0:\n    print(\"negative\")\nelse:\n    print(\"zero\")\n",
+ "else":"score = 35\nif score >= 40:\n    print(\"Pass\")\nelse:\n    print(\"Fail\")\n",
+ "Nested conditions":"age, has_id = 20, True\nif age >= 18:\n    if has_id:\n        print(\"allowed\")\n    else:\n        print(\"need ID\")\nelse:\n    print(\"too young\")\n",
+ "for":"for i in [1, 2, 3]:\n    print(i)\n\nfor letter in \"abc\":\n    print(letter)\n",
+ "range()":"print(list(range(5)))        # 0..4\nprint(list(range(1, 6)))     # 1..5\nprint(list(range(2, 11, 2))) # evens\nprint(list(range(10, 0, -1)))# countdown\n",
+ "For & While loops":"for i in range(1, 4):\n    print(\"for\", i)\n\nn = 1\nwhile n <= 3:\n    print(\"while\", n)\n    n += 1\n",
+ "While Loops":"n = 5\nwhile n > 0:\n    print(n)\n    n -= 1\nprint(\"done\")\n",
+ "For Loops":"total = 0\nfor i in range(1, 11):\n    total += i\nprint(total)\n",
+ "Accumulators":"total = 0\nfor i in [4, 8, 15]:\n    total += i      # accumulate\nprint(total)\n",
+ "break":"for i in range(10):\n    if i == 3:\n        break       # stop the loop entirely\n    print(i)\n",
+ "continue":"for i in range(5):\n    if i == 2:\n        continue    # skip just this pass\n    print(i)\n",
+ "Lists":"nums = [3, 1, 2]\nnums.append(4)\nnums.remove(1)\nprint(nums, len(nums), max(nums), sorted(nums))\n",
+ "Indexing":"items = [\"a\", \"b\", \"c\", \"d\"]\nprint(items[0], items[-1])\nprint(items[1:3], items[:2], items[::-1])\n",
+ "Methods":"nums = [1, 2, 3]\nnums.append(4)\nnums.insert(0, 0)\nnums.pop()\nprint(nums, nums.count(1), nums.index(2))\n",
+ "Tuples":"colors = (\"red\", \"green\", \"blue\")\nprint(colors[1], len(colors))\n\ntry:\n    colors[0] = \"pink\"   # tuples are immutable\nexcept TypeError as e:\n    print(\"TypeError:\", e)\n",
+ "Dictionaries":"case = {\"id\": 101, \"status\": \"Open\"}\nprint(case[\"status\"], case.get(\"owner\", \"none\"))\ncase[\"owner\"] = \"Abhinay\"\nfor k, v in case.items():\n    print(k, \"=\", v)\n",
+ "Keys and values":"d = {\"a\": 1, \"b\": 2}\nprint(list(d.keys()))\nprint(list(d.values()))\nprint(list(d.items()))\n",
+ "Sets":"s = {1, 2, 2, 3}\nprint(s)              # duplicates vanish\ns.add(4)\nprint(s, len(s))\n",
+ "Set operations":"a, b = {1, 2, 3}, {3, 4, 5}\nprint(a | b)   # union\nprint(a & b)   # intersection\nprint(a - b)   # difference\n",
+ "Functions":"def add(a, b):\n    return a + b\n\nprint(add(2, 3))\nprint(add(10, -4))\n",
+ "Parameters":"def greet(name, greeting=\"Hello\"):\n    return f\"{greeting}, {name}!\"\n\nprint(greet(\"Abhinay\"))\nprint(greet(\"Sam\", \"Hi\"))\n",
+ "Return values":"def double(n):\n    return n * 2      # return sends a value back\n\ndef shout(n):\n    print(n * 2)      # print only displays it\n\nx = double(5)\ny = shout(5)\nprint(x, y)           # y is None\n",
+ "Default arguments":"def power(base, exp=2):\n    return base ** exp\n\nprint(power(3))\nprint(power(3, 3))\n",
+ "Scope":"count = 0\n\ndef local_only():\n    inside = 5\n    print(\"inside:\", inside)\n\ndef uses_global():\n    global count\n    count += 1\n\nlocal_only()\nuses_global()\nprint(\"count:\", count)\n",
+ "Local and global scope":"x = \"global\"\n\ndef f():\n    x = \"local\"\n    print(x)\n\nf()\nprint(x)\n",
+ "Built-in functions":"nums = [3, 1, 2]\nprint(len(nums), max(nums), min(nums), sum(nums))\nprint(sorted(nums), list(reversed(nums)))\nprint(abs(-5), round(3.7), type(nums).__name__)\n",
+ "Modules":"import math, random\nprint(math.sqrt(16), math.pi)\nprint(math.floor(5.7), math.ceil(5.2))\nrandom.seed(1)\nprint(random.randint(1, 100))\n",
+ "math module":"import math\nprint(math.sqrt(25))\nprint(round(math.pi, 4))\nprint(math.floor(5.9), math.ceil(5.1))\n",
+ "random module":"import random\nprint(random.randint(1, 6))\nprint(random.choice([\"a\", \"b\", \"c\"]))\n",
+ "Strings":"s = \"  Hello World  \"\nprint(s.strip())\nprint(s.strip().lower(), s.strip().upper())\nprint(s.strip().split())\nprint(s.strip().replace(\"World\", \"Python\"))\nprint(s.strip()[::-1])\n",
+ "List comprehensions":"squares = [n * n for n in range(1, 6)]\nevens = [n for n in range(10) if n % 2 == 0]\nprint(squares)\nprint(evens)\n",
+ "Error handling":"try:\n    print(10 / 0)\nexcept ZeroDivisionError:\n    print(\"cannot divide by zero\")\nelse:\n    print(\"no error\")\nfinally:\n    print(\"always runs\")\n",
+ "try":"try:\n    n = int(\"abc\")\nexcept ValueError as e:\n    print(\"ValueError:\", e)\n",
+ "except":"for value in [\"5\", \"x\"]:\n    try:\n        print(int(value))\n    except ValueError:\n        print(value, \"is not a number\")\n",
+ "Common exception types":"for f in [lambda: 1/0, lambda: int(\"x\"), lambda: [][0], lambda: {}[\"k\"]]:\n    try:\n        f()\n    except Exception as e:\n        print(type(e).__name__)\n",
+ "File handling":"with open(\"demo.txt\", \"w\") as f:\n    f.write(\"line one\\nline two\\n\")\n\nwith open(\"demo.txt\") as f:\n    print(f.read())\n\nwith open(\"demo.txt\", \"a\") as f:\n    f.write(\"line three\\n\")\n\nprint(open(\"demo.txt\").read().count(\"\\n\"), \"lines\")\n",
+ "open()":"with open(\"note.txt\", \"w\") as f:\n    f.write(\"hello\")\nprint(open(\"note.txt\").read())\n",
+ "read / write / append":"with open(\"a.txt\", \"w\") as f: f.write(\"first\\n\")\nwith open(\"a.txt\", \"a\") as f: f.write(\"second\\n\")\nprint(open(\"a.txt\").read())\n",
+ "Context managers":"# 'with' closes the file for you, even if an error happens\nwith open(\"b.txt\", \"w\") as f:\n    f.write(\"safe\")\nprint(open(\"b.txt\").read())\n",
+ "csv module":"import csv\nwith open(\"d.csv\", \"w\", newline=\"\") as f:\n    csv.writer(f).writerows([[\"id\",\"status\"],[1,\"Open\"],[2,\"Closed\"]])\n\nwith open(\"d.csv\") as f:\n    for row in csv.DictReader(f):\n        print(row)\n",
+ "json module":"import json\ndata = {\"name\": \"LearnTrack\", \"version\": 2}\ntext = json.dumps(data)\nprint(text)\nprint(json.loads(text)[\"name\"])\n",
+ "DictReader":"import csv\nwith open(\"e.csv\", \"w\", newline=\"\") as f:\n    f.write(\"id,status\\n1,Open\\n2,Closed\\n\")\nwith open(\"e.csv\") as f:\n    for row in csv.DictReader(f):\n        print(row[\"id\"], row[\"status\"])\n",
+ "Classes":"class Car:\n    def __init__(self, brand, model):\n        self.brand = brand\n        self.model = model\n\n    def details(self):\n        return f\"{self.brand} {self.model}\"\n\nc = Car(\"Tata\", \"Nexon\")\nprint(c.brand, c.model)\nprint(c.details())\n",
+ "Objects":"class Dog:\n    def __init__(self, name):\n        self.name = name\n\na, b = Dog(\"Rex\"), Dog(\"Bo\")\nprint(a.name, b.name)\nprint(a is b)\n",
+ "Constructor":"class Case:\n    def __init__(self, cid, status=\"Open\"):\n        self.cid = cid\n        self.status = status\n\nprint(Case(1).status)\nprint(Case(2, \"Closed\").status)\n",
+ "Instance methods":"class Counter:\n    def __init__(self):\n        self.n = 0\n    def bump(self):\n        self.n += 1\n        return self.n\n\nc = Counter()\nprint(c.bump(), c.bump())\n",
+ "Methods":"class Case:\n    def __init__(self, cid): self.cid = cid\n    def summary(self): return f\"Case {self.cid}\"\n\nprint(Case(7).summary())\n",
+ "Inheritance":"class Animal:\n    def speak(self):\n        return \"...\"\n\nclass Dog(Animal):\n    def speak(self):\n        return \"Woof\"\n\nprint(Animal().speak())\nprint(Dog().speak())\n",
+ "Encapsulation":"class Case:\n    def __init__(self, owner):\n        self._owner = owner       # underscore = internal\n    def get_owner(self):\n        return self._owner\n\nc = Case(\"Abhinay\")\nprint(c.get_owner())\n",
+ "Classes and objects":"class Point:\n    def __init__(self, x, y):\n        self.x, self.y = x, y\n\np = Point(2, 3)\nprint(p.x, p.y)\n",
+ "Notebook cells":"# A notebook runs one cell at a time and keeps the variables around.\ntotal = 10\nprint(total)\ntotal += 5\nprint(total)\n",
+ "Arrays":"import numpy as np\na = np.array([1, 2, 3, 4])\nprint(a, a.shape, a.dtype)\nprint(a * 2, a.sum(), a.mean())\n",
+ "Basic calculations":"import numpy as np\na = np.array([1, 2, 3, 4, 5])\nprint(a.sum(), a.mean(), a.max(), a.min())\n",
+ "Summary statistics":"import numpy as np\na = np.array([2, 4, 4, 4, 5, 5, 7, 9])\nprint(a.mean(), np.median(a), round(a.std(), 2))\n",
+ "Series":"import pandas as pd\ns = pd.Series([10, 20, 30], index=[\"a\", \"b\", \"c\"])\nprint(s)\nprint(s[\"b\"], s.sum())\n",
+ "DataFrame":"import pandas as pd\ndf = pd.DataFrame({\"id\": [1, 2, 3], \"status\": [\"Open\", \"Closed\", \"Open\"]})\nprint(df)\nprint(df.shape)\nprint(df[\"status\"].value_counts())\n",
+ "Reading CSV":"import pandas as pd\nwith open(\"f.csv\", \"w\") as f:\n    f.write(\"id,status\\n1,Open\\n2,Closed\\n\")\ndf = pd.read_csv(\"f.csv\")\nprint(df)\nprint(len(df), list(df.columns))\n",
+ "Selecting rows and columns":"import pandas as pd\ndf = pd.DataFrame({\"id\":[1,2,3], \"status\":[\"Open\",\"Closed\",\"Open\"]})\nprint(df[\"status\"])\nprint(df[df[\"status\"] == \"Open\"])\nprint(df.head(2))\n",
+ "groupby()":"import pandas as pd\ndf = pd.DataFrame({\"status\":[\"Open\",\"Open\",\"Closed\"], \"n\":[1,2,3]})\nprint(df.groupby(\"status\").size())\nprint(df.groupby(\"status\")[\"n\"].sum())\n",
+ "value_counts()":"import pandas as pd\ns = pd.Series([\"Teams\", \"Excel\", \"Teams\"])\nprint(s.value_counts())\nprint(s.value_counts().to_dict())\n",
+ "Missing values":"import pandas as pd, numpy as np\ndf = pd.DataFrame({\"a\": [1, np.nan, 3]})\nprint(df.isna().sum())\nprint(df.fillna(0))\nprint(df.dropna())\n",
+ "Duplicates":"import pandas as pd\ndf = pd.DataFrame({\"a\": [1, 1, 2]})\nprint(df.duplicated().sum())\nprint(df.drop_duplicates())\n",
+ "Sorting":"import pandas as pd\ndf = pd.DataFrame({\"a\": [3, 1, 2]})\nprint(df.sort_values(\"a\"))\nprint(df.sort_values(\"a\", ascending=False))\n",
+ "Filtering":"import pandas as pd\ndf = pd.DataFrame({\"n\": [1, 5, 9]})\nprint(df[df[\"n\"] > 3])\n",
+ "Aggregations":"import pandas as pd\ndf = pd.DataFrame({\"g\": [\"a\",\"a\",\"b\"], \"v\": [1,2,3]})\nprint(df.groupby(\"g\")[\"v\"].agg([\"sum\", \"mean\", \"count\"]))\n",
+ "SELECT":"import sqlite3\nc = sqlite3.connect(\":memory:\")\nc.execute(\"CREATE TABLE t(name TEXT, v INT)\")\nc.executemany(\"INSERT INTO t VALUES (?,?)\", [(\"A\",3),(\"B\",5)])\nprint(c.execute(\"SELECT * FROM t\").fetchall())\n",
+ "WHERE":"import sqlite3\nc = sqlite3.connect(\":memory:\")\nc.execute(\"CREATE TABLE t(name TEXT, v INT)\")\nc.executemany(\"INSERT INTO t VALUES (?,?)\", [(\"A\",3),(\"B\",5)])\nprint(c.execute(\"SELECT * FROM t WHERE v > 3\").fetchall())\n",
+ "ORDER BY":"import sqlite3\nc = sqlite3.connect(\":memory:\")\nc.execute(\"CREATE TABLE t(name TEXT, v INT)\")\nc.executemany(\"INSERT INTO t VALUES (?,?)\", [(\"A\",3),(\"B\",5)])\nprint(c.execute(\"SELECT * FROM t ORDER BY v DESC\").fetchall())\n",
+ "GROUP BY":"import sqlite3\nc = sqlite3.connect(\":memory:\")\nc.execute(\"CREATE TABLE t(status TEXT)\")\nc.executemany(\"INSERT INTO t VALUES (?)\", [(\"Open\",),(\"Open\",),(\"Closed\",)])\nprint(c.execute(\"SELECT status, COUNT(*) FROM t GROUP BY status\").fetchall())\n",
+ "Basic joins":"import sqlite3\nc = sqlite3.connect(\":memory:\")\nc.execute(\"CREATE TABLE cases(id INT, pid INT)\")\nc.execute(\"CREATE TABLE products(id INT, name TEXT)\")\nc.executemany(\"INSERT INTO cases VALUES (?,?)\", [(1,10),(2,20)])\nc.executemany(\"INSERT INTO products VALUES (?,?)\", [(10,\"Teams\"),(20,\"Excel\")])\nprint(c.execute(\"SELECT c.id, p.name FROM cases c JOIN products p ON c.pid = p.id\").fetchall())\n",
+ "sqlite3":"import sqlite3\nc = sqlite3.connect(\":memory:\")\nc.execute(\"CREATE TABLE t(n TEXT)\")\nc.execute(\"INSERT INTO t VALUES ('hello')\")\nc.commit()\nprint(c.execute(\"SELECT * FROM t\").fetchall())\n",
+ "HTTP methods":"# GET reads, POST creates, PUT replaces, PATCH updates, DELETE removes.\nfor m in [\"GET\", \"POST\", \"PUT\", \"PATCH\", \"DELETE\"]:\n    print(m)\n",
+ "Status codes":"codes = {200: \"OK\", 201: \"Created\", 400: \"Bad Request\",\n         401: \"Unauthorized\", 404: \"Not Found\", 500: \"Server Error\"}\nfor k, v in codes.items():\n    print(k, v)\n",
+ "JSON responses":"import json\nbody = '{\"data\": {\"user\": {\"name\": \"Sam\"}}}'\npayload = json.loads(body)\nprint(payload[\"data\"][\"user\"][\"name\"])\n",
+ "Headers":"headers = {\"Authorization\": \"Bearer TOKEN\", \"Accept\": \"application/json\"}\nfor k, v in headers.items():\n    print(k + \": \" + v)\n",
+ "requests":"# Live network calls are blocked here, but this is the shape:\n#   r = requests.get(url, headers=h, timeout=10)\n#   r.raise_for_status()\n#   data = r.json()\nimport json\nprint(json.loads('{\"ok\": true}'))\n",
+ "REST":"# A REST endpoint is a noun; the method is the verb.\nfor path in [\"GET /cases\", \"GET /cases/1\", \"POST /cases\", \"DELETE /cases/1\"]:\n    print(path)\n",
+ "Authentication concepts":"token = \"abc123\"\nheaders = {\"Authorization\": f\"Bearer {token}\"}\nprint(headers)\n",
+ "Docstrings":"def area(r: float) -> float:\n    \"\"\"Return the area of a circle with radius r.\"\"\"\n    return 3.14159 * r * r\n\nprint(area(2))\nprint(area.__doc__)\n",
+ "Type hints":"def add(a: int, b: int) -> int:\n    return a + b\n\nprint(add(2, 3))\nprint(add.__annotations__)\n",
+ "Logging":"import logging\nlogging.basicConfig(level=logging.INFO, format=\"%(levelname)s: %(message)s\")\nlogging.info(\"started\")\nlogging.warning(\"careful\")\nlogging.error(\"something broke\")\n",
+ "pytest":"def add(a, b):\n    return a + b\n\n# In a real project these live in test_*.py and pytest finds them.\nassert add(2, 3) == 5\nassert add(-1, 1) == 0\nprint(\"all assertions passed\")\n",
+ "Meaningful names":"# Hard to read\nx = 60 * 8\n# Clear\nminutes_per_shift = 60 * 8\nprint(minutes_per_shift)\n",
+ "Small functions":"def to_hours(minutes):\n    return minutes // 60\n\ndef to_minutes(minutes):\n    return minutes % 60\n\nprint(to_hours(485), to_minutes(485))\n"
+};
+/* ---- clean, professional display titles ----
+   The underlying data keeps its original key; this is what the learner sees. */
+var TITLES={
+ 'Ask for a score and print "Pass" if >= 40, else "Fail".':"Pass or Fail Checker",
+ 'Print "Hello, Python!"':"Hello, Python!",
+ 'Write a program that prints "Hello, Python!".':"Your First Program",
+ "Print your name on a second line.":"Two Lines of Output",
+ "Store your name, city and current learning goal in variables.":"Three Variables",
+ "Print all three values.":"Values on One Line",
+ "Create one variable of each basic data type.":"The Four Basic Types",
+ "Print each value and its type.":"Identify the Type",
+ 'Convert "25" into an integer.':"Text to Number",
+ "Add 5 and print the result.":"Convert, Then Calculate",
+ 'Store your name in a variable and print "Hello, <name>!".':"Personalised Greeting",
+ "Create variables for age, height, and is_student. Print them.":"Mixed Types",
+ "Convert a float (e.g. 5.7) into an integer.":"Truncating a Decimal",
+ "Write a program to check if 15 > 10 and print the result.":"Comparison Result",
+ "Use logical operators to check if a number is between 10 and 20.":"Range Check",
+ "Take user input for two numbers and print their sum.":"Sum of Two Numbers",
+ "Ask for a string input and print its length.":"String Length",
+ "Write a program that checks if a number is positive, negative, or zero.":"Sign of a Number",
+ "Print numbers from 1 to 10 using a for loop.":"Count to Ten",
+ "Print numbers from 1 to 10.":"Count to Ten",
+ "Print 1 through 10.":"Count to Ten",
+ "Print numbers from 1 to 5.":"Count to Five",
+ "Print even numbers up to 20 using a while loop.":"Even Numbers with While",
+ "Print even numbers up to 20.":"Even Numbers",
+ "Print odd numbers up to 20.":"Odd Numbers",
+ "Calculate the sum of 1 through 10.":"Sum 1 to 10",
+ "Sum the numbers from 1 to 10.":"Sum 1 to 10",
+ "Sum numbers from 1-10.":"Sum 1 to 10",
+ "Sum only the even numbers from 1 to 20.":"Sum of Evens",
+ "Count how many numbers between 1 and 50 are divisible by 3.":"Divisible by Three",
+ "Print the multiplication table of 5.":"Times Table of 5",
+ "Print a multiplication table.":"Times Table",
+ "Print the multiplication table of any input number.":"Times Table",
+ "Countdown from 10.":"Countdown",
+ "Print a countdown from 10 to 1.":"Countdown",
+ "Print a countdown from 10 to 1 using a for loop.":"Countdown with For",
+ "Print a countdown from any input number.":"Countdown from N",
+ "Print the first 5 multiples of 3.":"First Five Multiples",
+ "Print numbers 1 to 10 using while.":"Count to Ten with While",
+ "Sum numbers 1 to 10 using while.":"Sum with While",
+ "Print even numbers up to 20 using while.":"Evens with While",
+ "Print odd numbers up to 20 using while.":"Odds with While",
+ 'Print "Hello Python".':"Hello Python",
+ "Print your name.":"Echo the Input",
+ "Store your age and print it.":"Store and Print an Age",
+ "Store your city and print it.":"Store and Print a City",
+ "Create an integer variable and print its type.":"Type of an Integer",
+ "Create a string variable and print its type.":"Type of a String",
+ "Ask the user for their name.":"Read a Name",
+ "Print a greeting using that name.":"Greeting from Input",
+ "Print your name, age and city together.":"Three Values, One Line",
+ "Take age as input and display it.":"Read and Display an Age",
+ "Check if 10 > 5 and print the result.":"Comparison Result",
+ "Add two numbers.":"Add Two Numbers",
+ "Multiply two numbers.":"Multiply Two Numbers",
+ "Check whether one number is greater than another.":"Which Is Greater?",
+ "Check whether a number is between 10 and 20.":"Range Check",
+ "Check if two numbers are equal.":"Equality Check",
+ "Check if age is greater than 18.":"Adult Check",
+ "Age greater than 18?":"Adult Check",
+ "Positive, negative or zero":"Sign of a Number",
+ "Check whether a number is positive or negative.":"Sign of a Number",
+ "Pass or fail":"Pass or Fail Checker",
+ "Print Pass or Fail based on a score.":"Pass or Fail Checker",
+ "Odd or even":"Odd or Even",
+ "Check whether a number is even or odd.":"Odd or Even",
+ "Basic age-category checker":"Age Category",
+ "Accept working minutes.":"Read the Minutes",
+ "Convert minutes into hours and minutes.":"Minutes to Hours",
+ "Display a clean summary.":"Format a Shift Summary",
+ "Handle an invalid numeric input.":"Handle Invalid Input",
+ "Reverse a string using slicing.":"Reverse a String",
+ "Reverse string":"Reverse a String",
+ "Count vowels in a string.":"Count the Vowels",
+ "Count the vowels in a string.":"Count the Vowels",
+ "Count vowels":"Count the Vowels",
+ "Count the consonants too.":"Count the Consonants",
+ "Check whether a word is a palindrome.":"Palindrome Check",
+ "Count the words in a sentence.":"Count the Words",
+ "Count words":"Count the Words",
+ "Find the longest word in a sentence.":"Longest Word",
+ "Convert a string to uppercase.":"Uppercase",
+ "Uppercase conversion":"Uppercase",
+ "Lowercase conversion":"Lowercase",
+ "Convert a string to lowercase and strip whitespace.":"Clean Up Text",
+ "Capitalise the first letter of every word.":"Title Case",
+ "Replace all spaces with underscores.":"Replace Spaces",
+ "Ask for a name and print a greeting.":"Greeting from Input",
+ "Ask for two numbers and print their sum.":"Sum of Two Numbers",
+ "Keep asking until a valid number is entered.":"First Valid Number",
+ "Add values until the user enters zero.":"Sum Until Zero",
+ "Create a three-attempt login simulation.":"Three-Attempt Login",
+ "Store five case numbers in a list.":"Build a List",
+ "Add and remove an item.":"Add and Remove",
+ "Find the largest value.":"Largest Value",
+ "Remove duplicate values.":"Remove Duplicates",
+ "Store a case with ID, status and owner.":"Build a Case Record",
+ "Count case statuses using a dictionary.":"Count by Status",
+ "Find unique product names using a set.":"Unique Products",
+ "Compare two sets of workspace users.":"Users in Common"
+};
+function displayTitle(t){
+  if(!t) return "";
+  var raw=(typeof t==="string")?t:t.title;
+  var base=raw.replace(/^(Project|Learn):\s*/,"").trim();
+  var pre=raw.match(/^(Project|Learn):\s*/);
+  var clean=TITLES[raw]||TITLES[base]||null;
+  if(!clean) return raw;
+  return (pre?pre[1]+": ":"")+clean;
+}
+/* ================= I/O EXERCISES =================
+   Beginner-friendly: no functions needed. The learner reads with input()
+   and prints with print(). Each case runs the whole script with its own
+   stdin and compares stdout exactly. This is how HackerRank works.        */
+var IO={
+ /* ---------- week 1: output and variables ---------- */
+ "Print \"Hello, Python!\"":{
+  objective:"Print a fixed greeting to the screen.",
+  statement:"Write a program that prints the text Hello, Python! exactly as shown — same capitals, same comma, same exclamation mark.",
+  input:"No input.",
+  output:"One line containing: Hello, Python!",
+  example:{in:"",out:"Hello, Python!",why:"print() writes its argument followed by a newline."},
+  cases:[{in:"",out:"Hello, Python!",name:"exact text"}]},
+
+ "Print your name on a second line.":{
+  objective:"Produce multi-line output.",
+  statement:"Read one line of input containing a name, then print two lines:\nline 1 — Hello, Python!\nline 2 — the name you read.",
+  input:"A single line: the name.",
+  output:"Two lines, as described above.",
+  example:{in:"Abhinay",out:"Hello, Python!\nAbhinay",why:"Each print() call starts a new line."},
+  cases:[{in:"Abhinay",out:"Hello, Python!\nAbhinay",name:"basic"},
+         {in:"Sam",out:"Hello, Python!\nSam",name:"different name"},
+         {in:"A",out:"Hello, Python!\nA",name:"single character"}]},
+
+ "Store your name, city and current learning goal in variables.":{
+  objective:"Store three values in variables and print them.",
+  statement:"Read three lines of input: a name, a city and a goal.\nStore each in its own variable, then print them on three separate lines in the order they were read.",
+  input:"Three lines: name, city, goal.",
+  output:"Three lines: the name, the city, then the goal.",
+  example:{in:"Abhinay\nHyderabad\nLearn Python",out:"Abhinay\nHyderabad\nLearn Python",
+    why:"Three input() calls read three lines; three print() calls write three lines."},
+  cases:[{in:"Abhinay\nHyderabad\nLearn Python",out:"Abhinay\nHyderabad\nLearn Python",name:"basic"},
+         {in:"Sam\nPune\nMaster SQL",out:"Sam\nPune\nMaster SQL",name:"different values"},
+         {in:"A\nB\nC",out:"A\nB\nC",name:"single characters"}]},
+
+ "Print all three values.":{
+  objective:"Print several values on one line.",
+  statement:"Read three lines: a name, a city and a goal.\nPrint all three on ONE line, separated by single spaces.",
+  input:"Three lines: name, city, goal.",
+  output:"One line with the three values separated by single spaces.",
+  example:{in:"Abhinay\nHyderabad\nLearn Python",out:"Abhinay Hyderabad Learn Python",
+    why:"print(a, b, c) joins its arguments with a space by default."},
+  cases:[{in:"Abhinay\nHyderabad\nLearn Python",out:"Abhinay Hyderabad Learn Python",name:"basic"},
+         {in:"Sam\nPune\nSQL",out:"Sam Pune SQL",name:"short values"},
+         {in:"X\nY\nZ",out:"X Y Z",name:"single characters"}]},
+
+ "Create one variable of each basic data type.":{
+  objective:"Recognise Python's four basic types.",
+  statement:"Create four variables — a string, an integer, a float and a boolean — using these exact values:\n  s = \"hello\"\n  n = 42\n  f = 3.5\n  b = True\nPrint each value on its own line, in that order.",
+  input:"No input.",
+  output:"Four lines: hello, 42, 3.5, True",
+  example:{in:"",out:"hello\n42\n3.5\nTrue",why:"print() converts each value to text automatically."},
+  cases:[{in:"",out:"hello\n42\n3.5\nTrue",name:"all four types"}]},
+
+ "Print each value and its type.":{
+  objective:"Inspect a value's type at runtime.",
+  statement:"Read four lines of input. Line 1 is text, line 2 is a whole number, line 3 is a decimal number, line 4 is either True or False.\nStore each value using the matching Python type, then print the NAME of each type on its own line, in the order they were read.\nPrint the short name only — for example str, not the longer class description Python shows by default.",
+  input:"Four lines: text, whole number, decimal, True/False.",
+  output:"Four lines: str, int, float, bool",
+  example:{in:"hello\n42\n3.5\nTrue",out:"str\nint\nfloat\nbool",
+    why:"After int(\"42\") the value is an int, so type(...).__name__ gives \"int\"."},
+  cases:[{in:"hello\n42\n3.5\nTrue",out:"str\nint\nfloat\nbool",name:"basic"},
+         {in:"abc\n0\n0.0\nFalse",out:"str\nint\nfloat\nbool",name:"zero values"},
+         {in:"x\n-7\n-2.5\nTrue",out:"str\nint\nfloat\nbool",name:"negative values"}]},
+
+ "Convert \"25\" into an integer.":{
+  objective:"Convert text to a number.",
+  statement:"Read one line that contains a whole number written as text.\nTurn that text into an actual number, then print it.",
+  input:"One line: a whole number as text.",
+  output:"One line: the same number, as an integer.",
+  example:{in:"25",out:"25",why:"int(\"25\") gives the number 25, which prints as 25."},
+  cases:[{in:"25",out:"25",name:"basic"},{in:"0",out:"0",name:"zero"},
+         {in:"-14",out:"-14",name:"negative"},{in:"1000000",out:"1000000",name:"large number"}]},
+
+ "Add 5 and print the result.":{
+  objective:"Convert text to a number, then do arithmetic on it.",
+  statement:"Read one line containing a whole number written as text.\nConvert it to an integer, add 5, and print the result.",
+  input:"One line: a whole number as text.",
+  output:"One line: the number plus 5.",
+  example:{in:"25",out:"30",why:"int(\"25\") + 5 = 30. Without int() you would get the text \"255\"."},
+  cases:[{in:"25",out:"30",name:"basic"},{in:"0",out:"5",name:"zero"},
+         {in:"-5",out:"0",name:"result is zero"},{in:"-12",out:"-7",name:"stays negative"}]},
+
+ /* ---------- basics track phase 1 ---------- */
+ "Write a program that prints \"Hello, Python!\".":{
+  objective:"Print a fixed line of text.",
+  statement:"Print the text Hello, Python! exactly as shown.",
+  input:"No input.",output:"One line: Hello, Python!",
+  example:{in:"",out:"Hello, Python!",why:"A single print() call."},
+  cases:[{in:"",out:"Hello, Python!",name:"exact text"}]},
+
+ "Store your name in a variable and print \"Hello, <name>!\".":{
+  objective:"Build a string from a variable.",
+  statement:"Read one line containing a name.\nStore it in a variable, then print Hello, <name>! — with a comma after Hello and an exclamation mark at the end.",
+  input:"One line: the name.",
+  output:"One line: Hello, <name>!",
+  example:{in:"Abhinay",out:"Hello, Abhinay!",why:'f"Hello, {name}!" inserts the variable into the text.'},
+  cases:[{in:"Abhinay",out:"Hello, Abhinay!",name:"basic"},
+         {in:"Sam",out:"Hello, Sam!",name:"short name"},
+         {in:"Ana Maria",out:"Hello, Ana Maria!",name:"name with a space"}]},
+
+ "Create variables for age, height, and is_student. Print them.":{
+  objective:"Store three different types in variables.",
+  statement:"Read three lines: an age (whole number), a height (decimal) and a status (True or False).\nConvert each to the right type and print them on three lines, in that order.",
+  input:"Three lines: age, height, True/False.",
+  output:"Three lines: the age, the height, the status.",
+  example:{in:"24\n5.9\nTrue",out:"24\n5.9\nTrue",why:"int(), float() and a comparison to \"True\" give the three types."},
+  cases:[{in:"24\n5.9\nTrue",out:"24\n5.9\nTrue",name:"basic"},
+         {in:"30\n6.1\nFalse",out:"30\n6.1\nFalse",name:"false status"},
+         {in:"0\n0.0\nTrue",out:"0\n0.0\nTrue",name:"zero values"}]},
+
+ "Convert a float (e.g. 5.7) into an integer.":{
+  objective:"Understand that converting a decimal to a whole number cuts off the fraction rather than rounding it.",
+  statement:"Read one line containing a decimal number.\nTurn it into a whole number and print the result.\nNote: the fractional part is discarded, not rounded — so a value just under six becomes five.",
+  input:"One line: a decimal number.",
+  output:"One line: the integer part.",
+  example:{in:"5.7",out:"5",why:"int(5.7) is 5, not 6 — the decimal part is discarded."},
+  cases:[{in:"5.7",out:"5",name:"rounds down"},{in:"9.99",out:"9",name:"nearly ten"},
+         {in:"3.0",out:"3",name:"already whole"},{in:"-2.7",out:"-2",name:"negative truncates toward zero"}]},
+
+ "Write a program to check if 15 > 10 and print the result.":{
+  objective:"Print the result of a comparison.",
+  statement:"Print the result of comparing 15 with 10 using the greater-than operator.\nA comparison produces True or False — print that value directly, not the word in quotes.",
+  input:"No input.",output:"One line: True",
+  example:{in:"",out:"True",why:"print(15 > 10) evaluates the comparison first, giving True."},
+  cases:[{in:"",out:"True",name:"comparison result"}]},
+
+ "Use logical operators to check if a number is between 10 and 20.":{
+  objective:"Combine two comparisons.",
+  statement:"Read one line containing a whole number.\nPrint True if the number is strictly between 10 and 20 (so 10 and 20 themselves do NOT count), otherwise print False.",
+  input:"One line: a whole number.",
+  output:"One line: True or False.",
+  example:{in:"15",out:"True",why:"15 is greater than 10 AND less than 20, so both conditions hold."},
+  cases:[{in:"15",out:"True",name:"in the middle"},{in:"10",out:"False",name:"lower boundary excluded"},
+         {in:"20",out:"False",name:"upper boundary excluded"},{in:"11",out:"True",name:"just inside"},
+         {in:"9",out:"False",name:"below range"},{in:"100",out:"False",name:"far above"}]},
+
+ "Take user input for two numbers and print their sum.":{
+  objective:"Read two numbers and add them.",
+  statement:"Read two lines, each containing a whole number.\nPrint their sum.",
+  input:"Two lines, each a whole number.",
+  output:"One line: the sum.",
+  example:{in:"7\n3",out:"10",why:"input() returns text, so convert with int() before adding."},
+  cases:[{in:"7\n3",out:"10",name:"basic"},{in:"0\n0",out:"0",name:"both zero"},
+         {in:"-5\n5",out:"0",name:"cancels out"},{in:"-4\n-6",out:"-10",name:"both negative"},
+         {in:"1000\n2500",out:"3500",name:"larger numbers"}]},
+
+ "Ask for a string input and print its length.":{
+  objective:"Measure the length of text.",
+  statement:"Read one line of text and print how many characters it contains.",
+  input:"One line of text.",
+  output:"One line: the number of characters.",
+  example:{in:"python",out:"6",why:"len(\"python\") counts six characters."},
+  cases:[{in:"python",out:"6",name:"basic"},{in:"a",out:"1",name:"single character"},
+         {in:"hello world",out:"11",name:"the space counts too"}]},
+
+ "Write a program that checks if a number is positive, negative, or zero.":{
+  objective:"Choose between three branches.",
+  statement:"Read one line containing a whole number.\nPrint exactly one of these lowercase words:\n  positive — if the number is greater than 0\n  negative — if the number is less than 0\n  zero — if the number is exactly 0",
+  input:"One line: a whole number.",
+  output:"One line: positive, negative or zero.",
+  example:{in:"-4",out:"negative",why:"-4 is less than 0, so the elif branch runs."},
+  cases:[{in:"5",out:"positive",name:"positive"},{in:"-4",out:"negative",name:"negative"},
+         {in:"0",out:"zero",name:"zero boundary"},{in:"-1",out:"negative",name:"just below zero"},
+         {in:"1",out:"positive",name:"just above zero"}]},
+
+ "Ask for a score and print \"Pass\" if >= 40, else \"Fail\".":{
+  objective:"Apply a threshold rule.",
+  statement:"Read one line containing a score, which is a whole number.\nIf the score is forty or more, print the word Pass. Otherwise print the word Fail.\nMatch the capitalisation exactly: a capital P and a capital F.",
+  input:"One line: the score.",
+  output:"One line: Pass or Fail.",
+  example:{in:"55",out:"Pass",why:"55 >= 40, so the if branch runs."},
+  cases:[{in:"55",out:"Pass",name:"clear pass"},{in:"40",out:"Pass",name:"exactly at the boundary"},
+         {in:"39",out:"Fail",name:"just below the boundary"},{in:"0",out:"Fail",name:"lowest score"},
+         {in:"100",out:"Pass",name:"highest score"}]},
+
+ /* ---------- loops ---------- */
+ "Print numbers from 1 to 10 using a for loop.":{
+  objective:"Repeat an action a fixed number of times.",
+  statement:"Using a for loop, print the numbers from 1 to 10, one per line.",
+  input:"No input.",output:"Ten lines: 1 through 10.",
+  example:{in:"",out:"1\n2\n3\n4\n5\n6\n7\n8\n9\n10",
+    why:"range(1, 11) produces 1..10 — the end value is excluded."},
+  cases:[{in:"",out:"1\n2\n3\n4\n5\n6\n7\n8\n9\n10",name:"ten lines in order"}]},
+
+ "Print numbers from 1 to 10.":{
+  objective:"Repeat an action a fixed number of times.",
+  statement:"Print the numbers from 1 to 10, one per line.",
+  input:"No input.",output:"Ten lines: 1 through 10.",
+  example:{in:"",out:"1\n2\n3\n4\n5\n6\n7\n8\n9\n10",why:"range(1, 11) stops before 11."},
+  cases:[{in:"",out:"1\n2\n3\n4\n5\n6\n7\n8\n9\n10",name:"ten lines"}]},
+
+ "Print 1 through 10.":{
+  objective:"Repeat an action a fixed number of times.",
+  statement:"Print the numbers from 1 to 10, one per line.",
+  input:"No input.",output:"Ten lines: 1 through 10.",
+  example:{in:"",out:"1\n2\n3\n4\n5\n6\n7\n8\n9\n10",why:"range(1, 11)."},
+  cases:[{in:"",out:"1\n2\n3\n4\n5\n6\n7\n8\n9\n10",name:"ten lines"}]},
+
+ "Print numbers from 1 to 5.":{
+  objective:"Control where a loop stops.",
+  statement:"Print the numbers from 1 to 5, one per line.",
+  input:"No input.",output:"Five lines: 1 through 5.",
+  example:{in:"",out:"1\n2\n3\n4\n5",why:"range(1, 6) gives 1..5."},
+  cases:[{in:"",out:"1\n2\n3\n4\n5",name:"five lines"}]},
+
+ "Print even numbers up to 20 using a while loop.":{
+  objective:"Use a while loop with a step.",
+  statement:"Using a while loop, print every even number from 2 up to and including 20, one per line.",
+  input:"No input.",output:"Ten lines: 2, 4, 6 … 20.",
+  example:{in:"",out:"2\n4\n6\n8\n10\n12\n14\n16\n18\n20",
+    why:"Start at 2 and add 2 each pass while the value is <= 20."},
+  cases:[{in:"",out:"2\n4\n6\n8\n10\n12\n14\n16\n18\n20",name:"all evens to 20"}]},
+
+ "Print even numbers up to 20.":{
+  objective:"Produce a stepped sequence.",
+  statement:"Print every even number from 2 up to and including 20, one per line.",
+  input:"No input.",output:"Ten lines: 2 through 20 in steps of 2.",
+  example:{in:"",out:"2\n4\n6\n8\n10\n12\n14\n16\n18\n20",why:"range(2, 21, 2)."},
+  cases:[{in:"",out:"2\n4\n6\n8\n10\n12\n14\n16\n18\n20",name:"all evens"}]},
+
+ "Print odd numbers up to 20.":{
+  objective:"Produce a stepped sequence from a different start.",
+  statement:"Print every odd number from 1 up to 20, one per line. (The largest is 19.)",
+  input:"No input.",output:"Ten lines: 1, 3, 5 … 19.",
+  example:{in:"",out:"1\n3\n5\n7\n9\n11\n13\n15\n17\n19",why:"range(1, 20, 2) — 20 itself is even."},
+  cases:[{in:"",out:"1\n3\n5\n7\n9\n11\n13\n15\n17\n19",name:"all odds"}]},
+
+ "Calculate the sum of 1 through 10.":{
+  objective:"Accumulate a running total in a loop.",
+  statement:"Calculate the sum of all whole numbers from 1 to 10 and print the single result.",
+  input:"No input.",output:"One line: the total.",
+  example:{in:"",out:"55",why:"1+2+3+…+10 = 55. Keep a running total inside the loop."},
+  cases:[{in:"",out:"55",name:"total is 55"}]},
+
+ "Sum the numbers from 1 to 10.":{
+  objective:"Accumulate a running total.",
+  statement:"Print the sum of the whole numbers from 1 to 10.",
+  input:"No input.",output:"One line: 55",
+  example:{in:"",out:"55",why:"Add each number to a total that starts at 0."},
+  cases:[{in:"",out:"55",name:"total"}]},
+
+ "Sum numbers from 1-10.":{
+  objective:"Accumulate a running total.",
+  statement:"Print the sum of the whole numbers from 1 to 10.",
+  input:"No input.",output:"One line: 55",
+  example:{in:"",out:"55",why:"sum(range(1, 11)) or a loop with an accumulator."},
+  cases:[{in:"",out:"55",name:"total"}]},
+
+ "Sum only the even numbers from 1 to 20.":{
+  objective:"Combine a loop with a condition.",
+  statement:"Add together every even number from 1 to 20 and print the single total.",
+  input:"No input.",output:"One line: the total.",
+  example:{in:"",out:"110",why:"2+4+6+…+20 = 110."},
+  cases:[{in:"",out:"110",name:"even total"}]},
+
+ "Count how many numbers between 1 and 50 are divisible by 3.":{
+  objective:"Count items that match a condition.",
+  statement:"Count how many whole numbers from 1 to 50 divide exactly by 3, and print that count.",
+  input:"No input.",output:"One line: the count.",
+  example:{in:"",out:"16",why:"3, 6, 9 … 48 — that is 16 numbers. Use n % 3 == 0 to test divisibility."},
+  cases:[{in:"",out:"16",name:"count"}]},
+
+ "Print the multiplication table of 5.":{
+  objective:"Multiply inside a loop.",
+  statement:"Print the first ten multiples of 5, one per line — the numbers only, not 5 x 1 = 5.",
+  input:"No input.",output:"Ten lines: 5, 10, 15 … 50.",
+  example:{in:"",out:"5\n10\n15\n20\n25\n30\n35\n40\n45\n50",why:"Loop i from 1 to 10 and print 5 * i."},
+  cases:[{in:"",out:"5\n10\n15\n20\n25\n30\n35\n40\n45\n50",name:"ten multiples"}]},
+
+ "Print a multiplication table.":{
+  objective:"Build a table from user input.",
+  statement:"Read one line containing a whole number.\nPrint the first ten multiples of that number, one per line — numbers only.",
+  input:"One line: the base number.",
+  output:"Ten lines: the first ten multiples.",
+  example:{in:"5",out:"5\n10\n15\n20\n25\n30\n35\n40\n45\n50",why:"Loop i from 1 to 10 and print n * i."},
+  cases:[{in:"5",out:"5\n10\n15\n20\n25\n30\n35\n40\n45\n50",name:"table of 5"},
+         {in:"3",out:"3\n6\n9\n12\n15\n18\n21\n24\n27\n30",name:"table of 3"},
+         {in:"1",out:"1\n2\n3\n4\n5\n6\n7\n8\n9\n10",name:"table of 1"},
+         {in:"0",out:"0\n0\n0\n0\n0\n0\n0\n0\n0\n0",name:"table of 0"}]},
+
+ "Print the multiplication table of any input number.":{
+  objective:"Generalise a table to any input.",
+  statement:"Read one line containing a whole number and print its first ten multiples, one per line.",
+  input:"One line: the base number.",output:"Ten lines: the multiples.",
+  example:{in:"7",out:"7\n14\n21\n28\n35\n42\n49\n56\n63\n70",why:"n * i for i in 1..10."},
+  cases:[{in:"7",out:"7\n14\n21\n28\n35\n42\n49\n56\n63\n70",name:"table of 7"},
+         {in:"2",out:"2\n4\n6\n8\n10\n12\n14\n16\n18\n20",name:"table of 2"},
+         {in:"-3",out:"-3\n-6\n-9\n-12\n-15\n-18\n-21\n-24\n-27\n-30",name:"negative base"}]},
+
+ "Countdown from 10.":{
+  objective:"Loop backwards.",
+  statement:"Print the numbers from 10 down to 1, one per line.",
+  input:"No input.",output:"Ten lines: 10 down to 1.",
+  example:{in:"",out:"10\n9\n8\n7\n6\n5\n4\n3\n2\n1",why:"range(10, 0, -1) counts down."},
+  cases:[{in:"",out:"10\n9\n8\n7\n6\n5\n4\n3\n2\n1",name:"countdown"}]},
+
+ "Print a countdown from 10 to 1.":{
+  objective:"Loop backwards.",
+  statement:"Print 10 down to 1, one number per line.",
+  input:"No input.",output:"Ten lines counting down.",
+  example:{in:"",out:"10\n9\n8\n7\n6\n5\n4\n3\n2\n1",why:"A negative step reverses the direction."},
+  cases:[{in:"",out:"10\n9\n8\n7\n6\n5\n4\n3\n2\n1",name:"countdown"}]},
+
+ "Print a countdown from 10 to 1 using a for loop.":{
+  objective:"Loop backwards with for.",
+  statement:"Using a for loop, print 10 down to 1, one number per line.",
+  input:"No input.",output:"Ten lines counting down.",
+  example:{in:"",out:"10\n9\n8\n7\n6\n5\n4\n3\n2\n1",why:"range(10, 0, -1)."},
+  cases:[{in:"",out:"10\n9\n8\n7\n6\n5\n4\n3\n2\n1",name:"countdown"}]},
+
+ "Print a countdown from any input number.":{
+  objective:"Generalise a countdown.",
+  statement:"Read one line containing a whole number N.\nPrint N down to 1, one per line. If N is 0 or negative, print nothing.",
+  input:"One line: N.",output:"N lines counting down, or no output when N < 1.",
+  example:{in:"5",out:"5\n4\n3\n2\n1",why:"range(N, 0, -1) produces nothing when N is 0."},
+  cases:[{in:"5",out:"5\n4\n3\n2\n1",name:"basic"},{in:"1",out:"1",name:"single value"},
+         {in:"0",out:"",name:"edge case — no output"},{in:"3",out:"3\n2\n1",name:"three values"}]},
+
+ "Print the first 5 multiples of 3.":{
+  objective:"Produce a short sequence.",
+  statement:"Print the first five multiples of 3, one per line.",
+  input:"No input.",output:"Five lines: 3, 6, 9, 12, 15.",
+  example:{in:"",out:"3\n6\n9\n12\n15",why:"range(3, 16, 3)."},
+  cases:[{in:"",out:"3\n6\n9\n12\n15",name:"five multiples"}]},
+
+ "Print numbers 1 to 10 using while.":{
+  objective:"Use a while loop with a counter.",
+  statement:"Using a while loop, print the numbers 1 to 10, one per line.",
+  input:"No input.",output:"Ten lines.",
+  example:{in:"",out:"1\n2\n3\n4\n5\n6\n7\n8\n9\n10",
+    why:"Start at 1, print, add 1, repeat while the value is <= 10."},
+  cases:[{in:"",out:"1\n2\n3\n4\n5\n6\n7\n8\n9\n10",name:"ten lines"}]},
+
+ "Print the first 5 multiples of 3.":{
+  objective:"Produce a short sequence.",
+  statement:"Print the first five multiples of 3, one per line.",
+  input:"No input.",output:"Five lines: 3, 6, 9, 12, 15.",
+  example:{in:"",out:"3\n6\n9\n12\n15",why:"3 * i for i in 1..5."},
+  cases:[{in:"",out:"3\n6\n9\n12\n15",name:"five multiples"}]},
+
+ "Sum numbers 1 to 10 using while.":{
+  objective:"Accumulate inside a while loop.",
+  statement:"Using a while loop, add the numbers 1 to 10 and print the total.",
+  input:"No input.",output:"One line: 55",
+  example:{in:"",out:"55",why:"Keep a total outside the loop and add to it each pass."},
+  cases:[{in:"",out:"55",name:"total"}]},
+
+ "Print even numbers up to 20 using while.":{
+  objective:"Step by 2 in a while loop.",
+  statement:"Using a while loop, print every even number from 2 to 20, one per line.",
+  input:"No input.",output:"Ten lines.",
+  example:{in:"",out:"2\n4\n6\n8\n10\n12\n14\n16\n18\n20",why:"Start at 2, add 2 each pass."},
+  cases:[{in:"",out:"2\n4\n6\n8\n10\n12\n14\n16\n18\n20",name:"evens"}]},
+
+ "Print odd numbers up to 20 using while.":{
+  objective:"Step by 2 from an odd start.",
+  statement:"Using a while loop, print every odd number from 1 to 19, one per line.",
+  input:"No input.",output:"Ten lines.",
+  example:{in:"",out:"1\n3\n5\n7\n9\n11\n13\n15\n17\n19",why:"Start at 1, add 2 each pass."},
+  cases:[{in:"",out:"1\n3\n5\n7\n9\n11\n13\n15\n17\n19",name:"odds"}]},
+
+ /* ---------- simple text / numbers ---------- */
+ "Print \"Hello Python\".":{
+  objective:"Print a fixed line.",
+  statement:"Print the text Hello Python — no comma, no exclamation mark.",
+  input:"No input.",output:"One line: Hello Python",
+  example:{in:"",out:"Hello Python",why:"Exact text matters, including the space."},
+  cases:[{in:"",out:"Hello Python",name:"exact text"}]},
+
+ "Print your name.":{
+  objective:"Echo input back.",
+  statement:"Read one line containing a name and print it exactly as given.",
+  input:"One line: the name.",output:"One line: the same name.",
+  example:{in:"Abhinay",out:"Abhinay",why:"print(input()) reads then writes."},
+  cases:[{in:"Abhinay",out:"Abhinay",name:"basic"},{in:"Sam",out:"Sam",name:"short name"},
+         {in:"Ana Maria",out:"Ana Maria",name:"name with a space"}]},
+
+ "Store your age and print it.":{
+  objective:"Store a number then print it.",
+  statement:"Read one line containing an age, store it in a variable, then print it.",
+  input:"One line: the age.",output:"One line: the age.",
+  example:{in:"24",out:"24",why:"Assign to a variable first, then print the variable."},
+  cases:[{in:"24",out:"24",name:"basic"},{in:"0",out:"0",name:"zero"},{in:"99",out:"99",name:"large value"}]},
+
+ "Store your city and print it.":{
+  objective:"Store text then print it.",
+  statement:"Read one line containing a city name, store it in a variable, then print it.",
+  input:"One line: the city.",output:"One line: the city.",
+  example:{in:"Hyderabad",out:"Hyderabad",why:"Assign, then print the variable."},
+  cases:[{in:"Hyderabad",out:"Hyderabad",name:"basic"},{in:"Pune",out:"Pune",name:"short name"},
+         {in:"New Delhi",out:"New Delhi",name:"two words"}]},
+
+ "Create an integer variable and print its type.":{
+  objective:"Check a value's type.",
+  statement:"Read one line containing a whole number.\nStore it as a whole-number value, then print the short name of its type.",
+  input:"One line: a whole number.",output:"One line: int",
+  example:{in:"42",out:"int",why:"After int(\"42\") the type name is \"int\"."},
+  cases:[{in:"42",out:"int",name:"basic"},{in:"0",out:"int",name:"zero"},{in:"-9",out:"int",name:"negative"}]},
+
+ "Create a string variable and print its type.":{
+  objective:"Check a value's type.",
+  statement:"Read one line of text and print the short name of its type.",
+  input:"One line of text.",output:"One line: str",
+  example:{in:"hello",out:"str",why:"input() always returns a str."},
+  cases:[{in:"hello",out:"str",name:"basic"},{in:"123",out:"str",name:"digits are still text"}]},
+
+ "Ask the user for their name.":{
+  objective:"Read a line of input.",
+  statement:"Read one line containing a name and print it back exactly.",
+  input:"One line: the name.",output:"One line: the same name.",
+  example:{in:"Abhinay",out:"Abhinay",why:"input() reads a whole line without the newline."},
+  cases:[{in:"Abhinay",out:"Abhinay",name:"basic"},{in:"Sam",out:"Sam",name:"short name"}]},
+
+ "Print a greeting using that name.":{
+  objective:"Insert a value into text.",
+  statement:"Read one line containing a name and print Hello, <name>! — with a comma after Hello and an exclamation mark at the end.",
+  input:"One line: the name.",output:"One line: the greeting.",
+  example:{in:"Abhinay",out:"Hello, Abhinay!",why:'f-strings insert a variable: f"Hello, {name}!"'},
+  cases:[{in:"Abhinay",out:"Hello, Abhinay!",name:"basic"},{in:"Sam",out:"Hello, Sam!",name:"short name"},
+         {in:"A",out:"Hello, A!",name:"single character"}]},
+
+ "Print your name, age and city together.":{
+  objective:"Print several values on one line.",
+  statement:"Read three lines: a name, an age and a city.\nPrint all three on ONE line separated by single spaces.",
+  input:"Three lines: name, age, city.",output:"One line with all three values.",
+  example:{in:"Abhinay\n24\nHyderabad",out:"Abhinay 24 Hyderabad",why:"print(a, b, c) separates with spaces."},
+  cases:[{in:"Abhinay\n24\nHyderabad",out:"Abhinay 24 Hyderabad",name:"basic"},
+         {in:"Sam\n30\nPune",out:"Sam 30 Pune",name:"different values"}]},
+
+ "Take age as input and display it.":{
+  objective:"Read and echo a number.",
+  statement:"Read one line containing an age and print it.",
+  input:"One line: the age.",output:"One line: the age.",
+  example:{in:"24",out:"24",why:"Read with input(), print the value."},
+  cases:[{in:"24",out:"24",name:"basic"},{in:"1",out:"1",name:"smallest"},{in:"120",out:"120",name:"largest"}]},
+
+ "Check if 10 > 5 and print the result.":{
+  objective:"Print a comparison result.",
+  statement:"Print the result of comparing 10 with 5 using the greater-than operator.",
+  input:"No input.",output:"One line: True",
+  example:{in:"",out:"True",why:"print(10 > 5) prints the boolean, not the text."},
+  cases:[{in:"",out:"True",name:"comparison"}]},
+
+ "Add two numbers.":{
+  objective:"Read two numbers and add them.",
+  statement:"Read two lines, each containing a whole number, and print their sum.",
+  input:"Two lines: the two numbers.",output:"One line: the sum.",
+  example:{in:"4\n6",out:"10",why:"Convert both with int() before adding."},
+  cases:[{in:"4\n6",out:"10",name:"basic"},{in:"0\n0",out:"0",name:"both zero"},
+         {in:"-3\n8",out:"5",name:"one negative"},{in:"-4\n-6",out:"-10",name:"both negative"}]},
+
+ "Multiply two numbers.":{
+  objective:"Read two numbers and multiply them.",
+  statement:"Read two lines, each containing a whole number, and print their product.",
+  input:"Two lines: the two numbers.",output:"One line: the product.",
+  example:{in:"3\n4",out:"12",why:"Use the * operator after converting both to int."},
+  cases:[{in:"3\n4",out:"12",name:"basic"},{in:"5\n0",out:"0",name:"multiplying by zero"},
+         {in:"-3\n4",out:"-12",name:"one negative"},{in:"-3\n-4",out:"12",name:"two negatives give a positive"}]},
+
+ "Check whether one number is greater than another.":{
+  objective:"Compare two values.",
+  statement:"Read two lines, each containing a whole number.\nPrint True if the first is greater than the second, otherwise print False.",
+  input:"Two lines: the two numbers.",output:"One line: True or False.",
+  example:{in:"5\n3",out:"True",why:"5 > 3 evaluates to True."},
+  cases:[{in:"5\n3",out:"True",name:"first is larger"},{in:"3\n5",out:"False",name:"second is larger"},
+         {in:"4\n4",out:"False",name:"equal — not greater"},{in:"-1\n-5",out:"True",name:"negatives"}]},
+
+ "Check whether a number is between 10 and 20.":{
+  objective:"Combine two conditions.",
+  statement:"Read one line containing a whole number.\nPrint True if it is strictly between 10 and 20 (10 and 20 themselves do NOT count), otherwise print False.",
+  input:"One line: the number.",output:"One line: True or False.",
+  example:{in:"15",out:"True",why:"Both 15 > 10 and 15 < 20 are true."},
+  cases:[{in:"15",out:"True",name:"in range"},{in:"10",out:"False",name:"lower boundary"},
+         {in:"20",out:"False",name:"upper boundary"},{in:"11",out:"True",name:"just inside"},
+         {in:"19",out:"True",name:"just inside the top"},{in:"25",out:"False",name:"above range"}]},
+
+ "Check if two numbers are equal.":{
+  objective:"Test equality.",
+  statement:"Read two lines, each containing a whole number.\nPrint True if they are equal, otherwise print False.",
+  input:"Two lines.",output:"One line: True or False.",
+  example:{in:"4\n4",out:"True",why:"Use == to compare, not = which assigns."},
+  cases:[{in:"4\n4",out:"True",name:"equal"},{in:"4\n5",out:"False",name:"different"},
+         {in:"0\n0",out:"True",name:"both zero"},{in:"-3\n-3",out:"True",name:"equal negatives"}]},
+
+ "Check if age is greater than 18.":{
+  objective:"Apply a threshold.",
+  statement:"Read one line containing an age.\nPrint True if it is greater than 18, otherwise print False. (Exactly 18 gives False.)",
+  input:"One line: the age.",output:"One line: True or False.",
+  example:{in:"19",out:"True",why:"Strictly greater than — 18 itself does not qualify."},
+  cases:[{in:"19",out:"True",name:"above"},{in:"18",out:"False",name:"exactly at boundary"},
+         {in:"5",out:"False",name:"well below"},{in:"65",out:"True",name:"well above"}]},
+
+ "Age greater than 18?":{
+  objective:"Apply a threshold.",
+  statement:"Read one line containing an age and print True if it is greater than 18, otherwise False.",
+  input:"One line: the age.",output:"One line: True or False.",
+  example:{in:"25",out:"True",why:"25 > 18."},
+  cases:[{in:"25",out:"True",name:"above"},{in:"18",out:"False",name:"boundary"},{in:"12",out:"False",name:"below"}]},
+
+ "Positive, negative or zero":{
+  objective:"Choose between three branches.",
+  statement:"Read one line containing a whole number.\nPrint positive, negative or zero (all lowercase) depending on its sign.",
+  input:"One line: the number.",output:"One line: one of the three words.",
+  example:{in:"5",out:"positive",why:"if / elif / else covers all three cases."},
+  cases:[{in:"5",out:"positive",name:"positive"},{in:"-5",out:"negative",name:"negative"},
+         {in:"0",out:"zero",name:"zero boundary"}]},
+
+ "Check whether a number is positive or negative.":{
+  objective:"Classify by sign.",
+  statement:"Read one line containing a whole number.\nPrint positive, negative or zero (lowercase) depending on its sign.",
+  input:"One line: the number.",output:"One line: one of the three words.",
+  example:{in:"-4",out:"negative",why:"Remember to handle 0 separately."},
+  cases:[{in:"7",out:"positive",name:"positive"},{in:"-4",out:"negative",name:"negative"},
+         {in:"0",out:"zero",name:"zero"}]},
+
+ "Pass or fail":{
+  objective:"Apply a pass mark.",
+  statement:"Read one line containing a score.\nPrint Pass if the score is 40 or more, otherwise Fail. Mind the capital letters.",
+  input:"One line: the score.",output:"One line: Pass or Fail.",
+  example:{in:"40",out:"Pass",why:"The boundary value 40 counts as a pass."},
+  cases:[{in:"75",out:"Pass",name:"clear pass"},{in:"40",out:"Pass",name:"exact boundary"},
+         {in:"39",out:"Fail",name:"just below"},{in:"0",out:"Fail",name:"zero"}]},
+
+ "Print Pass or Fail based on a score.":{
+  objective:"Apply a pass mark.",
+  statement:"Read one line containing a score and print Pass when it is 40 or more, otherwise Fail.",
+  input:"One line: the score.",output:"One line: Pass or Fail.",
+  example:{in:"55",out:"Pass",why:"score >= 40 is the test."},
+  cases:[{in:"55",out:"Pass",name:"pass"},{in:"40",out:"Pass",name:"boundary"},
+         {in:"12",out:"Fail",name:"fail"},{in:"100",out:"Pass",name:"maximum"}]},
+
+ "Odd or even":{
+  objective:"Use the remainder operator.",
+  statement:"Read one line containing a whole number.\nPrint even if it divides exactly by 2, otherwise print odd. Use lowercase.",
+  input:"One line: the number.",output:"One line: even or odd.",
+  example:{in:"4",out:"even",why:"4 % 2 == 0, so it is even. Zero counts as even."},
+  cases:[{in:"4",out:"even",name:"even"},{in:"7",out:"odd",name:"odd"},
+         {in:"0",out:"even",name:"zero is even"},{in:"-3",out:"odd",name:"negative odd"}]},
+
+ "Check whether a number is even or odd.":{
+  objective:"Use the remainder operator.",
+  statement:"Read one line containing a whole number and print even or odd (lowercase).",
+  input:"One line: the number.",output:"One line: even or odd.",
+  example:{in:"10",out:"even",why:"n % 2 gives 0 for even numbers."},
+  cases:[{in:"10",out:"even",name:"even"},{in:"9",out:"odd",name:"odd"},
+         {in:"0",out:"even",name:"zero"},{in:"-6",out:"even",name:"negative even"}]},
+
+ "Basic age-category checker":{
+  objective:"Classify a value into bands.",
+  statement:"Read one line containing an age and print its category (lowercase):\n  child — 0 to 12\n  teen — 13 to 19\n  adult — 20 and above",
+  input:"One line: the age.",output:"One line: child, teen or adult.",
+  example:{in:"15",out:"teen",why:"15 falls in the 13–19 band."},
+  cases:[{in:"5",out:"child",name:"child"},{in:"12",out:"child",name:"upper child boundary"},
+         {in:"13",out:"teen",name:"lower teen boundary"},{in:"19",out:"teen",name:"upper teen boundary"},
+         {in:"20",out:"adult",name:"lower adult boundary"},{in:"45",out:"adult",name:"adult"}]},
+
+ /* ---------- shift calculator project ---------- */
+ "Accept working minutes.":{
+  objective:"Read and validate a number.",
+  statement:"Read one line containing a number of minutes and print it back as a whole number.",
+  input:"One line: the minutes.",output:"One line: the same number.",
+  example:{in:"90",out:"90",why:"Convert with int() before printing."},
+  cases:[{in:"90",out:"90",name:"basic"},{in:"0",out:"0",name:"zero"},{in:"485",out:"485",name:"long shift"}]},
+
+ "Convert minutes into hours and minutes.":{
+  objective:"Use integer division and remainder together.",
+  statement:"Read one line containing a number of minutes.\nPrint two lines: the whole hours on line 1, and the leftover minutes on line 2.",
+  input:"One line: total minutes.",output:"Two lines: hours, then minutes.",
+  example:{in:"90",out:"1\n30",why:"90 // 60 = 1 hour, and 90 % 60 = 30 minutes left over."},
+  cases:[{in:"90",out:"1\n30",name:"basic"},{in:"45",out:"0\n45",name:"under an hour"},
+         {in:"120",out:"2\n0",name:"exact hours"},{in:"0",out:"0\n0",name:"zero"},
+         {in:"485",out:"8\n5",name:"long shift"}]},
+
+ "Display a clean summary.":{
+  objective:"Format a result as readable text.",
+  statement:"Read one line containing a number of minutes.\nPrint a single line in the format <hours>h <minutes>m.",
+  input:"One line: total minutes.",output:"One line in the form 1h 30m.",
+  example:{in:"90",out:"1h 30m",why:"Combine 90 // 60 and 90 % 60 into one formatted string."},
+  cases:[{in:"90",out:"1h 30m",name:"basic"},{in:"45",out:"0h 45m",name:"under an hour"},
+         {in:"120",out:"2h 0m",name:"exact hours"},{in:"485",out:"8h 5m",name:"long shift"},
+         {in:"0",out:"0h 0m",name:"zero"}]},
+
+ /* ---------- strings ---------- */
+ "Reverse a string using slicing.":{
+  objective:"Reverse text with a slice.",
+  statement:"Read one line of text and print it reversed.",
+  input:"One line of text.",output:"One line: the reversed text.",
+  example:{in:"python",out:"nohtyp",why:"s[::-1] steps through the string backwards."},
+  cases:[{in:"python",out:"nohtyp",name:"basic"},{in:"level",out:"level",name:"palindrome reads the same"},
+         {in:"a",out:"a",name:"single character"},{in:"ab cd",out:"dc ba",name:"the space moves too"}]},
+
+ "Reverse string":{
+  objective:"Reverse text.",
+  statement:"Read one line of text and print it reversed.",
+  input:"One line of text.",output:"One line: reversed.",
+  example:{in:"hello",out:"olleh",why:"s[::-1]"},
+  cases:[{in:"hello",out:"olleh",name:"basic"},{in:"abc",out:"cba",name:"three letters"},
+         {in:"x",out:"x",name:"single character"}]},
+
+ "Count vowels in a string.":{
+  objective:"Count matching characters.",
+  statement:"Read one line of text and print how many vowels it contains.\nCount a, e, i, o and u in BOTH upper and lower case.",
+  input:"One line of text.",output:"One line: the vowel count.",
+  example:{in:"hello",out:"2",why:"e and o are vowels, so the answer is 2."},
+  cases:[{in:"hello",out:"2",name:"basic"},{in:"rhythm",out:"0",name:"no vowels"},
+         {in:"aeiou",out:"5",name:"all vowels"},{in:"AEIOU",out:"5",name:"uppercase counts too"},
+         {in:"Programming",out:"3",name:"mixed case"}]},
+
+ "Count the vowels in a string.":{
+  objective:"Count matching characters.",
+  statement:"Read one line of text and print how many vowels (a, e, i, o, u — either case) it contains.",
+  input:"One line of text.",output:"One line: the count.",
+  example:{in:"hello",out:"2",why:"Convert to lowercase first so you only test five letters."},
+  cases:[{in:"hello",out:"2",name:"basic"},{in:"xyz",out:"0",name:"none"},
+         {in:"AEIOU",out:"5",name:"uppercase"},{in:"Data Analysis",out:"5",name:"mixed case with a space"}]},
+
+ "Count vowels":{
+  objective:"Count matching characters.",
+  statement:"Read one line of text and print the number of vowels it contains (either case).",
+  input:"One line of text.",output:"One line: the count.",
+  example:{in:"hello",out:"2",why:"e and o."},
+  cases:[{in:"hello",out:"2",name:"basic"},{in:"aeiou",out:"5",name:"all five"},{in:"bcd",out:"0",name:"none"}]},
+
+ "Count the consonants too.":{
+  objective:"Count letters that are not vowels.",
+  statement:"Read one line of text and print how many consonants it contains.\nCount letters only — ignore spaces, digits and punctuation.",
+  input:"One line of text.",output:"One line: the consonant count.",
+  example:{in:"hello",out:"3",why:"h, l and l are consonants; e and o are vowels."},
+  cases:[{in:"hello",out:"3",name:"basic"},{in:"aeiou",out:"0",name:"only vowels"},
+         {in:"xyz",out:"3",name:"only consonants"},{in:"a b c",out:"2",name:"spaces are ignored"}]},
+
+ "Check whether a word is a palindrome.":{
+  objective:"Compare text with its reverse.",
+  statement:"Read one line of text.\nPrint True if it reads the same forwards and backwards, otherwise print False.",
+  input:"One line of text.",output:"One line: True or False.",
+  example:{in:"level",out:"True",why:"\"level\" reversed is still \"level\"."},
+  cases:[{in:"level",out:"True",name:"palindrome"},{in:"python",out:"False",name:"not a palindrome"},
+         {in:"a",out:"True",name:"single character"},{in:"abba",out:"True",name:"even length"},
+         {in:"ab",out:"False",name:"two different letters"}]},
+
+ "Count the words in a sentence.":{
+  objective:"Split text into words.",
+  statement:"Read one line of text and print how many words it contains.\nWords are separated by one or more spaces.",
+  input:"One line of text.",output:"One line: the word count.",
+  example:{in:"hello world",out:"2",why:"split() breaks on whitespace and ignores extra spaces."},
+  cases:[{in:"hello world",out:"2",name:"basic"},{in:"one",out:"1",name:"single word"},
+         {in:"a b c d",out:"4",name:"four words"},{in:"  spaced   out  ",out:"2",name:"extra spaces ignored"}]},
+
+ "Find the longest word in a sentence.":{
+  objective:"Find the maximum by a property.",
+  statement:"Read one line of text and print its longest word.\nIf several words tie for longest, print the first one.",
+  input:"One line of text.",output:"One line: the longest word.",
+  example:{in:"I love python",out:"python",why:"\"python\" has 6 letters, more than \"I\" or \"love\"."},
+  cases:[{in:"I love python",out:"python",name:"basic"},{in:"a bb ccc",out:"ccc",name:"last is longest"},
+         {in:"one",out:"one",name:"single word"},{in:"aa bb",out:"aa",name:"tie — first wins"}]},
+
+ "Convert a string to uppercase.":{
+  objective:"Change letter case.",
+  statement:"Read one line of text and print it in capital letters.",
+  input:"One line of text.",output:"One line: the text in uppercase.",
+  example:{in:"hello",out:"HELLO",why:"s.upper() returns a new uppercase string."},
+  cases:[{in:"hello",out:"HELLO",name:"basic"},{in:"Hello World",out:"HELLO WORLD",name:"mixed case"},
+         {in:"abc123",out:"ABC123",name:"digits are unchanged"}]},
+
+ "Uppercase conversion":{
+  objective:"Change letter case.",
+  statement:"Read one line of text and print it in capital letters.",
+  input:"One line of text.",output:"One line uppercase.",
+  example:{in:"hi",out:"HI",why:"s.upper()"},
+  cases:[{in:"hi",out:"HI",name:"basic"},{in:"MiXeD",out:"MIXED",name:"mixed case"}]},
+
+ "Lowercase conversion":{
+  objective:"Change letter case.",
+  statement:"Read one line of text and print it in small letters.",
+  input:"One line of text.",output:"One line lowercase.",
+  example:{in:"HELLO",out:"hello",why:"s.lower()"},
+  cases:[{in:"HELLO",out:"hello",name:"basic"},{in:"MiXeD",out:"mixed",name:"mixed case"}]},
+
+ "Convert a string to lowercase and strip whitespace.":{
+  objective:"Clean up text.",
+  statement:"Read one line of text.\nRemove any leading and trailing spaces, convert it to lowercase, and print the result.",
+  input:"One line of text, possibly padded with spaces.",output:"One line: cleaned text.",
+  example:{in:"  HeLLo  ",out:"hello",why:"strip() removes the outer spaces; lower() changes the case."},
+  cases:[{in:"  HeLLo  ",out:"hello",name:"basic"},{in:"ABC",out:"abc",name:"no padding"},
+         {in:"   X   ",out:"x",name:"single character padded"}]},
+
+ "Capitalise the first letter of every word.":{
+  objective:"Apply title case.",
+  statement:"Read one line of text and print it with the first letter of every word capitalised and the rest lowercase.",
+  input:"One line of text.",output:"One line in title case.",
+  example:{in:"hello world",out:"Hello World",why:"title() capitalises the start of each word."},
+  cases:[{in:"hello world",out:"Hello World",name:"basic"},{in:"a",out:"A",name:"single letter"},
+         {in:"PYTHON IS FUN",out:"Python Is Fun",name:"from uppercase"}]},
+
+ "Replace all spaces with underscores.":{
+  objective:"Substitute characters in text.",
+  statement:"Read one line of text and print it with every space replaced by an underscore.",
+  input:"One line of text.",output:"One line with underscores.",
+  example:{in:"a b c",out:"a_b_c",why:'s.replace(" ", "_") swaps every occurrence.'},
+  cases:[{in:"a b c",out:"a_b_c",name:"basic"},{in:"one",out:"one",name:"no spaces"},
+         {in:"two  spaces",out:"two__spaces",name:"each space is replaced"}]},
+
+ "Count words":{
+  objective:"Count words in text.",
+  statement:"Read one line of text and print how many words it contains.",
+  input:"One line of text.",output:"One line: the count.",
+  example:{in:"a b c",out:"3",why:"split() then len()."},
+  cases:[{in:"a b c",out:"3",name:"basic"},{in:"one",out:"1",name:"single word"}]},
+
+ /* ---------- week 2 ---------- */
+ "Ask for a name and print a greeting.":{
+  objective:"Read input and build a message from it.",
+  statement:"Read one line containing a name and print Hello, <name>! — with a comma after Hello and an exclamation mark at the end.",
+  input:"One line: the name.",output:"One line: the greeting.",
+  example:{in:"Abhinay",out:"Hello, Abhinay!",why:'f"Hello, {name}!" inserts the variable into the text.'},
+  cases:[{in:"Abhinay",out:"Hello, Abhinay!",name:"basic"},{in:"Sam",out:"Hello, Sam!",name:"short name"},
+         {in:"Ana Maria",out:"Hello, Ana Maria!",name:"name with a space"}]},
+ "Ask for two numbers and print their sum.":{
+  objective:"Read two numbers and add them.",
+  statement:"Read two lines, each containing a whole number, and print their sum.",
+  input:"Two lines, each a whole number.",output:"One line: the sum.",
+  example:{in:"7\n3",out:"10",why:"input() returns text, so convert both with int() before adding."},
+  cases:[{in:"7\n3",out:"10",name:"basic"},{in:"0\n0",out:"0",name:"both zero"},
+         {in:"-5\n5",out:"0",name:"cancels out"},{in:"100\n250",out:"350",name:"larger numbers"}]},
+
+ /* ---------- week 4 ---------- */
+ "Handle an invalid numeric input.":{
+  objective:"Recover from bad input instead of crashing.",
+  statement:"Read one line of input.\nIf the text represents a valid whole number, print that number.\nIf it does not, print the word invalid in lowercase — your program must not crash.",
+  input:"One line of text, which may or may not be a number.",
+  output:"One line: the number, or the word invalid.",
+  example:{in:"90",out:"90",why:"int(\"90\") succeeds, so the try block prints 90."},
+  cases:[{in:"90",out:"90",name:"valid number"},{in:"abc",out:"invalid",name:"not a number"},
+         {in:"0",out:"0",name:"zero is valid"},{in:"12.5",out:"invalid",name:"decimals are not whole numbers"},
+         {in:"-7",out:"-7",name:"negative is valid"}]},
+
+ /* ---------- week 6 ---------- */
+ "Keep asking until a valid number is entered.":{
+  objective:"Loop until input is acceptable.",
+  statement:"Read lines one at a time until you find one that is a valid whole number.\nPrint that number and stop. There will always be at least one valid number in the input.",
+  input:"Several lines; some may not be numbers.",
+  output:"One line: the first valid whole number.",
+  example:{in:"abc\nxy\n7",out:"7",why:"The first two lines fail int(), so the loop continues to the third."},
+  cases:[{in:"abc\nxy\n7",out:"7",name:"skips two bad lines"},{in:"3",out:"3",name:"valid straight away"},
+         {in:"\n\n12",out:"12",name:"skips blank lines"},{in:"1.5\n-4",out:"-4",name:"decimal is not whole"}]},
+ "Add values until the user enters zero.":{
+  objective:"Accumulate until a sentinel value appears.",
+  statement:"Read whole numbers one line at a time, adding them to a running total.\nStop as soon as you read 0, and print the total. Ignore anything after the 0.\nThe input always contains a 0.",
+  input:"Several lines of whole numbers, ending with 0.",
+  output:"One line: the total of the numbers before the 0.",
+  example:{in:"1\n2\n3\n0",out:"6",why:"1+2+3 = 6. The 0 stops the loop and is not added."},
+  cases:[{in:"1\n2\n3\n0",out:"6",name:"basic"},{in:"0",out:"0",name:"stops immediately"},
+         {in:"5\n5\n0",out:"10",name:"two values"},{in:"10\n-4\n0",out:"6",name:"includes a negative"}]},
+ "Create a three-attempt login simulation.":{
+  objective:"Limit the number of tries.",
+  statement:"The first line of input is the correct password.\nThe following lines are attempts. Check at most THREE attempts.\nPrint granted if one of the first three attempts matches, otherwise print denied.",
+  input:"Line 1: the correct password. Remaining lines: the attempts.",
+  output:"One line: granted or denied.",
+  example:{in:"secret\nwrong\nsecret",out:"granted",why:"The second attempt matches, and it is within the first three."},
+  cases:[{in:"secret\nwrong\nsecret",out:"granted",name:"matches on attempt 2"},
+         {in:"secret\nsecret",out:"granted",name:"matches immediately"},
+         {in:"secret\na\nb\nc",out:"denied",name:"three wrong attempts"},
+         {in:"secret\na\nb\nc\nsecret",out:"denied",name:"correct, but on the fourth try"}]},
+
+ /* ---------- week 7 ---------- */
+ "Store five case numbers in a list.":{
+  objective:"Build a list from input.",
+  statement:"Read five lines, each containing a case number.\nStore them in a list, then print the list's length on line 1 and its first item on line 2.",
+  input:"Five lines: the case numbers.",output:"Two lines: the count, then the first item.",
+  example:{in:"101\n102\n103\n104\n105",out:"5\n101",why:"len(cases) is 5 and cases[0] is the first item."},
+  cases:[{in:"101\n102\n103\n104\n105",out:"5\n101",name:"basic"},
+         {in:"1\n2\n3\n4\n5",out:"5\n1",name:"short numbers"},
+         {in:"9\n8\n7\n6\n5",out:"5\n9",name:"descending order"}]},
+ "Add and remove an item.":{
+  objective:"Change a list after creating it.",
+  statement:"Line 1 contains several items separated by spaces.\nLine 2 is an item to ADD to the end.\nLine 3 is an item to REMOVE (remove only the first occurrence; if it is not present, change nothing).\nPrint the resulting items separated by single spaces.",
+  input:"Three lines: the starting items, the item to add, the item to remove.",
+  output:"One line: the final items separated by spaces.",
+  example:{in:"a b\nc\na",out:"b c",why:"Append c to get a b c, then remove a to get b c."},
+  cases:[{in:"a b\nc\na",out:"b c",name:"basic"},{in:"x\ny\nz",out:"x y",name:"removal item is absent"},
+         {in:"1 2 3\n4\n2",out:"1 3 4",name:"removes from the middle"},
+         {in:"a a\nb\na",out:"a b",name:"removes only the first occurrence"}]},
+ "Find the largest value.":{
+  objective:"Find the maximum in a collection.",
+  statement:"Read one line containing whole numbers separated by spaces.\nPrint the largest of them.",
+  input:"One line: numbers separated by spaces.",output:"One line: the largest number.",
+  example:{in:"3 9 1",out:"9",why:"Split the line, convert each to int, then take max()."},
+  cases:[{in:"3 9 1",out:"9",name:"basic"},{in:"7",out:"7",name:"single value"},
+         {in:"-5 -1 -9",out:"-1",name:"all negative"},{in:"2 2 2",out:"2",name:"all equal"},
+         {in:"100 5 50",out:"100",name:"largest comes first"}]},
+ "Remove duplicate values.":{
+  objective:"Deduplicate while keeping order.",
+  statement:"Read one line containing values separated by spaces.\nRemove any repeats, keeping the FIRST occurrence of each and preserving the original order.\nPrint the result separated by single spaces.",
+  input:"One line: values separated by spaces.",output:"One line: the unique values in their original order.",
+  example:{in:"1 2 2 3",out:"1 2 3",why:"The second 2 is dropped; the order of first appearances is kept."},
+  cases:[{in:"1 2 2 3",out:"1 2 3",name:"basic"},{in:"a a a",out:"a",name:"all identical"},
+         {in:"3 1 3 2 1",out:"3 1 2",name:"order of first appearance"},
+         {in:"x y z",out:"x y z",name:"nothing to remove"}]},
+
+ /* ---------- week 8 ---------- */
+ "Store a case with ID, status and owner.":{
+  objective:"Build a dictionary and read values back.",
+  statement:"Read three lines: an ID, a status and an owner.\nStore them in a dictionary under the keys id, status and owner.\nThen print the three values on three separate lines, in that order.",
+  input:"Three lines: id, status, owner.",output:"Three lines: the id, the status, the owner.",
+  example:{in:"101\nOpen\nAbhinay",out:"101\nOpen\nAbhinay",
+    why:"Build the dict, then read each value back with case[\"id\"] and so on."},
+  cases:[{in:"101\nOpen\nAbhinay",out:"101\nOpen\nAbhinay",name:"basic"},
+         {in:"7\nClosed\nSam",out:"7\nClosed\nSam",name:"different values"}]},
+ "Count case statuses using a dictionary.":{
+  objective:"Count occurrences with a dictionary.",
+  statement:"Read one line containing statuses separated by spaces.\nCount how many times each status appears.\nPrint one line per status in the form <status> <count>, ordered alphabetically by status.",
+  input:"One line: statuses separated by spaces.",
+  output:"One line per distinct status: the status, a space, then the count.",
+  example:{in:"Open Closed Open",out:"Closed 1\nOpen 2",
+    why:"Open appears twice and Closed once. Sorting the keys gives Closed before Open."},
+  cases:[{in:"Open Closed Open",out:"Closed 1\nOpen 2",name:"basic"},
+         {in:"Open",out:"Open 1",name:"single status"},
+         {in:"A A A",out:"A 3",name:"all the same"},
+         {in:"b a b a",out:"a 2\nb 2",name:"tie, sorted alphabetically"}]},
+ "Find unique product names using a set.":{
+  objective:"Deduplicate using a set.",
+  statement:"Read one line containing product names separated by spaces.\nPrint the unique names, sorted alphabetically, separated by single spaces.",
+  input:"One line: names separated by spaces.",output:"One line: the unique names, sorted.",
+  example:{in:"Teams Excel Teams",out:"Excel Teams",why:"A set removes the duplicate; sorted() puts them in order."},
+  cases:[{in:"Teams Excel Teams",out:"Excel Teams",name:"basic"},
+         {in:"A A A",out:"A",name:"all identical"},
+         {in:"c b a",out:"a b c",name:"sorts the output"},
+         {in:"Word",out:"Word",name:"single name"}]},
+ "Compare two sets of workspace users.":{
+  objective:"Find what two collections have in common.",
+  statement:"Line 1 contains the first group of users, separated by spaces.\nLine 2 contains the second group.\nPrint the users who appear in BOTH groups, sorted alphabetically, separated by spaces.\nIf there are none, print none.",
+  input:"Two lines, each a space-separated list of users.",
+  output:"One line: the shared users sorted, or none.",
+  example:{in:"amy bob\nbob cat",out:"bob",why:"Using sets, the & operator gives the users present in both."},
+  cases:[{in:"amy bob\nbob cat",out:"bob",name:"one in common"},
+         {in:"a b\nc d",out:"none",name:"nothing in common"},
+         {in:"a b\na b",out:"a b",name:"identical groups"},
+         {in:"z y x\ny z",out:"y z",name:"output is sorted"}]}
+};
+/* IO entries become the authoritative spec + test suite */
+for(var __io in IO){
+  SPEC[__io]={task:IO[__io].statement,out:IO[__io].cases[0].out,stdin:IO[__io].cases[0]["in"]};
+}
 /* every SPEC becomes a strict exact-output check */
 var EXPECT2={
  "Print \"Hello Python\".":{mode:"exact",text:"Hello Python",hint:'print("Hello Python")'},
@@ -3774,7 +5171,7 @@ function slowLoad(week,silent){
     });
   });
   save();
-  if(!silent){ render(); renderRoad(); toast(added?("Added "+added+" questions"):"Already in your planner"); }
+  if(!silent){ render(); renderRoad(); toast(added?("Opened "+added+" questions"):"Already open"); }
   return added;
 }
 
@@ -3815,7 +5212,7 @@ function mpLoad(wnum,silent){
     });
   });
   save();
-  if(!silent){ render(); renderRoad(); toast(added?("Added "+added+" items to your planner"):"Already in your planner"); }
+  if(!silent){ render(); renderRoad(); toast(added?("Opened "+added+" items"):"Already open"); }
   return added;
 }
 function renderMyPath(host){
@@ -3825,7 +5222,7 @@ function renderMyPath(host){
   ip.textContent="Mon/Tue/Thu/Fri at 15–20 minutes · Wed rest · Sat optional catch-up · Sun weekly review. One micro-lesson, one small question, one short note — never more than 25 minutes. Projects use real support scenarios: shift calculators, case summaries, log analysers, weekly case reports.";
   intro.appendChild(ih); intro.appendChild(ip);
   var ib=document.createElement("div"); ib.className="rowb";
-  [["Load all 24 weeks","mpall"],["Load next week","mpnext"]].forEach(function(p,i){
+  [["Open all 24 weeks","mpall"],["Open the next week","mpnext"]].forEach(function(p,i){
     var b=document.createElement("button"); b.type="button"; b.className="btn"+(i?"":" pri");
     b.textContent=p[0]; b.setAttribute("data-do",p[1]); ib.appendChild(b);
   });
@@ -3859,7 +5256,7 @@ function renderMyPath(host){
       var bw=document.createElement("div"); bw.className="phbar"; bw.appendChild(bar(pct));
       var pc=document.createElement("div"); pc.className="phpct"; pc.textContent=loaded?(done+"/"+items.length+" · "+pct+"%"):"—";
       var btn=document.createElement("button"); btn.type="button"; btn.className="btn sm"+(loaded?"":" pri");
-      btn.textContent=loaded>=items.length?"✓ In planner":(loaded?"+ Add missing":"+ Add week");
+      btn.textContent=loaded>=items.length?"✓ Opened":(loaded?"+ Open the rest":"▶ Start this week");
       btn.setAttribute("data-do","mpload"); btn.setAttribute("data-id",String(W.w));
       hd.appendChild(bx); hd.appendChild(tw); hd.appendChild(bw); hd.appendChild(pc); hd.appendChild(btn);
       sec.appendChild(hd);
@@ -4030,7 +5427,7 @@ function renderRevision(){
     cb.textContent="✓ revised"; cb.setAttribute("data-do","revdone");
     cb.setAttribute("data-id",x.t.id+"|"+x.i);
     var tx=document.createElement("span"); tx.className="qt";
-    tx.textContent=x.t.title;
+    tx.textContent=displayTitle(x.t);
     var tg=document.createElement("span"); tg.className="tag "+(x.r.due<today()?"r":"y");
     tg.textContent=(x.r.n===1?"next-day":x.r.n===7?"1 week":x.r.n===30?"1 month":x.r.n+"d")+" review";
     row.appendChild(tx); row.appendChild(tg); row.appendChild(cb);
@@ -4041,7 +5438,7 @@ function renderRevision(){
   if(!soon.length){ var e2=document.createElement("div"); e2.className="empty"; e2.textContent="Nothing scheduled yet."; up.appendChild(e2); }
   soon.forEach(function(x){
     var row=document.createElement("div"); row.className="q"; row.style.marginBlockEnd="6px";
-    var tx=document.createElement("span"); tx.className="qt"; tx.textContent=x.t.title;
+    var tx=document.createElement("span"); tx.className="qt"; tx.textContent=displayTitle(x.t);
     var tg=document.createElement("span"); tg.className="tag n"; tg.textContent=short(pIso(x.r.due));
     row.appendChild(tx); row.appendChild(tg); up.appendChild(row);
   });
@@ -4078,7 +5475,7 @@ function renderProjects(){
     var bw=document.createElement("div"); bw.className="phbar"; bw.appendChild(bar(st.pct));
     var pc=document.createElement("div"); pc.className="phpct"; pc.textContent=st.done+"/"+st.total+" · "+st.pct+"%";
     var btn=document.createElement("button"); btn.type="button"; btn.className="btn sm"+(st.done?"":" pri");
-    btn.textContent=st.done?"open":"+ start project";
+    btn.textContent=st.done?"open":"▶ start project";
     btn.setAttribute("data-do","pjload"); btn.setAttribute("data-id",p.id);
     hd.appendChild(num); hd.appendChild(tw); hd.appendChild(bw); hd.appendChild(pc); hd.appendChild(btn);
     sec.appendChild(hd);
@@ -4118,6 +5515,161 @@ function renderProjects(){
   var tot=PROJECTS.reduce(function(s,p){return s+projStats(p).done;},0);
   var all=PROJECTS.reduce(function(s,p){return s+p.steps.length;},0);
   document.getElementById("projSummary").textContent=shipped+" of "+PROJECTS.length+" shipped · "+tot+"/"+all+" steps done";
+}
+
+/* ============ learn from basics ============ */
+var CURRIC={
+ python:{name:"Python",icon:"🐍",modules:[
+  {id:"py-out",  t:"Output & print()",       lesson:"print()",         depth:"core",  topics:["print()"]},
+  {id:"py-var",  t:"Variables",              lesson:"Variables",       depth:"core",  topics:["Variables","Naming rules"]},
+  {id:"py-type", t:"Data types",             lesson:"str",             depth:"core",  topics:["str","int","float","bool","Data Types"]},
+  {id:"py-conv", t:"Type conversion",        lesson:"Type conversion", depth:"core",  topics:["Type conversion"]},
+  {id:"py-io",   t:"Input & output",         lesson:"input()",         depth:"core",  topics:["Input","Input/Output","input()"]},
+  {id:"py-op",   t:"Operators",              lesson:"Operators",       depth:"core",  topics:["Operators","Arithmetic Operators","Comparison Operators"]},
+  {id:"py-if",   t:"Conditions",             lesson:"Control Flow",    depth:"broad", topics:["Control Flow","Conditions","If Statements","If Else"]},
+  {id:"py-for",  t:"For loops",              lesson:"For Loops",       depth:"broad", topics:["For Loops","For & While loops"]},
+  {id:"py-wh",   t:"While loops",            lesson:"While Loops",     depth:"broad", topics:["While Loops"]},
+  {id:"py-list", t:"Lists",                  lesson:"Lists",           depth:"deep",  topics:["Lists"]},
+  {id:"py-tup",  t:"Tuples",                 lesson:"Tuples",          depth:"small", topics:["Tuples"]},
+  {id:"py-dict", t:"Dictionaries",           lesson:"Dictionaries",    depth:"deep",  topics:["Dictionaries"]},
+  {id:"py-set",  t:"Sets",                   lesson:"Sets",            depth:"small", topics:["Sets"]},
+  {id:"py-str",  t:"Strings",                lesson:"Strings",         depth:"deep",  topics:["Strings"]},
+  {id:"py-fn",   t:"Functions",              lesson:"Functions",       depth:"deep",  topics:["Functions","Defining functions","Scope"]},
+  {id:"py-mod",  t:"Modules",                lesson:null,              depth:"small", topics:["Modules","math module","random module"]},
+  {id:"py-err",  t:"Error handling",         lesson:"Error handling",  depth:"broad", topics:["Error Handling","Exceptions"]},
+  {id:"py-file", t:"File handling",          lesson:"File handling",   depth:"broad", topics:["File Handling","Text and file handling"]},
+  {id:"py-csv",  t:"CSV & JSON",             lesson:null,              depth:"broad", topics:["CSV and JSON","csv module","json module"]},
+  {id:"py-oop",  t:"Object-oriented Python", lesson:null,              depth:"deep",  topics:["Classes","Objects","Inheritance","Encapsulation","OOP","Constructor","Methods"]},
+  {id:"py-np",   t:"NumPy",                  lesson:null,              depth:"broad", topics:["Arrays","Jupyter and NumPy","NumPy"]},
+  {id:"py-pd",   t:"Pandas",                 lesson:null,              depth:"deep",  topics:["Pandas basics","DataFrame","Series","Data cleaning","Aggregation and reporting"]},
+  {id:"py-sql",  t:"SQL from Python",        lesson:null,              depth:"broad", topics:["SQL","SQLite with Python","sqlite3"]},
+  {id:"py-api",  t:"REST APIs",              lesson:null,              depth:"broad", topics:["REST APIs","APIs","requests"]},
+  {id:"py-test", t:"Testing & clean code",   lesson:null,              depth:"broad", topics:["Testing","Clean and reliable code","pytest"]}
+ ]},
+ c:{name:"C",icon:"📘",modules:[
+  {id:"c-hello", t:"Structure of a C program", depth:"core", topics:[],
+   note:"main(), #include, return 0, compiling with gcc"},
+  {id:"c-var",   t:"Variables & data types",  depth:"core", topics:[],
+   note:"int, float, char, double; format specifiers %d %f %c %s"},
+  {id:"c-io",    t:"printf and scanf",        depth:"core", topics:[],
+   note:"Formatted output, reading input, the & operator"},
+  {id:"c-op",    t:"Operators",               depth:"core", topics:[],
+   note:"Arithmetic, relational, logical, bitwise, increment"},
+  {id:"c-if",    t:"Conditions",              depth:"broad",topics:[],
+   note:"if / else if / else, switch-case, ternary"},
+  {id:"c-loop",  t:"Loops",                   depth:"broad",topics:[],
+   note:"for, while, do-while, break, continue"},
+  {id:"c-arr",   t:"Arrays",                  depth:"deep", topics:[],
+   note:"1-D and 2-D arrays, traversal, searching, sorting"},
+  {id:"c-str",   t:"Strings",                 depth:"deep", topics:[],
+   note:"char arrays, null terminator, string.h functions"},
+  {id:"c-fn",    t:"Functions",               depth:"deep", topics:[],
+   note:"Declaration, definition, parameters, return, recursion"},
+  {id:"c-ptr",   t:"Pointers",                depth:"deep", topics:[],
+   note:"Address-of, dereference, pointer arithmetic, arrays vs pointers"},
+  {id:"c-mem",   t:"Memory management",       depth:"deep", topics:[],
+   note:"malloc, calloc, realloc, free, leaks and dangling pointers"},
+  {id:"c-struct",t:"Structures & unions",     depth:"broad",topics:[],
+   note:"struct, typedef, nested structs, arrays of structs"},
+  {id:"c-file",  t:"File handling",           depth:"broad",topics:[],
+   note:"fopen, fclose, fscanf, fprintf, modes"}
+ ]},
+ cpp:{name:"C++",icon:"📗",modules:[
+  {id:"cpp-basic",t:"C++ basics",             depth:"core", topics:[],
+   note:"iostream, cin/cout, namespaces, auto"},
+  {id:"cpp-fn",   t:"Functions & overloading",depth:"broad",topics:[],
+   note:"Default arguments, overloading, references, inline"},
+  {id:"cpp-oop",  t:"Classes & objects",      depth:"deep", topics:[],
+   note:"Constructors, destructors, this, access specifiers"},
+  {id:"cpp-inh",  t:"Inheritance",            depth:"deep", topics:[],
+   note:"Single, multiple, virtual functions, abstract classes"},
+  {id:"cpp-poly", t:"Polymorphism",           depth:"deep", topics:[],
+   note:"Compile-time vs runtime, virtual tables, overriding"},
+  {id:"cpp-stl",  t:"STL containers",         depth:"deep", topics:[],
+   note:"vector, map, set, unordered_map, pair, iterators"},
+  {id:"cpp-algo", t:"STL algorithms",         depth:"broad",topics:[],
+   note:"sort, find, count, accumulate, lower_bound"},
+  {id:"cpp-tmpl", t:"Templates",              depth:"broad",topics:[],
+   note:"Function and class templates, generic programming"},
+  {id:"cpp-ptr",  t:"Pointers & memory",      depth:"deep", topics:[],
+   note:"new/delete, smart pointers, RAII"},
+  {id:"cpp-dsa",  t:"Data structures",        depth:"deep", topics:[],
+   note:"Linked lists, stacks, queues, trees, graphs"}
+ ]}
+};
+var DEPTH={small:"Focused topic — a handful of questions covers it",
+  core:"Foundation — used in almost every program you write",
+  broad:"Broad topic — several subtopics and many use cases",
+  deep:"Deep topic — extensive real-world use, expect the most coverage here"};
+function moduleTasks(m){
+  if(!m.topics||!m.topics.length) return [];
+  return S.tasks.filter(function(t){
+    var tp=(t.topic||"");
+    return m.topics.some(function(x){ return tp===x || tp.indexOf(x)>=0 || x.indexOf(tp)>=0; });
+  });
+}
+function renderBasics(){
+  var host=document.getElementById("basicsBody"); if(!host) return; clr(host);
+  var lang=ui.lang||"python";
+  document.querySelectorAll("[data-lang]").forEach(function(b){
+    b.classList.toggle("pri", b.getAttribute("data-lang")===lang); });
+  var q=((document.getElementById("bSearch")||{}).value||"").toLowerCase();
+  var C=CURRIC[lang];
+  var mods=C.modules.filter(function(m){ return !q || m.t.toLowerCase().indexOf(q)>=0; });
+  if(!mods.length){ var e=document.createElement("div"); e.className="panel";
+    var em=document.createElement("div"); em.className="empty"; em.textContent="No topics match that search.";
+    e.appendChild(em); host.appendChild(e); return; }
+  var grid=document.createElement("div"); grid.className="tcards";
+  mods.forEach(function(m){
+    var rel=moduleTasks(m);
+    var done=rel.filter(function(t){return t.status==="done";}).length;
+    var pct=rel.length?Math.round(done/rel.length*100):0;
+    var les=m.lesson?LESSONS[m.lesson]:null;
+    var card=document.createElement("div"); card.className="tcard"+(pct>=100?" tcdone":"");
+    var hd=document.createElement("div"); hd.className="tchd";
+    var ti=document.createElement("div"); ti.className="tct"; ti.textContent=m.t;
+    hd.appendChild(ti);
+    var sp=document.createElement("span"); sp.className="sp"; hd.appendChild(sp);
+    var dp=document.createElement("span");
+    dp.className="tag "+(m.depth==="deep"?"r":m.depth==="broad"?"y":m.depth==="core"?"c":"n");
+    dp.textContent=m.depth==="deep"?"deep dive":m.depth==="broad"?"broad":m.depth==="core"?"foundation":"focused";
+    dp.title=DEPTH[m.depth]; hd.appendChild(dp);
+    card.appendChild(hd);
+    var ds=document.createElement("div"); ds.className="tcd";
+    ds.textContent=m.note||(les?les.what:DEPTH[m.depth]);
+    card.appendChild(ds);
+    if(rel.length){
+      var pb=document.createElement("div"); pb.style.marginBlockStart="9px";
+      pb.appendChild(bar(pct)); card.appendChild(pb);
+      var pt=document.createElement("div"); pt.className="tcp";
+      pt.textContent=done+" of "+rel.length+" questions complete";
+      card.appendChild(pt);
+    } else {
+      var pt2=document.createElement("div"); pt2.className="tcp";
+      pt2.textContent=lang==="python"?"Not opened yet — start it from the Roadmap tab":"Reference outline — Python has the interactive questions";
+      card.appendChild(pt2);
+    }
+    var acts=document.createElement("div"); acts.className="rowb"; acts.style.marginBlockStart="10px";
+    if(les){
+      var b1=document.createElement("button"); b1.type="button"; b1.className="btn xs";
+      b1.textContent=ui.openMod===m.id?"▲ Hide theory":"📘 Learn theory first";
+      b1.setAttribute("data-do","modtheory"); b1.setAttribute("data-id",m.id);
+      acts.appendChild(b1);
+    }
+    if(rel.length){
+      var open1=rel.filter(function(t){return t.status!=="done";})[0];
+      var b2=document.createElement("button"); b2.type="button"; b2.className="btn xs pri";
+      b2.textContent=open1?"I already know this — start questions":"✓ All questions done";
+      if(open1){ b2.setAttribute("data-do","ccode"); b2.setAttribute("data-id",open1.id); }
+      else b2.disabled=true;
+      acts.appendChild(b2);
+    }
+    card.appendChild(acts);
+    if(les&&ui.openMod===m.id) renderLesson(les,card);
+    grid.appendChild(card);
+  });
+  var wrap=document.createElement("div"); wrap.className="panel"; wrap.appendChild(grid);
+  host.appendChild(wrap);
 }
 
 /* ============ visual skill map ============ */
@@ -4198,7 +5750,7 @@ function showNode(id){
   }).sort(function(x,y){ return (x.status==="done"?1:0)-(y.status==="done"?1:0)||x.due.localeCompare(y.due); });
   if(!rel.length){
     var e=document.createElement("div"); e.className="empty"; e.style.marginBlockStart="12px";
-    e.textContent="Nothing loaded for this skill yet — open the Roadmap tab and load a week that covers it.";
+    e.textContent="Nothing opened for this skill yet — go to the Roadmap tab and start a week that covers it.";
     b.appendChild(e);
   }
   rel.slice(0,12).forEach(function(t){
@@ -4206,7 +5758,7 @@ function showNode(id){
     row.style.marginBlockStart="7px";
     var ic=document.createElement("span"); ic.className="qn";
     ic.textContent=t.type==="learn"?"📖":t.type==="project"?"🚀":"✍️";
-    var tx=document.createElement("span"); tx.className="qt"; tx.textContent=t.title;
+    var tx=document.createElement("span"); tx.className="qt"; tx.textContent=displayTitle(t);
     row.appendChild(ic); row.appendChild(tx);
     var bb=document.createElement("div"); bb.className="qb";
     var go=document.createElement("button"); go.type="button"; go.className="btn xs"+(t.status==="done"?" ok":" pri");
@@ -4314,9 +5866,8 @@ function recommendations(){
     if(pct<40 && a.q>=3) out.push({p:0,txt:n+" is at "+pct+"% — your weakest area.",act:"Focus your next session on "+n+"."});
   });
   var late=S.tasks.filter(isLate);
-  if(late.length>=3) out.push({p:0,txt:late.length+" tasks are out of track.",act:"Reschedule or clear the oldest three before adding anything new."});
   var st=streaks();
-  if(st.cur===0 && st.days>0) out.push({p:1,txt:"Your streak has broken.",act:"One question today restarts it — consistency beats intensity."});
+  if(st.cur===0 && st.days>0) out.push({p:2,txt:"Welcome back — your "+st.best+"-day best streak is safe.",act:"One question today starts a fresh streak. Nothing was lost."});
   if(st.cur>=5) out.push({p:2,txt:st.cur+" day streak going.",act:"Keep it alive with a single short question."});
   var w=weekTasks(0);
   if(!w.length) out.push({p:1,txt:"Nothing planned for this week.",act:"Load the next week of your roadmap."});
@@ -4366,12 +5917,11 @@ function renderToday(){
     tk.setAttribute("data-do","toggle"); tk.setAttribute("data-id",t.id); tk.setAttribute("aria-label","Mark complete");
     row.appendChild(tk);
     var bd=document.createElement("div"); bd.className="tbody";
-    var ti=document.createElement("div"); ti.className="ttl"; ti.textContent=t.title; bd.appendChild(ti);
+    var ti=document.createElement("div"); ti.className="ttl"; ti.textContent=displayTitle(t); bd.appendChild(ti);
     var tg=document.createElement("div"); tg.className="tags";
     if(t.topic) tg.appendChild(tag(t.topic));
     if(t.diff) tg.appendChild(tag(t.diff,t.diff==="Easy"?"g":t.diff==="Hard"?"r":"y"));
     tg.appendChild(tag("⏱ ~"+(t.est||12)+" min","n"));
-    if(isLate(t)) tg.appendChild(tag("carried over","r"));
     bd.appendChild(tg);
     if(t.notes){ var nn=document.createElement("div"); nn.className="tnote"; nn.textContent=t.notes; bd.appendChild(nn); }
     var ac=document.createElement("div"); ac.className="tacts";
@@ -4404,7 +5954,7 @@ function renderMicro(){
   head.appendChild(b);
   var sp=document.createElement("span"); sp.className="sp"; head.appendChild(sp);
   var note=document.createElement("span"); note.style.cssText="font-size:12.5px;color:var(--muted)";
-  note.textContent=state==="pending"?("Just "+(min-got)+" question"+(min-got===1?"":"s")+" to go — that's it."):"Anything more today is a bonus.";
+  note.textContent=state==="pending"?("Just "+(min-got)+" question"+(min-got===1?"":"s")+" whenever you have a moment."):"Anything more today is a bonus.";
   head.appendChild(note);
   host.appendChild(head);
   [["Questions today",got,min,str,"minimum "+min+" · stretch "+str],
@@ -4440,20 +5990,20 @@ function renderCatchup(){
   if(box.hidden) return;
   var h=document.createElement("p"); h.className="hint";
   h.textContent=(dow===6||dow===0)
-    ? "It's the weekend — here's what slipped this week. Clearing even two is a win."
-    : pending.length+" items are still open this week. Worth a catch-up session.";
+    ? "Weekend — here is what is still open. No rush; clearing even one is a win."
+    : pending.length+" items are still open. They will wait for you.";
   host.appendChild(h);
   if(!pending.length&&!due.length){
     var e=document.createElement("div"); e.className="empty";
     var big=document.createElement("span"); big.className="big"; big.textContent="🎉";
-    e.appendChild(big); e.appendChild(document.createTextNode("Nothing pending — the week is clear. Enjoy the weekend."));
+    e.appendChild(big); e.appendChild(document.createTextNode("Nothing pending — everything you opened is complete."));
     host.appendChild(e); return;
   }
   pending.slice(0,10).forEach(function(t){
     var row=document.createElement("div"); row.className="q"; row.style.marginBlockEnd="6px";
     var cb=document.createElement("button"); cb.type="button"; cb.className="btn xs";
     cb.textContent="mark done"; cb.setAttribute("data-do","toggle"); cb.setAttribute("data-id",t.id);
-    var tx=document.createElement("span"); tx.className="qt"; tx.textContent=t.title;
+    var tx=document.createElement("span"); tx.className="qt"; tx.textContent=displayTitle(t);
     var tg=document.createElement("span"); tg.className="tag n"; tg.textContent=short(pIso(t.due));
     row.appendChild(tx); row.appendChild(tg); row.appendChild(cb);
     host.appendChild(row);
@@ -4594,7 +6144,7 @@ function rdLoadPhase(track,ph,silent){
     });
   });
   save();
-  if(!silent){ render(); renderRoad(); toast(added?("Added "+added+" question"+(added===1?"":"s")+" to your planner"):"Already in your planner"); }
+  if(!silent){ render(); renderRoad(); toast(added?("Opened "+added+" item"+(added===1?"":"s")):"Already open"); }
   return added;
 }
 function rdLoadAll(track){
@@ -4602,12 +6152,12 @@ function rdLoadAll(track){
   ROAD[track].phases.forEach(function(ph){ n+=rdLoadPhase(track,ph,true); });
   ev("road","Loaded roadmap: "+ROAD[track].name);
   save(); render(); renderRoad();
-  toast(n?("Added "+n+" questions across "+ROAD[track].phases.length+" phases"):"Everything is already in your planner");
+  toast(n?("Opened "+n+" items across "+ROAD[track].phases.length+" phases"):"Everything is already open");
 }
 function rdClear(){
   var n=S.tasks.filter(function(t){return t.road;}).length;
   if(!n){ toast("No roadmap tasks to remove"); return; }
-  if(!confirm("Remove all "+n+" roadmap tasks from your planner? Your own tasks are untouched.")) return;
+  if(!confirm("Remove all "+n+" roadmap items? Your own tasks are untouched.")) return;
   S.tasks=S.tasks.filter(function(t){ return !t.road; });
   ev("road","Removed roadmap tasks"); save(); render(); renderRoad(); toast("Removed "+n+" roadmap tasks");
 }
@@ -4621,7 +6171,7 @@ function rdProjects(){
     t.road=key; added++;
   });
   save(); render(); renderRoad();
-  toast(added?("Added "+added+" projects to your planner"):"All projects are already in your planner");
+  toast(added?("Opened "+added+" projects"):"All projects are already open");
 }
 function bar(pct){
   var b=document.createElement("div"); b.className="bar";
@@ -4657,7 +6207,7 @@ function renderRoad(){
     var pc=document.createElement("div"); pc.className="phpct"; pc.textContent=loaded.length?(done+"/"+total+" · "+pct+"%"):"not loaded";
     var btn=document.createElement("button"); btn.type="button";
     btn.className="btn sm"+(loaded.length?"":" pri");
-    btn.textContent=loaded.length?(loaded.length<total?"+ Add missing":"✓ In planner"):"+ Add to planner";
+    btn.textContent=loaded.length?(loaded.length<total?"+ Open the rest":"✓ Opened"):"▶ Start this topic";
     btn.setAttribute("data-do","rdload"); btn.setAttribute("data-id",track+":"+ph.n);
     hd.appendChild(num); hd.appendChild(tw); hd.appendChild(bw); hd.appendChild(pc); hd.appendChild(btn);
     sec.appendChild(hd);
@@ -4690,7 +6240,7 @@ function renderRoad(){
           b.appendChild(cd);
         } else {
           var ad=document.createElement("button"); ad.type="button"; ad.className="btn xs";
-          ad.textContent="+ add"; ad.setAttribute("data-do","rdone"); ad.setAttribute("data-id",track+":"+ph.n+":"+gi+":"+qi);
+          ad.textContent="▶ open"; ad.setAttribute("data-do","rdone"); ad.setAttribute("data-id",track+":"+ph.n+":"+gi+":"+qi);
           b.appendChild(ad);
         }
         row.appendChild(b);
@@ -4709,10 +6259,10 @@ function renderSlow(host){
   ip.textContent="20–30 minutes a day · 2 questions a day · 5 days a week · weekends optional. 12 weeks of content spread across 6 months, 120 questions. Consistency beats intensity.";
   intro.appendChild(ih); intro.appendChild(ip);
   var ib=document.createElement("div"); ib.className="rowb";
-  var ba=document.createElement("button"); ba.type="button"; ba.className="btn pri"; ba.textContent="Load all 6 months";
+  var ba=document.createElement("button"); ba.type="button"; ba.className="btn pri"; ba.textContent="Open all 6 months";
   ba.setAttribute("data-do","slall");
   ib.appendChild(ba);
-  var bn=document.createElement("button"); bn.type="button"; bn.className="btn"; bn.textContent="Load next unloaded week";
+  var bn=document.createElement("button"); bn.type="button"; bn.className="btn"; bn.textContent="Open the next week";
   bn.setAttribute("data-do","slnext"); ib.appendChild(bn);
   intro.appendChild(ib);
   host.appendChild(intro);
@@ -4745,7 +6295,7 @@ function renderSlow(host){
     var bw=document.createElement("div"); bw.className="phbar"; bw.appendChild(bar(pct));
     var pc=document.createElement("div"); pc.className="phpct"; pc.textContent=loaded?(done+"/"+total+" · "+pct+"%"):"—";
     var btn=document.createElement("button"); btn.type="button"; btn.className="btn sm"+(loaded?"":" pri");
-    btn.textContent=loaded>=total?"✓ In planner":(loaded?"+ Add missing":"+ Add week");
+    btn.textContent=loaded>=total?"✓ Opened":(loaded?"+ Open the rest":"▶ Start this week");
     btn.setAttribute("data-do","slload"); btn.setAttribute("data-id",String(W.w));
     hd.appendChild(bx); hd.appendChild(tw); hd.appendChild(bw); hd.appendChild(pc); hd.appendChild(btn);
     sec.appendChild(hd);
@@ -4793,7 +6343,7 @@ function renderOverall(){
   var gm=document.createElement("div"); gm.className="goal";
   var lm=document.createElement("div"); lm.className="gl";
   var am=document.createElement("span"); am.innerHTML=""; am.textContent="⭐ My Path (24 weeks)";
-  var bm=document.createElement("span"); bm.textContent=mpD+" / "+mpT+" done  ·  "+mpL+" in planner  ·  "+mpPct+"%";
+  var bm=document.createElement("span"); bm.textContent=mpD+" / "+mpT+" done  ·  "+mpL+" opened  ·  "+mpPct+"%";
   lm.appendChild(am); lm.appendChild(bm); gm.appendChild(lm); gm.appendChild(bar(mpPct)); h.appendChild(gm);
   var slT=0,slL=0,slD=0;
   SLOW.forEach(function(W){ W.days.forEach(function(D,di){ D[1].forEach(function(q,qi){
@@ -4802,7 +6352,7 @@ function renderOverall(){
   var g0=document.createElement("div"); g0.className="goal";
   var l0=document.createElement("div"); l0.className="gl";
   var a0=document.createElement("span"); a0.textContent="Track 0 · Slow plan (6 months)";
-  var b0=document.createElement("span"); b0.textContent=slD+" / "+slT+" done  ·  "+slL+" in planner  ·  "+slPct+"%";
+  var b0=document.createElement("span"); b0.textContent=slD+" / "+slT+" done  ·  "+slL+" opened  ·  "+slPct+"%";
   l0.appendChild(a0); l0.appendChild(b0); g0.appendChild(l0); g0.appendChild(bar(slPct)); h.appendChild(g0);
   ["basics","job","work"].forEach(function(tr){
     var R=ROAD[tr], total=0, loaded=0, done=0;
@@ -4815,7 +6365,7 @@ function renderOverall(){
     var g=document.createElement("div"); g.className="goal";
     var l=document.createElement("div"); l.className="gl";
     var a=document.createElement("span"); a.textContent="Track "+(tr==="basics"?"1":tr==="job"?"2":"3")+" · "+R.name;
-    var b=document.createElement("span"); b.textContent=done+" / "+total+" done  ·  "+loaded+" in planner  ·  "+pct+"%";
+    var b=document.createElement("span"); b.textContent=done+" / "+total+" done  ·  "+loaded+" opened  ·  "+pct+"%";
     l.appendChild(a); l.appendChild(b);
     g.appendChild(l); g.appendChild(bar(pct)); h.appendChild(g);
   });
@@ -4933,6 +6483,18 @@ function loadPyodide_(){
   });
   return PY.loading;
 }
+function beginRun(label){
+  var box=document.getElementById("verdictBox");
+  box.hidden=false; box.className="vbox vrun"; clr(box);
+  var h=document.createElement("div"); h.className="vh"; h.textContent="⏳ "+label;
+  var p=document.createElement("div"); p.className="vp";
+  p.textContent="Running your current code — the previous result has been cleared.";
+  box.appendChild(h); box.appendChild(p);
+  ["btnRun","btnSubmit"].forEach(function(x){ var b=document.getElementById(x); if(b) b.disabled=true; });
+}
+function endRun(){
+  ["btnRun","btnSubmit"].forEach(function(x){ var b=document.getElementById(x); if(b) b.disabled=false; });
+}
 function runCode(verify){
   var lang=document.getElementById("cbLang").value;
   var code=document.getElementById("editor").value;
@@ -4940,7 +6502,8 @@ function runCode(verify){
   cclear();
   if(lang==="other"){ cwrite("This language can only be saved here, not executed.\nUse the editor to keep your solution with the question.\n","dim"); return; }
   if(!code.trim()){ cwrite("Nothing to run — the editor is empty.\n","dim"); return; }
-  if(lang==="javascript"){ runJS(code,verify); return; }
+  if(verify) beginRun("Checking your solution"); else document.getElementById("verdictBox").hidden=true;
+  if(lang==="javascript"){ runJS(code,verify); endRun(); return; }
   var t0=performance.now();
   loadPyodide_().then(function(py){
     cwrite("▶ running\n","in");
@@ -4948,12 +6511,14 @@ function runCode(verify){
     py.setStdout({batched:function(s){ out.push(s); }});
     py.setStderr({batched:function(s){ out.push(s); }});
     try{
+      var ns=py.globals.get("dict")();
       if(stdin.trim()){
         var lines=stdin.replace(/\r/g,"").split("\n");
         py.globals.set("__lt_stdin__",lines.join("\n"));
         py.runPython("import sys, io\nsys.stdin = io.StringIO(__lt_stdin__)\n");
       }
-      py.runPython(code);
+      py.runPython(code,{globals:ns});
+      ns.destroy();
       var txt=out.join("\n");
       if(txt.trim()) cwrite(txt.replace(/\n+$/,"")+"\n");
       else cwrite("(no output — did you forget print()?)\n","dim");
@@ -4965,12 +6530,172 @@ function runCode(verify){
         return l.indexOf("pyodide")<0 && l.indexOf("/lib/python")<0; }).join("\n")+"\n","err");
       if(verify) afterRun(txt2,verify,true);
     }
-  }).catch(function(){
+    endRun();
+  }).catch(function(){ endRun();
     cwrite("Could not load the Python engine.\nCheck your internet connection — the engine is fetched from a CDN the first time.\n","err");
   });
 }
+function ioFor(t){
+  if(!t) return null;
+  return IO[t.title]||IO[t.title.replace(/^Project:\s*/,"").trim()]||null;
+}
+/* run the whole script once per test case, each with its own stdin */
+function runIOTests(){
+  var t=byId(ui.cur), spec=ioFor(t);
+  var code=document.getElementById("editor").value;
+  if(!code.trim()){ cclear(); cwrite("Nothing to run — the editor is empty.\n","dim"); return; }
+  if(document.getElementById("cbLang").value!=="python"){
+    cclear(); cwrite("Test cases run against Python only.\n","dim"); return;
+  }
+  cclear(); beginRun("Running "+spec.cases.length+" test case"+(spec.cases.length===1?"":"s"));
+  cwrite("▶ running "+spec.cases.length+" test case"+(spec.cases.length===1?"":"s")+"\n","in");
+  loadPyodide_().then(function(py){
+    var rows=spec.cases.map(function(c){
+      var out=[];
+      py.setStdout({batched:function(s){ out.push(s); }});
+      py.setStderr({batched:function(s){ out.push(s); }});
+      var err=null;
+      var ns=null;
+      try{
+        ns=py.globals.get("dict")();
+        py.globals.set("__lt_in__",c["in"]||"");
+        py.runPython("import sys, io\nsys.stdin = io.StringIO(__lt_in__)\n");
+        py.runPython(code,{globals:ns});
+      }catch(e){
+        err=String(e.message||e).split("\n").filter(function(l){
+          return l.indexOf("pyodide")<0 && l.indexOf("/lib/python")<0 && l.trim().length; }).slice(-2).join(" ");
+      }finally{ if(ns){ try{ ns.destroy(); }catch(e2){} } }
+      var got=normOut(out.join("\n"));
+      var want=normOut(c.out);
+      return {c:c,got:got,want:want,err:err,ok:!err&&got===want};
+    });
+    var passed=rows.filter(function(r){return r.ok;}).length;
+    cwrite("\n"+passed+" / "+rows.length+" test cases passed\n",passed===rows.length?"ok":"err");
+    showIOTests(t,spec,rows);
+    if(passed===rows.length) acceptSolution(t,rows[0].got,"All "+passed+" test cases passed");
+    endRun();
+  }).catch(function(){ endRun(); cwrite("Could not load the Python engine.\n","err"); });
+}
+function ioDiagnose(r){
+  if(r.err){
+    var m=r.err;
+    if(/EOF when reading a line|EOFError/.test(m))
+      return "Your program asked for more input than this test case provides. This case supplies "+
+        ((r.c["in"]||"").split("\n").filter(function(x){return x.length;}).length)+" line(s) — count your input() calls.";
+    if(/ValueError.*invalid literal/.test(m))
+      return "You tried to convert text that is not a number. Check which line you are converting with int().";
+    if(/NameError/.test(m)) return "You used a name that does not exist — check for a typo. Python said: "+m;
+    if(/IndentationError|SyntaxError/.test(m)) return "Python could not parse your code. Check your indentation and colons. Python said: "+m;
+    if(/ZeroDivisionError/.test(m)) return "Division by zero on this input.";
+    return "Your code raised an error on this input: "+m;
+  }
+  if(!r.got) return "Your program printed nothing for this input. Make sure the result goes through print().";
+  var g=r.got.split("\n"), w=r.want.split("\n");
+  if(g.length!==w.length)
+    return "Expected "+w.length+" line"+(w.length===1?"":"s")+" of output but got "+g.length+". "+
+      (g.length>w.length?"You are printing something extra — perhaps a prompt inside input().":
+       "You may be printing several values on one line instead of separate lines.");
+  for(var i=0;i<w.length;i++){
+    if(g[i]===w[i]) continue;
+    if(g[i].toLowerCase()===w[i].toLowerCase())
+      return "Line "+(i+1)+": right text, wrong capitalisation. Expected "+JSON.stringify(w[i])+" but got "+JSON.stringify(g[i])+".";
+    if(g[i].replace(/[^\w]/g,"")===w[i].replace(/[^\w]/g,""))
+      return "Line "+(i+1)+": the words are right but the punctuation differs. Expected "+JSON.stringify(w[i])+" but got "+JSON.stringify(g[i])+".";
+    if(g[i].replace(/\s+/g,"")===w[i].replace(/\s+/g,""))
+      return "Line "+(i+1)+": right characters, wrong spacing. Expected "+JSON.stringify(w[i])+" but got "+JSON.stringify(g[i])+".";
+    if(/^<class /.test(g[i]))
+      return "Line "+(i+1)+": you printed "+JSON.stringify(g[i])+". Use type(x).__name__ to get just "+JSON.stringify(w[i])+".";
+    if(!isNaN(+g[i])&&!isNaN(+w[i])){
+      var d=+g[i]-+w[i];
+      if(Math.abs(d)===1) return "Line "+(i+1)+": off by one — expected "+w[i]+" but got "+g[i]+". Check your range() bounds; range(1, n) stops at n-1.";
+      if(+w[i]!==0&&Math.abs(+g[i]/+w[i]-2)<0.01) return "Line "+(i+1)+": your answer is exactly double — you may be counting something twice.";
+      return "Line "+(i+1)+": expected "+w[i]+" but got "+g[i]+" (a difference of "+(d>0?"+":"")+d+").";
+    }
+    if(g[i].indexOf(w[i])>=0)
+      return "Line "+(i+1)+": your output contains the right answer plus extra text. Print only the value — no prompt or label.";
+    return "Line "+(i+1)+": expected "+JSON.stringify(w[i])+" but got "+JSON.stringify(g[i])+".";
+  }
+  return "The output differs from what was expected.";
+}
+function showIOTests(t,spec,rows){
+  var box=document.getElementById("verdictBox");
+  box.hidden=false; clr(box);
+  var allOk=rows.every(function(r){return r.ok;});
+  box.className="vbox "+(allOk?"vok":"vno");
+  var passed=rows.filter(function(r){return r.ok;}).length;
+  var h=document.createElement("div"); h.className="vh";
+  h.textContent=(allOk?"🎉 Congratulations! ":"")+passed+"/"+rows.length+" test cases passed";
+  box.appendChild(h);
+  var sum=document.createElement("div"); sum.className="tsum";
+  rows.forEach(function(r,i){
+    var d=document.createElement("span"); d.className="tdot "+(r.ok?"p":"f");
+    d.textContent=(i+1); d.title=r.c.name||("case "+(i+1)); sum.appendChild(d);
+  });
+  box.appendChild(sum);
+  rows.forEach(function(r,i){
+    var card=document.createElement("div"); card.className="tcase "+(r.ok?"tpass":"tfail");
+    var hd=document.createElement("div"); hd.className="tchead";
+    var mk=document.createElement("span"); mk.className="tcmark"; mk.textContent=r.ok?"✓":"✗";
+    var nm=document.createElement("span"); nm.className="tcname";
+    nm.textContent="Test case "+(i+1)+(r.c.name?" — "+r.c.name:"");
+    hd.appendChild(mk); hd.appendChild(nm);
+    var sp=document.createElement("span"); sp.className="sp"; hd.appendChild(sp);
+    var st=document.createElement("span"); st.className="tag "+(r.ok?"g":"r"); st.textContent=r.ok?"passed":"failed";
+    hd.appendChild(st); card.appendChild(hd);
+    var grid=document.createElement("div"); grid.className="tcgrid";
+    [["Input",(r.c["in"]||"").length?r.c["in"]:"(no input)",""],
+     ["Expected",r.want||"(no output)",""],
+     ["Your output",r.err?("Error: "+r.err):(r.got||"(nothing printed)"),r.ok?"":"bad"]
+    ].forEach(function(p){
+      var l=document.createElement("div"); l.className="tcl"; l.textContent=p[0];
+      var v=document.createElement("div"); v.className="tcv mono"+(p[2]?" "+p[2]:"");
+      v.style.whiteSpace="pre-wrap"; v.textContent=p[1];
+      grid.appendChild(l); grid.appendChild(v);
+    });
+    card.appendChild(grid);
+    if(!r.ok){
+      var why=document.createElement("div"); why.className="tcwhy";
+      var wb=document.createElement("b"); wb.textContent="Why this failed: ";
+      why.appendChild(wb); why.appendChild(document.createTextNode(ioDiagnose(r)));
+      card.appendChild(why);
+    }
+    box.appendChild(card);
+  });
+  if(!allOk){
+    var fails=rows.filter(function(r){return !r.ok;});
+    var pass=rows.filter(function(r){return r.ok;});
+    if(pass.length){
+      var p2=document.createElement("div"); p2.className="vhint";
+      p2.textContent=pass.length+" case"+(pass.length===1?"":"s")+" already pass, so your main logic works. "+
+        "Compare the failing inputs above with the passing ones — the difference is usually a boundary value like 0, 1 or an empty line.";
+      box.appendChild(p2);
+    }
+  } else {
+    var okw=document.createElement("div"); okw.className="okwrap";
+    var g1=XP_RULES[t.type||"practice"]||20;
+    [["✓ Question completed","Saved automatically — no need to do anything else"],
+     ["+"+(g1+XP_RULES.verified)+" XP earned","includes a bonus for passing every test case"],
+     ["Concept",spec&&spec.objective?spec.objective:(t.topic||"practice")]
+    ].forEach(function(pair){
+      var r2=document.createElement("div"); r2.className="okrow";
+      var a2=document.createElement("b"); a2.textContent=pair[0];
+      var b2=document.createElement("span"); b2.textContent=pair[1];
+      r2.appendChild(a2); r2.appendChild(b2); okw.appendChild(r2);
+    });
+    var nx=document.createElement("div"); nx.className="rowb"; nx.style.marginBlockStart="10px";
+    var nb=document.createElement("button"); nb.type="button"; nb.className="btn xs pri";
+    nb.textContent="Next question →"; nb.setAttribute("data-do","nextq"); nb.setAttribute("data-id",t.id);
+    nx.appendChild(nb);
+    var rb=document.createElement("button"); rb.type="button"; rb.className="btn xs";
+    rb.textContent="Review my solution"; rb.setAttribute("data-do","ccode"); rb.setAttribute("data-id",t.id);
+    nx.appendChild(rb);
+    okw.appendChild(nx);
+    box.appendChild(okw);
+  }
+}
 function runTests(){
   var t=ui.cur?byId(ui.cur):null;
+  if(t&&ioFor(t)){ runIOTests(); return; }
   var suite=t&&testsFor(t);
   if(!t||!suite){ runCode(true); return; }
   var code=document.getElementById("editor").value;
@@ -4978,14 +6703,17 @@ function runTests(){
   if(document.getElementById("cbLang").value!=="python"){
     cclear(); cwrite("Test cases currently run against Python only.\n","dim"); return;
   }
-  cclear(); cwrite("▶ running "+suite.cases.length+" test cases\n","in");
+  cclear(); beginRun("Running "+suite.cases.length+" test cases");
+  cwrite("▶ running "+suite.cases.length+" test cases\n","in");
   loadPyodide_().then(function(py){
     var out=[];
     py.setStdout({batched:function(s){ out.push(s); }});
     py.setStderr({batched:function(s){ out.push(s); }});
     var results=null, userOut="", fatal=null;
     try{
-      py.runPython(code+"\n"+buildHarness(suite));
+      var ns2=py.globals.get("dict")();
+      py.runPython(code+"\n"+buildHarness(suite),{globals:ns2});
+      ns2.destroy();
       var joined=out.join("\n");
       var idx=joined.lastIndexOf("__LT_JSON__");
       if(idx>=0){
@@ -4997,8 +6725,8 @@ function runTests(){
         return l.indexOf("pyodide")<0 && l.indexOf("/lib/python")<0; }).join("\n");
     }
     if(userOut) cwrite(userOut+"\n","dim");
-    if(fatal){ cwrite("\n"+fatal+"\n","err"); showTests(t,suite,null,"error"); return; }
-    if(!results){ cwrite("\nCould not evaluate the tests.\n","err"); showTests(t,suite,null,"error"); return; }
+    if(fatal){ cwrite("\n"+fatal+"\n","err"); showTests(t,suite,null,"error"); endRun(); return; }
+    if(!results){ cwrite("\nCould not evaluate the tests.\n","err"); showTests(t,suite,null,"error"); endRun(); return; }
     if(results.length===1&&results[0].err==="missing"){
       cwrite("\nYour code doesn't define a function called "+suite.fn+"().\n","err");
       showTests(t,suite,null,"missing"); return;
@@ -5021,7 +6749,8 @@ function runTests(){
     cwrite("\n"+passed+" / "+suite.cases.length+" test cases passed\n",passed===suite.cases.length?"ok":"err");
     showTests(t,suite,rows,null);
     if(passed===suite.cases.length) acceptSolution(t,userOut,"All "+passed+" test cases passed");
-  }).catch(function(){
+    endRun();
+  }).catch(function(){ endRun();
     cwrite("Could not load the Python engine.\n","err");
   });
 }
@@ -5117,7 +6846,7 @@ function acceptSolution(t,output,why){
   t.output=normOut(output||"");
   t.verified=true;
   if(!already){
-    t.status="done"; t.completedAt=new Date().toISOString(); t.missed=t.due<today();
+    t.status="done"; t.completedAt=new Date().toISOString();
     ev("done","Solved & verified: "+t.title+" ("+why+")");
     autoRevision(t);
   } else ev("code","Solution updated: "+t.title);
@@ -5184,7 +6913,7 @@ function afterRun(output,verify,erred){
     t.codeAt=new Date().toISOString();
     t.output=normOut(output);
     if(!already){
-      t.status="done"; t.completedAt=new Date().toISOString(); t.missed=t.due<today();
+      t.status="done"; t.completedAt=new Date().toISOString();
       ev("done","Solved & verified: "+t.title);
       autoRevision(t);
     } else ev("code","Solution updated: "+t.title);
@@ -5197,7 +6926,7 @@ function afterRun(output,verify,erred){
     box.appendChild(note);
     cwrite("\n✓ Verified — saved and marked complete.\n","ok");
     render();
-    loadIntoEditor(ui.cur);
+    loadIntoEditor(ui.cur,true);
     document.getElementById("verdictBox").hidden=false;
     toast(already?"Solution saved":"Correct! Saved and ticked off 🎉");
   } else if(verify){
@@ -5250,8 +6979,68 @@ function renderQPanel(t){
   if(t.status==="done"){ var dn=document.createElement("span"); dn.className="tag g"; dn.textContent="✓ completed "+stamp(t.completedAt); top.appendChild(dn); }
   if(t.est){ var es=document.createElement("span"); es.className="tag c"; es.textContent="⏱ ~"+t.est+" min"; top.appendChild(es); }
   p.appendChild(top);
-  var q=document.createElement("div"); q.className="qtext"; q.textContent=t.title;
+  var q=document.createElement("div"); q.className="qtext"; q.textContent=displayTitle(t);
   p.appendChild(q);
+  var io=ioFor(t);
+  if(io){
+    var ib=document.createElement("div"); ib.className="spec";
+    function sect(label,body,cls){
+      var l=document.createElement("div"); l.className="specl";
+      if(label!=="Objective") l.style.marginBlockStart="11px";
+      l.textContent=label;
+      var v=document.createElement("div"); v.className=cls||"spect"; v.textContent=body;
+      ib.appendChild(l); ib.appendChild(v);
+    }
+    sect("Objective",io.objective);
+    sect("Problem statement",io.statement);
+    sect("Input",io.input);
+    sect("Output",io.output);
+    if(io.constraints) sect("Constraints",io.constraints);
+    if(io.example){
+      var el=document.createElement("div"); el.className="specl"; el.style.marginBlockStart="11px";
+      el.textContent="Example"; ib.appendChild(el);
+      var eg=document.createElement("div"); eg.className="egrid";
+      [["Input",io.example["in"]||"(no input)"],["Output",io.example.out]].forEach(function(p){
+        var a=document.createElement("div"); a.className="tcl"; a.textContent=p[0];
+        var b2=document.createElement("div"); b2.className="tcv mono"; b2.style.whiteSpace="pre-wrap"; b2.textContent=p[1];
+        eg.appendChild(a); eg.appendChild(b2);
+      });
+      ib.appendChild(eg);
+      if(io.example.why){
+        var w=document.createElement("div"); w.className="spect"; w.style.cssText="margin-block-start:7px;color:var(--muted);font-size:12.5px";
+        w.textContent="Explanation: "+io.example.why; ib.appendChild(w);
+      }
+    }
+    var cl=document.createElement("div"); cl.className="specl"; cl.style.marginBlockStart="11px";
+    cl.textContent=io.cases.length+" test case"+(io.cases.length===1?"":"s")+" — all must pass";
+    ib.appendChild(cl);
+    io.cases.forEach(function(c,i){
+      var r=document.createElement("div"); r.className="egrid"; r.style.marginBlockStart="5px";
+      var a=document.createElement("div"); a.className="tcl";
+      a.textContent=(i+1)+". "+(c.name||"case");
+      var b3=document.createElement("div"); b3.className="tcv mono"; b3.style.whiteSpace="pre-wrap";
+      b3.textContent=((c["in"]||"").length?c["in"].replace(/\n/g," ⏎ "):"(no input)")+"  →  "+c.out.replace(/\n/g," ⏎ ");
+      r.appendChild(a); r.appendChild(b3); ib.appendChild(r);
+    });
+    var les2=LESSONS[t.topic]||null;
+    if(les2){
+      var tr2=document.createElement("div"); tr2.className="rowb"; tr2.style.marginBlockStart="12px";
+      var tb2=document.createElement("button"); tb2.type="button"; tb2.className="btn xs";
+      tb2.textContent=ui.theoryOpen===t.id?"▲ Hide theory":"📘 Review theory";
+      tb2.setAttribute("data-do","toggletheory"); tb2.setAttribute("data-id",t.id);
+      tr2.appendChild(tb2);
+      var nt2=document.createElement("span");
+      nt2.style.cssText="font-size:12px;color:var(--muted)";
+      nt2.textContent="Stuck? The theory for "+t.topic+" is one click away.";
+      tr2.appendChild(nt2);
+      ib.appendChild(tr2);
+      if(ui.theoryOpen===t.id) renderLesson(les2,ib);
+    }
+    p.appendChild(ib);
+    var sd2=document.getElementById("stdinBox");
+    if(!sd2.value.trim()&&io.cases[0]["in"]) sd2.value=io.cases[0]["in"];
+    return;
+  }
   var spec=SPEC[t.title]||SPEC[t.title.replace(/^Project:\s*/,"").trim()];
   if(spec){
     var sb=document.createElement("div"); sb.className="spec";
@@ -5297,6 +7086,62 @@ function renderQPanel(t){
     st2.style.marginBlockStart="9px"; sw.appendChild(st2);
     p.appendChild(sw);
     return;
+  }
+  /* reading / review items are not coding tasks */
+  if((t.type==="learn"||t.type==="revision")&&!testsFor(t)&&!expectFor(t)){
+    var les=lessonFor(t);
+    if(les) renderLesson(les,p);
+    var lr=document.createElement("div"); lr.className="exp";
+    var lh=document.createElement("div"); lh.className="exph";
+    lh.textContent=t.type==="learn"?(les?"Read the theory above, then mark it done":"Reading task — nothing to submit")
+      :"Review task — nothing to submit";
+    lr.appendChild(lh);
+    var lb=document.createElement("div"); lb.className="vhint"; lb.style.marginBlockStart="0";
+    lb.textContent=t.type==="learn"
+      ? (les?"Try the syntax example in the editor below to see it run. Nothing is submitted for a reading task — mark it done when you understand it."
+           : "Read up on this topic, then mark it done. Use the editor below as a scratchpad.")
+      : "Do this in your own words or in your head, then mark it done. Reviews are about recall, not output.";
+    lr.appendChild(lb);
+    if(les&&les.syntax){
+      var lt=document.createElement("button"); lt.type="button"; lt.className="btn xs";
+      lt.textContent="↧ load the syntax example"; lt.setAttribute("data-do","loadles"); lt.setAttribute("data-id",t.id);
+      lt.style.marginBlockStart="9px"; lr.appendChild(lt);
+    }
+    var snip=LEARN_SNIPPETS[t.title]||LEARN_SNIPPETS[t.title.replace(/^Learn:\s*/,"").trim()];
+    if(snip){
+      var sh=document.createElement("div"); sh.className="specl"; sh.style.marginBlockStart="11px";
+      sh.textContent="Try this in the editor";
+      var sc=document.createElement("div"); sc.className="specout"; sc.textContent=snip;
+      lr.appendChild(sh); lr.appendChild(sc);
+      var tb=document.createElement("button"); tb.type="button"; tb.className="btn xs";
+      tb.textContent="↧ load into editor"; tb.setAttribute("data-do","loadsnip"); tb.setAttribute("data-id",t.id);
+      tb.style.marginBlockStart="9px"; lr.appendChild(tb);
+    }
+    var lm=document.createElement("button"); lm.type="button"; lm.className="btn xs ok";
+    lm.textContent=t.status==="done"?"✓ done":"✓ I've read this — mark done";
+    lm.setAttribute("data-do","toggle"); lm.setAttribute("data-id",t.id);
+    lm.style.marginBlockStart="9px";
+    lm.style.marginInlineStart=snip?"6px":"0";
+    lr.appendChild(lm);
+    p.appendChild(lr); return;
+  }
+  /* project umbrella items */
+  if(t.type==="project"&&!testsFor(t)&&!expectFor(t)){
+    var pr2=document.createElement("div"); pr2.className="exp";
+    var ph=document.createElement("div"); ph.className="exph"; ph.textContent="Project — build it, then mark it done";
+    pr2.appendChild(ph);
+    var pb=document.createElement("div"); pb.className="vhint"; pb.style.marginBlockStart="0";
+    pb.textContent="Projects are open-ended by design — there is no single correct output. Build it in the editor below, run it until it behaves the way you want, then press Save and mark it done.\n\nThe Projects tab breaks each one into smaller steps if you would rather work through it piece by piece.";
+    pr2.appendChild(pb);
+    var pg=document.createElement("button"); pg.type="button"; pg.className="btn xs";
+    pg.textContent="🚀 open Projects tab"; pg.setAttribute("data-tab","proj");
+    pg.style.marginBlockStart="9px"; pr2.appendChild(pg);
+    var pm=document.createElement("button"); pm.type="button"; pm.className="btn xs ok";
+    pm.textContent=t.status==="done"?"✓ done":"✓ mark done";
+    pm.setAttribute("data-do","toggle"); pm.setAttribute("data-id",t.id);
+    pm.style.cssText="margin-block-start:9px;margin-inline-start:6px";
+    pr2.appendChild(pm);
+    p.appendChild(pr2); return;
   }
   var man=MANUAL[t.title]||MANUAL[t.title.replace(/^Project:\s*/,"").trim()];
   if(man){
@@ -5431,7 +7276,7 @@ function describeChecks(exp){
   var c=buildChecks(exp);
   return c?c.map(function(x){return x.label;}):null;
 }
-function loadIntoEditor(id){
+function loadIntoEditor(id,keepEditor){
   ui.cur=id||"";
   var ta=document.getElementById("editor"), sel=document.getElementById("cbTask");
   var lang=document.getElementById("cbLang");
@@ -5439,14 +7284,14 @@ function loadIntoEditor(id){
   if(id){
     var t=byId(id);
     if(t){
-      ta.value=t.code||t.draft||"";
+      if(!keepEditor) ta.value=t.code||t.draft||"";
       lang.value=t.codeLang||(t.lang==="JavaScript"?"javascript":t.lang==="Python"?"python":t.lang?"other":"python");
-      document.getElementById("edName").textContent=(t.title.toLowerCase().replace(/[^a-z0-9]+/g,"_").replace(/^_|_$/g,"").slice(0,40)||"solution")+"."+ext(lang.value);
+      document.getElementById("edName").textContent=(displayTitle(t).toLowerCase().replace(/[^a-z0-9]+/g,"_").replace(/^_|_$/g,"").slice(0,40)||"solution")+"."+ext(lang.value);
       document.getElementById("edMeta").textContent=t.codeAt?((t.verified?"✓ verified ":"saved ")+stamp(t.codeAt))
         :(t.draftAt?("draft from "+stamp(t.draftAt)):"not saved yet");
     }
   } else {
-    ta.value=S.scratch||"";
+    if(!keepEditor) ta.value=S.scratch||"";
     document.getElementById("edName").textContent="scratch."+ext(lang.value);
     document.getElementById("edMeta").textContent="scratchpad";
   }
@@ -5474,7 +7319,7 @@ function renderCode(){
   var o0=document.createElement("option"); o0.value=""; o0.textContent="— scratchpad (not linked to a question) —"; sel.appendChild(o0);
   S.tasks.slice().sort(function(a,b){ return b.due.localeCompare(a.due); }).forEach(function(t){
     var o=document.createElement("option"); o.value=t.id;
-    o.textContent=(t.code?"● ":"○ ")+t.title+(t.topic?" · "+t.topic:"");
+    o.textContent=(t.code?"● ":"○ ")+displayTitle(t)+(t.topic?" · "+t.topic:"");
     sel.appendChild(o);
   });
   sel.value=cur||ui.cur||"";
@@ -5489,7 +7334,7 @@ function renderCode(){
   withCode.forEach(function(t){
     var d=document.createElement("div"); d.className="snip";
     d.setAttribute("data-do","copen"); d.setAttribute("data-id",t.id);
-    var a=document.createElement("div"); a.className="st"; a.textContent=t.title;
+    var a=document.createElement("div"); a.className="st"; a.textContent=displayTitle(t);
     var b=document.createElement("div"); b.className="sm";
     b.textContent=(t.codeLang||"code")+" · "+t.code.split("\n").length+" lines · "+stamp(t.codeAt);
     d.appendChild(a); d.appendChild(b); host.appendChild(d);
