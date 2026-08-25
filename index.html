@@ -39,6 +39,18 @@
   --h0:#161d30; --h1:#213256; --h2:#2f4d95; --h3:#4a72d4; --h4:#7d9dfb;
 }
 *{box-sizing:border-box}
+/* ---- layout grid: one width, one gutter, nothing shifts ---- */
+:root{--maxw:1240px; --pad:20px; --gap:14px}
+.wrap,.top-in{max-inline-size:var(--maxw); margin-inline:auto; padding-inline:var(--pad); inline-size:100%}
+.wrap>*,section.tab>*{max-inline-size:100%}
+/* a scrollbar appearing or vanishing was shifting the whole page sideways */
+html{scrollbar-gutter:stable}
+/* long words and code must never widen a panel */
+.panel,.tcard,.task,.kpi,.res,.tcase,.q,.wk,.phase{min-inline-size:0; overflow-wrap:anywhere}
+.tblwrap,.mapwrap,.egrid,.tcgrid{max-inline-size:100%}
+img,svg,table,pre{max-inline-size:100%}
+.rowb{min-inline-size:0}
+.rowb>*{min-inline-size:0}
 html,body{margin:0;padding:0}
 body{
   background:
@@ -57,7 +69,7 @@ button{font:inherit; color:inherit}
 /* ---------------- topbar ---------------- */
 header.top{position:sticky; top:0; z-index:40; border-block-end:1px solid var(--line);
   background:color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter:blur(14px) saturate(1.3)}
-.top-in{max-width:1240px; margin-inline:auto; padding:11px 20px; display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.top-in{padding-block:11px; display:flex; align-items:center; gap:10px; flex-wrap:wrap}
 .brand{display:flex; align-items:center; gap:10px; cursor:pointer; background:none; border:0; padding:0}
 .mark{inline-size:34px; block-size:34px; border-radius:11px; display:grid; place-items:center; color:#fff; font-weight:800; font-size:15px;
   background:linear-gradient(135deg,var(--brand),var(--brand2)); box-shadow:0 6px 18px var(--ring)}
@@ -80,7 +92,7 @@ header.top{position:sticky; top:0; z-index:40; border-block-end:1px solid var(--
 .btn.xs{padding:3px 8px; font-size:11.5px; border-radius:6px; font-weight:600}
 .btn.dgr:hover{border-color:var(--bad); color:var(--bad)}
 .btn.ok{border-color:var(--ok); color:var(--ok)}
-.wrap{max-width:1240px; margin-inline:auto; padding-inline:20px; padding-block:0 70px}
+.wrap{padding-block:0 70px}
 
 /* ---------------- tabs ---------------- */
 nav.tabs{display:flex; gap:5px; overflow-x:auto; padding-block:14px 4px; scrollbar-width:none}
@@ -111,7 +123,7 @@ section.tab{animation:fade .32s ease}
 .ringbox .sub{font-size:12px; color:#c8cee2; margin-block-start:4px}
 
 /* ---------------- kpi ---------------- */
-.kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(178px,1fr)); gap:13px; margin-block:14px}
+.kpis{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(178px,100%),1fr)); gap:13px; margin-block:var(--gap)}
 .kpi{background:var(--panel); border:1px solid var(--line); border-radius:var(--r); padding:15px 16px; box-shadow:var(--shadow);
   position:relative; overflow:hidden; transition:.18s}
 .kpi{animation:rise .4s ease backwards}
@@ -128,11 +140,11 @@ section.tab{animation:fade .32s ease}
 .kpi .ic{position:absolute; inset-block-start:13px; inset-inline-end:13px; font-size:17px; opacity:.85}
 
 /* ---------------- panels ---------------- */
-.panel{background:var(--panel); border:1px solid var(--line); border-radius:var(--r); padding:18px; box-shadow:var(--shadow); margin-block:14px}
+.panel{background:var(--panel); border:1px solid var(--line); border-radius:var(--r); padding:18px; box-shadow:var(--shadow); margin-block:var(--gap)}
 .panel h2{margin:0; font-size:16px; letter-spacing:-.3px; font-weight:750}
 .panel .hint{margin:3px 0 13px; font-size:12.5px; color:var(--muted)}
-.grid2{display:grid; grid-template-columns:repeat(auto-fit,minmax(330px,1fr)); gap:14px}
-.grid3{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px}
+.grid2{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(330px,100%),1fr)); gap:var(--gap)}
+.grid3{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr)); gap:var(--gap)}
 .rowb{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
 svg.chart{inline-size:100%; block-size:auto; display:block; overflow:visible}
 .legend{display:flex; flex-wrap:wrap; gap:12px; margin-block-start:10px; font-size:12.5px; color:var(--muted)}
@@ -283,7 +295,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
 /* ---------------- today / badges / recos ---------------- */
 .focusCard{border-color:var(--brand); box-shadow:0 0 0 3px var(--brand-soft),var(--shadow);
   background:linear-gradient(160deg,var(--panel),var(--brand-soft))}
-.badges{display:grid; grid-template-columns:repeat(auto-fill,minmax(136px,1fr)); gap:11px}
+.badges{display:grid; grid-template-columns:repeat(auto-fill,minmax(min(136px,100%),1fr)); gap:11px}
 .badge{position:relative; border:1px solid var(--line); border-radius:14px; padding:14px 11px; text-align:center;
   background:var(--panel2); opacity:.42; filter:grayscale(1); transition:.2s}
 .badge.got{opacity:1; filter:none; border-color:var(--brand); background:linear-gradient(160deg,var(--panel2),var(--brand-soft))}
@@ -306,6 +318,26 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
 .tdot:nth-child(6){animation-delay:.25s} .tdot:nth-child(7){animation-delay:.3s}
 .bar i{transition:inline-size .7s cubic-bezier(.2,.8,.2,1)}
 @media (prefers-reduced-motion:reduce){ *{animation:none!important; transition:none!important} }
+@media (max-width:1024px){ :root{--pad:16px} }
+@media (max-width:820px){
+  :root{--pad:14px; --gap:11px}
+  .panel{padding:14px}
+  .hero{padding:20px}
+  .edrow{block-size:clamp(260px,42vh,460px)}
+  .lab{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  :root{--pad:11px}
+  .panel{padding:12px; border-radius:12px}
+  .top-in{gap:7px}
+  .pill{min-inline-size:0; padding-inline:9px}
+  .kpi .val{font-size:24px}
+  .qnav{gap:6px}
+  .qdots{display:none}
+  .tcgrid,.egrid{grid-template-columns:1fr}
+  .tcl{margin-block-start:5px}
+  #editor,.gutter{font-size:12.5px}
+}
 .badge .bi{font-size:27px; line-height:1}
 .badge .bn{font-weight:750; font-size:12.5px; margin-block-start:7px}
 .badge .bd{font-size:11px; color:var(--muted); margin-block-start:3px; line-height:1.4}
@@ -362,7 +394,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   border:1px solid var(--line)}
 .specl{font-size:11px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:var(--brand)}
 .spect{font-size:13.5px; line-height:1.6; margin-block-start:5px; white-space:pre-wrap; color:var(--ink)}
-.tcards{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:12px}
+.tcards{display:grid; grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr)); gap:12px}
 .tcard{border:1px solid var(--line); border-radius:14px; padding:14px; background:var(--panel2); transition:.2s}
 .tcard:hover{border-color:var(--brand); transform:translateY(-2px); box-shadow:0 8px 22px var(--ring)}
 .tcard.tcdone{border-color:var(--ok); background:linear-gradient(160deg,var(--panel2),var(--ok-soft))}
@@ -475,18 +507,23 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
 .proj .pdz{font-size:12.5px; color:var(--muted); margin-block-start:2px}
 
 /* ---------------- code lab ---------------- */
-.lab{display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:14px}
+.lab{display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:var(--gap); align-items:start}
 @media (max-width:900px){ .lab{grid-template-columns:1fr} }
 .edwrap{border:1px solid var(--line); border-radius:12px; overflow:hidden; background:var(--panel2)}
 .edbar{display:flex; align-items:center; gap:8px; padding:7px 10px; background:var(--panel); border-block-end:1px solid var(--line); flex-wrap:wrap}
 .edbar .fn{font-family:var(--mono); font-size:12.5px; color:var(--muted); min-inline-size:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
-.edrow{display:flex; min-block-size:340px; max-block-size:60vh; align-items:stretch}
-.gutter{font-family:var(--mono); font-size:13px; line-height:21px; padding:12px 8px 12px 12px; color:var(--faint);
-  text-align:end; user-select:none; background:var(--panel); border-inline-end:1px solid var(--line);
-  overflow:hidden; min-inline-size:46px; white-space:pre; box-sizing:border-box; flex:none}
-#editor{flex:1; font-family:var(--mono); font-size:13px; line-height:21px; padding:12px; border:0; border-radius:0;
-  background:transparent; resize:none; min-block-size:340px; tab-size:4; white-space:pre; overflow-wrap:normal;
-  overflow:auto; box-sizing:border-box}
+.edrow{display:flex; block-size:clamp(300px,46vh,560px); align-items:stretch; min-inline-size:0}
+.gutter{font-family:var(--mono); font-size:13px; line-height:21px; padding-block:12px; padding-inline:10px 8px;
+  color:var(--faint); text-align:end; user-select:none; background:var(--panel);
+  border-inline-end:1px solid var(--line); overflow:hidden; box-sizing:border-box; flex:none;
+  inline-size:52px; transition:inline-size .12s}
+.gutter.g4{inline-size:60px} .gutter.g5{inline-size:68px}
+.gutter .ln{display:block; block-size:21px; line-height:21px; font-variant-numeric:tabular-nums}
+.gutter .ln.cur{color:var(--brand); font-weight:700}
+#editor{flex:1 1 auto; inline-size:100%; min-inline-size:0; font-family:var(--mono); font-size:13px;
+  line-height:21px; padding-block:12px; padding-inline:12px; border:0; border-radius:0;
+  background:transparent; resize:none; block-size:100%; tab-size:4; -moz-tab-size:4;
+  white-space:pre; overflow-wrap:normal; overflow:auto; box-sizing:border-box}
 #editor:focus{box-shadow:none; outline:none}
 .console{background:#0a0e18; color:#d7e3ff; font-family:var(--mono); font-size:12.5px; line-height:1.6; border-radius:12px;
   padding:12px 14px; min-block-size:180px; max-block-size:340px; overflow:auto; white-space:pre-wrap; word-break:break-word;
@@ -2168,103 +2205,154 @@ document.getElementById("cbLang").addEventListener("change",function(){
   document.getElementById("edName").textContent=n+"."+ext(this.value);
   renderCode();
 });
-document.getElementById("editor").addEventListener("scroll",function(){
-  document.getElementById("gutter").scrollTop=this.scrollTop;
-});
+(function(){
+  var ed=document.getElementById("editor");
+  ed.addEventListener("scroll",function(){ document.getElementById("gutter").scrollTop=this.scrollTop; });
+  ["click","keyup","select","focus"].forEach(function(evt){ ed.addEventListener(evt,gutter); });
+  ed.addEventListener("paste",function(){ setTimeout(gutter,0); });
+  ed.addEventListener("cut",function(){ setTimeout(gutter,0); });
+})();
 document.getElementById("btnRun").addEventListener("click",function(){ runCode(false); });
 document.getElementById("btnSubmit").addEventListener("click",function(){ runTests(); });
+/* ---- editor edits as pure logic, so they can be reasoned about and tested ---- */
+var EDIT_UNIT="    ";
+/* strip strings and comments so a colon inside them never triggers an indent */
+function codeOnly(line){
+  var out="",q=null;
+  for(var i=0;i<line.length;i++){
+    var c=line[i];
+    if(q){
+      if(c==="\\"){ i++; continue; }
+      if(c===q) q=null;
+      continue;
+    }
+    if(c==="'"||c==='"'){ q=c; continue; }
+    if(c==="#") break;
+    if(c==="/"&&line[i+1]==="/") break;
+    out+=c;
+  }
+  return out;
+}
+/* keywords that continue an existing block: they line up with the opener */
+var DEDENT_KW=/^\s*(elif|else|except|finally|catch)\b/;
+/* find the indent of the nearest earlier line that opened this block */
+function openerIndent(v,lineStart,U){
+  var before=v.slice(0,lineStart).split("\n");
+  for(var i=before.length-1;i>=0;i--){
+    var L=before[i];
+    if(!L.trim()) continue;
+    var ind=(L.match(/^[ \t]*/)||[""])[0];
+    var body=codeOnly(L).replace(/\s+$/,"");
+    if(/^\s*(if|for|while|try|def|class|with|elif|else|except|finally)\b/.test(body)&&/:\s*$/.test(body))
+      return ind;
+    if(ind.length===0) return "";
+  }
+  return "";
+}
+function editPlan(v,st,en,key,shift){
+  var U=EDIT_UNIT, lineStart=v.lastIndexOf("\n",st-1)+1;
+  if(key==="Tab"){
+    var multi=(st!==en)&&v.slice(st,en).indexOf("\n")>=0;
+    if(multi){
+      var bStart=v.lastIndexOf("\n",st-1)+1;
+      var bEnd=v.indexOf("\n",en); if(bEnd<0) bEnd=v.length;
+      var block=v.slice(bStart,bEnd);
+      var out=shift?block.replace(/^ {1,4}/gm,""):block.replace(/^/gm,U);
+      return {from:bStart,to:bEnd,text:out,selStart:bStart,selEnd:bStart+out.length};
+    }
+    if(shift){
+      var pre=v.slice(lineStart,st), cut=pre.match(/^ {1,4}/);
+      if(!cut) return null;
+      var n=cut[0].length;
+      return {from:lineStart,to:lineStart+n,text:"",selStart:st-n,selEnd:st-n};
+    }
+    var col=st-lineStart, pad=U.length-(col%U.length);
+    var sp=new Array(pad+1).join(" ");
+    return {from:st,to:en,text:sp,selStart:st+pad,selEnd:st+pad};
+  }
+
+  /* typing the colon of an elif/else/except snaps the line back to its opener */
+  if(key===":"){
+    var cl=v.slice(lineStart,st);
+    if(DEDENT_KW.test(cl)&&!/:/.test(codeOnly(cl))){
+      var want=openerIndent(v,lineStart,U);
+      var have=(cl.match(/^[ \t]*/)||[""])[0];
+      if(have!==want){
+        var rest=cl.slice(have.length);
+        var txt=want+rest+":";
+        return {from:lineStart,to:st,text:txt,selStart:lineStart+txt.length,selEnd:lineStart+txt.length};
+      }
+    }
+    return null;
+  }
+
+  if(key==="Enter"){
+    var line=v.slice(lineStart,st);
+    var ind=(line.match(/^[ \t]*/)||[""])[0];
+    var body=codeOnly(line).replace(/\s+$/,"");
+    if(/:\s*$/.test(body)||/[{[(]\s*$/.test(body)) ind+=U;
+    else if(/^\s*(return|break|continue|pass|raise)\b/.test(body)&&ind.length>=U.length)
+      ind=ind.slice(U.length);
+    var after=v.slice(en);
+    if(/^\s*[}\])]/.test(after)&&/[{[(]\s*$/.test(body)){
+      var inner="\n"+ind, outer="\n"+ind.slice(U.length);
+      return {from:st,to:en,text:inner+outer,selStart:st+inner.length,selEnd:st+inner.length};
+    }
+    var t="\n"+ind;
+    return {from:st,to:en,text:t,selStart:st+t.length,selEnd:st+t.length};
+  }
+  if(key==="Backspace"&&st===en){
+    var before2=v.slice(lineStart,st);
+    if(before2.length&&/^ +$/.test(before2)){
+      var back=before2.length%U.length||U.length;
+      return {from:st-back,to:st,text:"",selStart:st-back,selEnd:st-back};
+    }
+  }
+  return null;
+}
 document.getElementById("editor").addEventListener("keydown",function(e){
   var ta=this;
-  if(e.key==="Tab"){
-    e.preventDefault();
-    var s=ta.selectionStart, en=ta.selectionEnd;
-    if(s!==en && ta.value.slice(s,en).indexOf("\n")>=0){
-      var ls=ta.value.lastIndexOf("\n",s-1)+1;
-      var block=ta.value.slice(ls,en);
-      var upd=e.shiftKey?block.replace(/^ {1,4}/gm,""):block.replace(/^/gm,"    ");
-      ta.value=ta.value.slice(0,ls)+upd+ta.value.slice(en);
-      ta.selectionStart=ls; ta.selectionEnd=ls+upd.length;
+  if(e.isComposing||e.keyCode===229) return;
+
+  /* shortcuts first, so Ctrl+Enter never falls through to the Enter handler */
+  if(e.ctrlKey||e.metaKey){
+    var k=(e.key||"").toLowerCase();
+    if(e.key==="Enter"){ e.preventDefault(); runCode(e.shiftKey); return; }
+    if(k==="s"){ e.preventDefault(); saveCode(); return; }
+    if(e.key==="ArrowRight"){ e.preventDefault(); goRelative(1,false); return; }
+    if(e.key==="ArrowLeft"){ e.preventDefault(); goRelative(-1,false); return; }
+    return;   /* leave copy, paste, undo, select-all to the browser */
+  }
+  if(e.altKey) return;
+  if(e.key!=="Tab"&&e.key!=="Enter"&&e.key!=="Backspace"&&e.key!==":") return;
+
+  var plan=editPlan(ta.value,ta.selectionStart,ta.selectionEnd,e.key,e.shiftKey);
+  if(!plan){ if(e.key==="Tab") e.preventDefault(); return; }
+  e.preventDefault();
+  applyEdit(ta,plan);
+});
+/* apply an edit while preserving the browser's native undo stack */
+function applyEdit(ta,p){
+  ta.focus();
+  ta.setSelectionRange(p.from,p.to);
+  var done=false;
+  try{
+    if(p.text===""){
+      /* an empty insertText is a no-op in Chrome — deleting needs its own command */
+      done=(p.from!==p.to)&&document.execCommand("delete",false,null);
     } else {
-      ta.value=ta.value.slice(0,s)+"    "+ta.value.slice(en);
-      ta.selectionStart=ta.selectionEnd=s+4;
+      done=document.execCommand("insertText",false,p.text);
     }
-    gutter();
-  } else if(e.key==="Enter"){
-    var p=ta.value.lastIndexOf("\n",ta.selectionStart-1)+1;
-    var line=ta.value.slice(p,ta.selectionStart);
-    var ind=(line.match(/^[ \t]*/)||[""])[0];
-    if(/[:{[(]\s*$/.test(line)) ind+="    ";
-    if(ind){
-      e.preventDefault();
-      var c=ta.selectionStart;
-      ta.value=ta.value.slice(0,c)+"\n"+ind+ta.value.slice(ta.selectionEnd);
-      ta.selectionStart=ta.selectionEnd=c+1+ind.length;
-      gutter();
-    }
-  }   else if((e.ctrlKey||e.metaKey)&&e.key==="Enter"){ e.preventDefault(); runCode(e.shiftKey); }
-  else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="s"){ e.preventDefault(); saveCode(); }
-  else if((e.ctrlKey||e.metaKey)&&e.key==="ArrowRight"){ e.preventDefault(); goRelative(1,false); }
-  else if((e.ctrlKey||e.metaKey)&&e.key==="ArrowLeft"){ e.preventDefault(); goRelative(-1,false); }
-});
-document.getElementById("quickForm").addEventListener("submit",function(e){
-  e.preventDefault();
-  var title=document.getElementById("qTitle").value.trim(); if(!title) return;
-  addTask({title:title,topic:document.getElementById("qTopic").value.trim(),
-    lang:document.getElementById("qLang").value,diff:document.getElementById("qDiff").value,
-    due:document.getElementById("qDue").value||today(),done:document.getElementById("qDone").value==="done"});
-  document.getElementById("qTitle").value="";
-  save(); render(); toast("Logged");
-});
-document.getElementById("goalForm").addEventListener("submit",function(e){
-  e.preventDefault();
-  var n=document.getElementById("gTopic").value.trim(); if(!n) return;
-  S.goals.topics[n]=Math.max(1,parseInt(document.getElementById("gTarget").value,10)||1);
-  document.getElementById("gTopic").value="";
-  save(); fillPickers(); renderGoals(); toast("Goal saved");
-});
-document.getElementById("hourForm").addEventListener("submit",function(e){
-  e.preventDefault();
-  S.goals.hours=Math.max(1,parseFloat(document.getElementById("gHours").value)||8);
-  save(); renderGoals(); toast("Weekly hours updated");
-});
-document.getElementById("resForm").addEventListener("submit",function(e){
-  e.preventDefault();
-  S.resources=S.resources||[];
-  S.resources.push({id:uid(),title:document.getElementById("rTitle").value.trim(),
-    url:document.getElementById("rUrl").value.trim(),type:document.getElementById("rType").value,
-    topic:document.getElementById("rTopic").value.trim(),dur:document.getElementById("rDur").value.trim(),
-    pri:document.getElementById("rPri").value,src:"Added by me",builtin:false});
-  ["rTitle","rUrl","rTopic","rDur"].forEach(function(x){ document.getElementById(x).value=""; });
-  save(); renderResources(); toast("Resource added");
-});
-document.getElementById("microForm").addEventListener("submit",function(e){
-  e.preventDefault();
-  S.goals.minDaily=Math.max(1,parseInt(document.getElementById("gMin").value,10)||1);
-  S.goals.stretchDaily=Math.max(S.goals.minDaily,parseInt(document.getElementById("gStretch").value,10)||2);
-  S.goals.dailyMinutes=Math.max(5,parseInt(document.getElementById("gMins").value,10)||20);
-  save(); render(); toast("Daily goals updated");
-});
-document.getElementById("noteForm").addEventListener("submit",function(e){
-  e.preventDefault();
-  var v=document.getElementById("noteBox").value.trim();
-  if(v) S.notes[today()]=v; else delete S.notes[today()];
-  ev("note","Daily update saved"); save(); render(); toast("Update saved");
-});
-document.getElementById("dlgForm").addEventListener("submit",function(e){
-  var btn=e.submitter||document.getElementById("dlgSave");
-  if(btn&&btn.value==="cancel") return;
-  var title=document.getElementById("fTitle").value.trim();
-  if(!title){ e.preventDefault(); return; }
-  var id=document.getElementById("fId").value;
-  var p={title:title,topic:document.getElementById("dTopic").value.trim(),
-    due:document.getElementById("fDue").value||today(),lang:document.getElementById("fLang").value,
-    diff:document.getElementById("dDiff").value,url:document.getElementById("fUrl").value.trim(),
-    notes:document.getElementById("fNotes").value.trim(),
-    learned:document.getElementById("fLearned").value.trim()};
-  if(id){ var t=byId(id); if(t){ t.title=p.title; t.topic=p.topic; t.due=p.due; t.lang=p.lang; t.diff=p.diff; t.url=p.url; t.notes=p.notes; t.learned=p.learned; ev("edit","Updated: "+t.title); } }
-  else addTask(p);
-  save(); setTimeout(render,0); toast("Saved");
-});
+  }catch(err){ done=false; }
+  if(!done){
+    var v=ta.value;
+    ta.value=v.slice(0,p.from)+p.text+v.slice(p.to);
+  }
+  ta.setSelectionRange(p.selStart,p.selEnd);
+  gutter();
+  if(ta.oninput) ta.oninput();
+  ta.dispatchEvent(new Event("input",{bubbles:true}));
+}
 document.addEventListener("keydown",function(e){
   if(e.target.matches&&e.target.matches("input,textarea,select")) return;
   var tabs=["dash","plan","basics","goals","rep","road","res","rev","proj","code","jrnl","data"];
@@ -7013,11 +7101,29 @@ function runJS(code,verify){
   }catch(e){ if(buf.length) cwrite(buf.join("\n")+"\n"); cwrite("\n"+(e.name+": "+e.message)+"\n","err"); }
   finally{ console.log=orig.log; console.error=orig.error; console.warn=orig.warn; }
 }
+function curLine(ta){
+  return ta.value.slice(0,ta.selectionStart).split("\n").length;
+}
 function gutter(){
-  var ta=document.getElementById("editor");
-  var n=ta.value.split("\n").length, a=[],i;
-  for(i=1;i<=n;i++) a.push(i);
-  document.getElementById("gutter").textContent=a.join("\n");
+  var ta=document.getElementById("editor"), g=document.getElementById("gutter");
+  if(!ta||!g) return;
+  var n=ta.value.split("\n").length, cur=curLine(ta);
+  g.className="gutter"+(n>999?" g5":n>99?" g4":"");
+  if(g.childElementCount!==n){
+    clr(g);
+    var frag=document.createDocumentFragment();
+    for(var i=1;i<=n;i++){
+      var d=document.createElement("span"); d.className="ln"; d.textContent=i;
+      frag.appendChild(d);
+    }
+    g.appendChild(frag);
+  }
+  var kids=g.children;
+  for(var k=0;k<kids.length;k++){
+    var on=(k+1)===cur;
+    if(on!==kids[k].classList.contains("cur")) kids[k].classList.toggle("cur",on);
+  }
+  g.scrollTop=ta.scrollTop;
 }
 function renderQNav(t){
   var n=document.getElementById("qNav");
