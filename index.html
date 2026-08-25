@@ -341,6 +341,15 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
 .rtitle:hover{color:var(--brand); text-decoration:underline}
 .rsrc{font-size:11.5px; color:var(--faint); margin-block-start:5px; font-family:var(--mono)}
 .rnote{inline-size:100%; margin-block-start:8px; font-size:12.5px; padding:6px 9px}
+.qnav{display:flex; align-items:center; gap:8px; flex-wrap:wrap; padding:8px 11px; margin-block-end:10px;
+  border:1px solid var(--line); border-radius:11px; background:var(--panel2)}
+.qpos{font-size:12px; color:var(--muted); font-family:var(--mono); white-space:nowrap}
+.qdots{display:inline-flex; gap:4px; align-items:center}
+.qdot{inline-size:9px; block-size:9px; border-radius:50%; border:0; padding:0; cursor:pointer;
+  background:var(--line); transition:.15s}
+.qdot:hover{transform:scale(1.5)}
+.qdot.qd{background:var(--ok)}
+.qdot.qcur{background:var(--brand); box-shadow:0 0 0 3px var(--brand-soft); transform:scale(1.35)}
 .qpanel{border:1px solid var(--brand); border-radius:13px; padding:14px; margin-block-end:12px;
   background:linear-gradient(160deg,var(--panel2),var(--brand-soft))}
 .qlab{font-size:11px; font-weight:800; letter-spacing:.1em; color:var(--brand)}
@@ -471,11 +480,13 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
 .edwrap{border:1px solid var(--line); border-radius:12px; overflow:hidden; background:var(--panel2)}
 .edbar{display:flex; align-items:center; gap:8px; padding:7px 10px; background:var(--panel); border-block-end:1px solid var(--line); flex-wrap:wrap}
 .edbar .fn{font-family:var(--mono); font-size:12.5px; color:var(--muted); min-inline-size:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
-.edrow{display:flex; min-block-size:340px}
-.gutter{font-family:var(--mono); font-size:12.5px; line-height:1.62; padding:12px 8px 12px 12px; color:var(--faint);
-  text-align:end; user-select:none; background:var(--panel); border-inline-end:1px solid var(--line); overflow:hidden; min-inline-size:44px}
-#editor{flex:1; font-family:var(--mono); font-size:13px; line-height:1.62; padding:12px; border:0; border-radius:0;
-  background:transparent; resize:none; min-block-size:340px; tab-size:4; white-space:pre; overflow-wrap:normal; overflow-x:auto}
+.edrow{display:flex; min-block-size:340px; max-block-size:60vh; align-items:stretch}
+.gutter{font-family:var(--mono); font-size:13px; line-height:21px; padding:12px 8px 12px 12px; color:var(--faint);
+  text-align:end; user-select:none; background:var(--panel); border-inline-end:1px solid var(--line);
+  overflow:hidden; min-inline-size:46px; white-space:pre; box-sizing:border-box; flex:none}
+#editor{flex:1; font-family:var(--mono); font-size:13px; line-height:21px; padding:12px; border:0; border-radius:0;
+  background:transparent; resize:none; min-block-size:340px; tab-size:4; white-space:pre; overflow-wrap:normal;
+  overflow:auto; box-sizing:border-box}
 #editor:focus{box-shadow:none; outline:none}
 .console{background:#0a0e18; color:#d7e3ff; font-family:var(--mono); font-size:12.5px; line-height:1.6; border-radius:12px;
   padding:12px 14px; min-block-size:180px; max-block-size:340px; overflow:auto; white-space:pre-wrap; word-break:break-word;
@@ -955,6 +966,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
           <span class="dot-live" id="pyDot" title="Python engine status"></span>
           <span style="font-size:12px; color:var(--muted)" id="pyStat">Python engine idle</span>
         </div>
+        <div class="qnav" id="qNav" hidden></div>
         <div class="qpanel" id="qPanel" hidden></div>
         <div class="vbox" id="verdictBox" hidden></div>
         <div class="edwrap">
@@ -1087,7 +1099,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   <div class="panel">
     <h2>Keyboard shortcuts</h2>
     <p class="hint">Because a portfolio project should feel like a product.</p>
-    <p style="font-size:14px; line-height:2"><kbd>N</kbd> new task · <kbd>/</kbd> jump to search · <kbd>1</kbd>–<kbd>6</kbd> switch tabs · <kbd>Esc</kbd> close dialog</p>
+    <p style="font-size:14px; line-height:2"><kbd>N</kbd> new task · <kbd>/</kbd> search · <kbd>1</kbd>–<kbd>9</kbd> switch tabs · <kbd>Esc</kbd> close dialog<br><b>In the Code lab:</b> <kbd>Ctrl</kbd>+<kbd>Enter</kbd> run · <kbd>Ctrl</kbd>+<kbd>S</kbd> save · <kbd>Ctrl</kbd>+<kbd>→</kbd> next question · <kbd>Ctrl</kbd>+<kbd>←</kbd> previous</p>
   </div>
   <div class="panel">
     <h2>How the tracker works</h2>
@@ -1781,7 +1793,12 @@ function openDlg(id){
   document.getElementById("dlg").showModal();
   setTimeout(function(){ document.getElementById("fTitle").focus(); },40);
 }
+function closeDialogs(){
+  var ds=document.querySelectorAll("dialog[open]");
+  for(var i=0;i<ds.length;i++){ try{ ds[i].close(); }catch(e){} }
+}
 function setTab(name){
+  closeDialogs();
   ui.tab=name;
   var els=document.querySelectorAll("nav.tabs button");
   for(var i=0;i<els.length;i++) els[i].setAttribute("aria-selected", els[i].getAttribute("data-tab")===name?"true":"false");
@@ -1871,6 +1888,10 @@ document.addEventListener("click",function(e){
       ui.theoryOpen=(ui.theoryOpen===id)?null:id;
       renderQPanel(byId(id)); return;
     }
+    if(doAct==="qprev"){ goRelative(-1,false); return; }
+    if(doAct==="qnext"){ goRelative(1,false); return; }
+    if(doAct==="qnextopen"){ goRelative(1,true); return; }
+    if(doAct==="qjump"){ loadIntoEditor(id); document.getElementById("qPanel").scrollIntoView({behavior:"smooth",block:"start"}); return; }
     if(doAct==="nextq"){
       var cu=byId(id);
       var pool=S.tasks.filter(function(x){ return x.status!=="done" && (x.type==="practice"||!x.type); })
@@ -2147,6 +2168,9 @@ document.getElementById("cbLang").addEventListener("change",function(){
   document.getElementById("edName").textContent=n+"."+ext(this.value);
   renderCode();
 });
+document.getElementById("editor").addEventListener("scroll",function(){
+  document.getElementById("gutter").scrollTop=this.scrollTop;
+});
 document.getElementById("btnRun").addEventListener("click",function(){ runCode(false); });
 document.getElementById("btnSubmit").addEventListener("click",function(){ runTests(); });
 document.getElementById("editor").addEventListener("keydown",function(e){
@@ -2179,6 +2203,8 @@ document.getElementById("editor").addEventListener("keydown",function(e){
     }
   }   else if((e.ctrlKey||e.metaKey)&&e.key==="Enter"){ e.preventDefault(); runCode(e.shiftKey); }
   else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="s"){ e.preventDefault(); saveCode(); }
+  else if((e.ctrlKey||e.metaKey)&&e.key==="ArrowRight"){ e.preventDefault(); goRelative(1,false); }
+  else if((e.ctrlKey||e.metaKey)&&e.key==="ArrowLeft"){ e.preventDefault(); goRelative(-1,false); }
 });
 document.getElementById("quickForm").addEventListener("submit",function(e){
   e.preventDefault();
@@ -2244,6 +2270,8 @@ document.addEventListener("keydown",function(e){
   var tabs=["dash","plan","basics","goals","rep","road","res","rev","proj","code","jrnl","data"];
   if(e.key==="n"||e.key==="N"){ e.preventDefault(); openDlg(""); }
   else if(e.key==="/"){ e.preventDefault(); setTab("plan"); document.getElementById("fSearch").focus(); }
+  else if(ui.tab==="code"&&e.key==="ArrowRight"){ e.preventDefault(); goRelative(1,false); }
+  else if(ui.tab==="code"&&e.key==="ArrowLeft"){ e.preventDefault(); goRelative(-1,false); }
   else if(/^[1-9]$/.test(e.key)) setTab(tabs[+e.key-1]);
   else if(e.key==="0") setTab("data");
 });
@@ -6535,6 +6563,31 @@ function runCode(verify){
     cwrite("Could not load the Python engine.\nCheck your internet connection — the engine is fetched from a CDN the first time.\n","err");
   });
 }
+function solvableQueue(){
+  return S.tasks.filter(function(t){
+    if(t.type==="learn"||t.type==="revision") return false;
+    return !!(ioFor(t)||testsFor(t)||expectFor(t)||(t.code&&t.code.trim()));
+  }).sort(function(a,b){
+    return a.due.localeCompare(b.due) || (a.createdAt||"").localeCompare(b.createdAt||"");
+  });
+}
+function queueIndex(id){
+  var q=solvableQueue();
+  for(var i=0;i<q.length;i++) if(q[i].id===id) return i;
+  return -1;
+}
+function goRelative(step,unsolvedOnly){
+  var q=solvableQueue(), i=queueIndex(ui.cur);
+  if(!q.length) return;
+  if(i<0){ loadIntoEditor(q[0].id); return; }
+  var j=i;
+  for(var n=0;n<q.length;n++){
+    j+=step;
+    if(j<0||j>=q.length){ toast(step>0?"That was the last question":"You are at the first question"); return; }
+    if(!unsolvedOnly||q[j].status!=="done"){ loadIntoEditor(q[j].id); document.getElementById("qPanel").scrollIntoView({behavior:"smooth",block:"start"}); return; }
+  }
+  toast("Nothing else unsolved in that direction");
+}
 function ioFor(t){
   if(!t) return null;
   return IO[t.title]||IO[t.title.replace(/^Project:\s*/,"").trim()]||null;
@@ -6684,11 +6737,11 @@ function showIOTests(t,spec,rows){
     });
     var nx=document.createElement("div"); nx.className="rowb"; nx.style.marginBlockStart="10px";
     var nb=document.createElement("button"); nb.type="button"; nb.className="btn xs pri";
-    nb.textContent="Next question →"; nb.setAttribute("data-do","nextq"); nb.setAttribute("data-id",t.id);
+    nb.textContent="Next unsolved question →"; nb.setAttribute("data-do","qnextopen");
     nx.appendChild(nb);
-    var rb=document.createElement("button"); rb.type="button"; rb.className="btn xs";
-    rb.textContent="Review my solution"; rb.setAttribute("data-do","ccode"); rb.setAttribute("data-id",t.id);
-    nx.appendChild(rb);
+    var nb2=document.createElement("button"); nb2.type="button"; nb2.className="btn xs";
+    nb2.textContent="Next in order"; nb2.setAttribute("data-do","qnext");
+    nx.appendChild(nb2);
     okw.appendChild(nx);
     box.appendChild(okw);
   }
@@ -6966,7 +7019,40 @@ function gutter(){
   for(i=1;i<=n;i++) a.push(i);
   document.getElementById("gutter").textContent=a.join("\n");
 }
+function renderQNav(t){
+  var n=document.getElementById("qNav");
+  if(!t){ n.hidden=true; return; }
+  var q=solvableQueue(), i=queueIndex(t.id);
+  if(i<0){ n.hidden=true; return; }
+  n.hidden=false; clr(n);
+  var prev=document.createElement("button"); prev.type="button"; prev.className="btn xs";
+  prev.textContent="← Previous"; prev.setAttribute("data-do","qprev"); prev.disabled=(i<=0);
+  if(i>0) prev.title=displayTitle(q[i-1]);
+  n.appendChild(prev);
+  var pos=document.createElement("span"); pos.className="qpos";
+  var doneN=q.filter(function(x){return x.status==="done";}).length;
+  pos.textContent="Question "+(i+1)+" of "+q.length+"  ·  "+doneN+" solved";
+  n.appendChild(pos);
+  var bar2=document.createElement("span"); bar2.className="qdots";
+  var from=Math.max(0,Math.min(i-5,q.length-11)), to=Math.min(q.length,from+11);
+  for(var k=from;k<to;k++){
+    var d=document.createElement("button"); d.type="button";
+    d.className="qdot"+(q[k].status==="done"?" qd":"")+(k===i?" qcur":"");
+    d.title=displayTitle(q[k]); d.setAttribute("data-do","qjump"); d.setAttribute("data-id",q[k].id);
+    bar2.appendChild(d);
+  }
+  n.appendChild(bar2);
+  var sp=document.createElement("span"); sp.className="sp"; n.appendChild(sp);
+  var skip=document.createElement("button"); skip.type="button"; skip.className="btn xs";
+  skip.textContent="Next unsolved"; skip.setAttribute("data-do","qnextopen");
+  n.appendChild(skip);
+  var next=document.createElement("button"); next.type="button"; next.className="btn xs pri";
+  next.textContent="Next →"; next.setAttribute("data-do","qnext"); next.disabled=(i>=q.length-1);
+  if(i<q.length-1) next.title=displayTitle(q[i+1]);
+  n.appendChild(next);
+}
 function renderQPanel(t){
+  renderQNav(t);
   var p=document.getElementById("qPanel");
   document.getElementById("verdictBox").hidden=true;
   if(!t){ p.hidden=true; return; }
