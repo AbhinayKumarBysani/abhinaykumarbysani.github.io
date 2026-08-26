@@ -75,6 +75,7 @@ header.top{position:sticky; top:0; z-index:40; border-block-end:1px solid var(--
   background:linear-gradient(135deg,var(--brand),var(--brand2)); box-shadow:0 6px 18px var(--ring)}
 .brand .nm{font-weight:800; letter-spacing:-.3px; font-size:16.5px; line-height:1.1; text-align:start}
 .brand .tg{font-size:11px; color:var(--muted); font-weight:600; letter-spacing:.02em}
+.ver{font-family:var(--mono); font-size:10px; opacity:.7; margin-inline-start:3px}
 .sp{flex:1}
 .pill{display:inline-flex; flex-direction:column; padding:4px 12px; border:1px solid var(--line); border-radius:var(--r3);
   background:var(--panel); min-inline-size:66px}
@@ -143,11 +144,19 @@ section.tab{animation:fade .32s ease}
 .panel{background:var(--panel); border:1px solid var(--line); border-radius:var(--r); padding:18px; box-shadow:var(--shadow); margin-block:var(--gap)}
 .panel h2{margin:0; font-size:16px; letter-spacing:-.3px; font-weight:750}
 .panel .hint{margin:3px 0 13px; font-size:12.5px; color:var(--muted)}
-.grid2{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(330px,100%),1fr)); gap:var(--gap)}
+.grid2{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(330px,100%),1fr)); gap:var(--gap); align-items:start}
 .grid3{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr)); gap:var(--gap)}
 .rowb{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
 svg.chart{inline-size:100%; block-size:auto; display:block; overflow:visible}
-.legend{display:flex; flex-wrap:wrap; gap:12px; margin-block-start:10px; font-size:12.5px; color:var(--muted)}
+svg.chart14{block-size:clamp(240px,30vh,330px); inline-size:100%}
+.heatwrap{inline-size:100%; overflow-x:auto; overflow-y:hidden; padding-block-end:2px}
+svg.heatsvg{block-size:auto; min-inline-size:340px}
+.statrow{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; margin-block:2px 12px}
+.stcell{background:var(--panel2); border:1px solid var(--line); border-radius:10px; padding:8px 10px; text-align:center; min-inline-size:0}
+.stv{font-size:19px; font-weight:800; letter-spacing:-.4px; line-height:1.15}
+.stl{font-size:10.5px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-block-start:2px}
+@media (max-width:560px){ .statrow{grid-template-columns:repeat(2,minmax(0,1fr))} .stv{font-size:17px} }
+.legend{display:flex; flex-wrap:wrap; gap:12px; margin-block-start:8px; font-size:12.5px; color:var(--muted)}
 .legend i{display:inline-block; inline-size:10px; block-size:10px; border-radius:3px; margin-inline-end:6px}
 .scale{display:flex; align-items:center; gap:5px; font-size:11.5px; color:var(--muted); margin-block-start:9px}
 .scale i{inline-size:11px; block-size:11px; border-radius:3px; display:inline-block}
@@ -244,6 +253,15 @@ footer.f{text-align:center; color:var(--faint); font-size:12.5px; padding-block:
 kbd{font-family:var(--mono); font-size:11px; background:var(--panel2); border:1px solid var(--line); border-block-end-width:2px;
   border-radius:5px; padding:1px 5px; color:var(--muted)}
 /* ---------------- xp / level ---------------- */
+.langbar{display:inline-flex; gap:3px; background:var(--panel2); border:1px solid var(--line);
+  border-radius:10px; padding:3px}
+.langbtn{display:inline-flex; align-items:center; gap:5px; border:0; background:none; cursor:pointer;
+  border-radius:7px; padding:5px 9px; font-size:12.5px; font-weight:680; color:var(--muted); transition:.15s}
+.langbtn:hover{background:var(--panel); color:var(--ink)}
+.langbtn.on{background:linear-gradient(135deg,var(--brand),var(--brand2)); color:#fff; box-shadow:0 3px 10px var(--ring)}
+.lgi{font-size:14px; line-height:1}
+.lgp{font-family:var(--mono); font-size:10px; opacity:.85}
+@media (max-width:900px){ .lgn{display:none} .langbtn{padding:5px 7px} }
 .pill.lvl .v{color:var(--brand2)}
 .xpcard{background:linear-gradient(120deg,var(--panel),var(--brand-soft)); border-color:var(--brand)}
 .xptop{display:flex; align-items:center; gap:10px}
@@ -284,18 +302,51 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
 .mapnode .mbar{display:block; inline-size:100%; block-size:4px; border-radius:99px; background:var(--panel2);
   overflow:hidden; margin-block-start:3px}
 .mapnode .mbar i{display:block; block-size:100%; background:var(--brand); border-radius:99px; transition:inline-size .6s}
-.mapnode.mdone{border-color:var(--ok); background:linear-gradient(160deg,var(--panel),var(--ok-soft))}
-.mapnode.mdone .mi{color:var(--ok)}
-.mapnode.mdone .mbar i{background:var(--ok)}
-.mapnode.mprog{border-color:var(--brand); box-shadow:0 0 0 3px var(--brand-soft)}
-.mapnode.mready{border-color:var(--cyan)}
-.mapnode.mlock{opacity:.5}
+/* four clearly distinct states: green / amber / blue / grey */
+.mapnode{border-width:2px}
+.mapnode.mdone{border-color:#16a34a; background:linear-gradient(160deg,#dcfce7,#bbf7d0)}
+.mapnode.mdone .mn,.mapnode.mdone .mp{color:#14532d}
+.mapnode.mdone .mi{color:#15803d}
+.mapnode.mdone .mbar i{background:#16a34a}
+.mapnode.mprog{border-color:#f59e0b; background:linear-gradient(160deg,#fef3c7,#fde68a); box-shadow:0 0 0 3px rgba(245,158,11,.25)}
+.mapnode.mprog .mn,.mapnode.mprog .mp{color:#78350f}
+.mapnode.mprog .mbar i{background:#f59e0b}
+.mapnode.mready{border-color:#2563eb; background:linear-gradient(160deg,#dbeafe,#bfdbfe)}
+.mapnode.mready .mn,.mapnode.mready .mp{color:#1e3a8a}
+.mapnode.mready .mbar i{background:#2563eb}
+.mapnode.mlock{border-color:#cbd5e1; background:#f1f5f9; opacity:.72}
+.mapnode.mlock .mn{color:#64748b} .mapnode.mlock .mp{color:#94a3b8} .mapnode.mlock .mi{filter:grayscale(1); opacity:.6}
+:root[data-theme="dark"] .mapnode.mdone{background:linear-gradient(160deg,#052e16,#14532d); border-color:#22c55e}
+:root[data-theme="dark"] .mapnode.mdone .mn,:root[data-theme="dark"] .mapnode.mdone .mp{color:#86efac}
+:root[data-theme="dark"] .mapnode.mprog{background:linear-gradient(160deg,#451a03,#78350f); border-color:#fbbf24}
+:root[data-theme="dark"] .mapnode.mprog .mn,:root[data-theme="dark"] .mapnode.mprog .mp{color:#fde68a}
+:root[data-theme="dark"] .mapnode.mready{background:linear-gradient(160deg,#172554,#1e3a8a); border-color:#60a5fa}
+:root[data-theme="dark"] .mapnode.mready .mn,:root[data-theme="dark"] .mapnode.mready .mp{color:#bfdbfe}
+:root[data-theme="dark"] .mapnode.mlock{background:#1e293b; border-color:#334155}
+:root[data-theme="dark"] .mapnode.mlock .mn{color:#94a3b8}
 @media (max-width:720px){ .mapwrap{aspect-ratio:auto; min-block-size:620px} .mapnode{inline-size:92px; padding:7px 5px} .mapnode .mn{font-size:10.5px} }
 
 /* ---------------- today / badges / recos ---------------- */
 .focusCard{border-color:var(--brand); box-shadow:0 0 0 3px var(--brand-soft),var(--shadow);
   background:linear-gradient(160deg,var(--panel),var(--brand-soft))}
-.badges{display:grid; grid-template-columns:repeat(auto-fill,minmax(min(136px,100%),1fr)); gap:11px}
+.badges{display:flex; gap:11px; overflow-x:auto; overflow-y:hidden; padding-block-end:8px;
+  scroll-snap-type:x proximity; scrollbar-width:thin}
+.badges::-webkit-scrollbar{block-size:8px}
+.badges::-webkit-scrollbar-thumb{background:var(--line); border-radius:99px}
+.badges>.badge{flex:0 0 142px; inline-size:142px; scroll-snap-align:start; block-size:132px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center}
+.badges>.empty{flex:1 1 auto}
+.btier{font-size:9.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--muted); margin-block-start:4px}
+.badge.bnew{animation:bpop .7s cubic-bezier(.3,1.6,.5,1); border-color:var(--amber);
+  box-shadow:0 0 0 3px var(--warn-soft)}
+@keyframes bpop{0%{transform:scale(.6) rotate(-8deg);opacity:0}60%{transform:scale(1.12) rotate(3deg)}100%{transform:scale(1);opacity:1}}
+.badge.bnext{opacity:.55; filter:grayscale(.7)}
+.bprog{inline-size:78%; block-size:4px; border-radius:99px; background:var(--panel2); overflow:hidden; margin-block-start:6px}
+.bprog i{display:block; block-size:100%; background:var(--brand); border-radius:99px}
+.badge.tsilver{border-color:#9aa7bd} .badge.tgold{border-color:var(--amber)}
+.badge.tplatinum,.badge.tdiamond{border-color:var(--cyan)}
+.badge.tmaster,.badge.tgrandmaster,.badge.tlegend,.badge.tmythic,.badge.teternal{border-color:var(--brand2)}
 .badge{position:relative; border:1px solid var(--line); border-radius:14px; padding:14px 11px; text-align:center;
   background:var(--panel2); opacity:.42; filter:grayscale(1); transition:.2s}
 .badge.got{opacity:1; filter:none; border-color:var(--brand); background:linear-gradient(160deg,var(--panel2),var(--brand-soft))}
@@ -342,6 +393,52 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
 .badge .bn{font-weight:750; font-size:12.5px; margin-block-start:7px}
 .badge .bd{font-size:11px; color:var(--muted); margin-block-start:3px; line-height:1.4}
 .badge .bl{position:absolute; inset-block-start:7px; inset-inline-end:9px; font-size:11px}
+.quotecard{background:linear-gradient(135deg,var(--panel),var(--brand-soft)); border-color:var(--brand); position:relative}
+.qmark{font-size:52px; line-height:.6; color:var(--brand); opacity:.35; font-family:Georgia,serif}
+.qtext2{font-size:17px; line-height:1.6; font-weight:600; font-style:italic; margin-block-start:4px; color:var(--ink)}
+.qwho{font-size:13px; color:var(--muted); margin-block-start:10px}
+.qwho b{color:var(--brand)}
+.quotecard .btn{position:absolute; inset-block-start:14px; inset-inline-end:14px}
+.tech{border:1px solid var(--line); border-radius:12px; background:var(--panel2); margin-block-end:8px; overflow:hidden; transition:.18s}
+.tech:hover{border-color:var(--brand)}
+.tech.topen{border-color:var(--brand); background:var(--panel)}
+.techh{display:flex; align-items:center; gap:11px; padding:11px 13px; cursor:pointer}
+.techi{font-size:20px; line-height:1}
+.techn{font-weight:750; font-size:14.5px}
+.techw{font-size:11.5px; color:var(--muted); margin-block-start:2px}
+.techa{font-size:11px; color:var(--muted)}
+.techb{padding:0 13px 13px; border-block-start:1px solid var(--line); padding-block-start:11px}
+.techp{font-size:13.5px; line-height:1.65; color:var(--ink2); margin:0 0 8px}
+.techfit{font-size:12.5px; color:var(--ok); background:var(--ok-soft); border-radius:8px;
+  padding:8px 10px; margin-block-start:10px; border-inline-start:3px solid var(--ok)}
+.fact{border-inline-start:3px solid var(--cyan); padding:9px 0 9px 12px; margin-block-end:10px}
+.factt{font-weight:720; font-size:13.5px; color:var(--ink)}
+.factd{font-size:12.5px; color:var(--ink2); line-height:1.6; margin-block-start:4px}
+.tipg{border:1px solid var(--line); border-radius:11px; background:var(--panel2); margin-block-end:7px; padding:2px 11px}
+.tiph{display:flex; align-items:center; gap:9px; padding:9px 0; cursor:pointer; font-size:13.5px}
+.tipn{font-weight:720}
+.tipg .lpts{padding-block-end:9px}
+.strug{border:1px solid var(--warn); border-radius:12px; background:var(--warn-soft); padding:11px 12px; margin-block-end:9px}
+.wrow{border:1px solid var(--line); border-radius:12px; padding:11px 12px; background:var(--panel2);
+  margin-block-end:8px; border-inline-start:3px solid var(--line); transition:.18s}
+.wrow:hover{border-color:var(--brand)}
+.wrow.wdue,.wrow.wcold{border-inline-start-color:var(--warn); background:linear-gradient(160deg,var(--panel2),var(--warn-soft))}
+.wrow.wnew{border-inline-start-color:var(--cyan)}
+.wrow.wresting{border-inline-start-color:var(--ok); opacity:.82}
+.wtop{display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+.wdot{font-size:15px; line-height:1}
+.wname{font-weight:750; font-size:14.5px}
+.wnote{font-size:12.5px; color:var(--ink2); margin-block-start:6px; font-style:italic}
+.wmeta{font-size:11.5px; color:var(--faint); margin-block-start:5px; font-family:var(--mono)}
+.mrow{display:flex; gap:5px; align-items:flex-end; margin-block-start:8px}
+.mcol{flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; background:none;
+  border:0; padding:4px 2px; cursor:pointer; border-radius:8px; min-inline-size:0}
+.mcol:hover{background:var(--panel2)}
+.mcol.mcur{background:var(--brand-soft)}
+.mval{font-size:10.5px; font-weight:800; color:var(--muted); font-family:var(--mono); min-block-size:13px}
+.mbar{inline-size:100%; max-inline-size:26px; background:var(--brand); border-radius:4px 4px 0 0; transition:block-size .5s}
+.mcol.mcur .mbar{background:var(--brand2)}
+.mlab{font-size:10px; color:var(--faint)}
 .reco{border:1px solid var(--line); border-inline-start:3px solid var(--brand); border-radius:10px; padding:10px 12px;
   background:var(--panel2); margin-block-end:8px}
 .reco.hot{border-inline-start-color:var(--bad)}
@@ -552,14 +649,16 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   <div class="top-in">
     <button class="brand" data-act="home" type="button">
       <span class="mark">LT</span>
-      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove</span></span>
+      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v30</span></span></span>
     </button>
+    <span class="langbar" id="langBar"></span>
     <span class="sp"></span>
     <span class="pill lvl"><span class="l">level</span><span class="v" id="pLevel">L1</span></span>
     <span class="pill fire"><span class="l">streak</span><span class="v" id="pStreak">0d</span></span>
     <span class="pill"><span class="l">today</span><span class="v" id="pToday">0</span></span>
     <span class="pill"><span class="l">week</span><span class="v" id="pWeek">0%</span></span>
     <span class="pill live" id="pTimerBox" hidden><span class="l" id="pTimerLab">session</span><span class="v" id="pTimer">00:00</span></span>
+    <button class="btn sm" data-act="export" type="button" title="Download a backup of all your data">⬇ Backup</button>
     <button class="btn sm" data-act="theme" type="button" title="Toggle theme">◐</button>
     <button class="btn pri" data-act="new" type="button">+ Add task</button>
   </div>
@@ -578,21 +677,20 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   <button role="tab" data-tab="proj" aria-selected="false" type="button">🚀 Projects</button>
   <button role="tab" data-tab="code" aria-selected="false" type="button">⌨ Code lab</button>
   <button role="tab" data-tab="jrnl" aria-selected="false" type="button">✎ Journal</button>
-  <button role="tab" data-tab="data" aria-selected="false" type="button">⚙ Data</button>
+  <button role="tab" data-tab="data" aria-selected="false" type="button">💾 Backup &amp; Data</button>
 </nav>
 
 <!-- ================= DASHBOARD ================= -->
 <section class="tab" id="tab-dash">
   <div class="hero">
     <div class="hero-in">
-      <div>
-        <p class="eyebrow">Your learning command center</p>
-        <h1 id="heroHi">Keep your coding plan on track.</h1>
-        <p>Plan questions by date, time your practice sessions, capture what you learned, and build a timestamped record of your progress you can show a recruiter.</p>
+      <div style="flex:1 1 320px; min-inline-size:0">
+        <p class="eyebrow" id="heroWhere">Your learning path</p>
+        <h1 id="heroHi">Keep going.</h1>
+        <p id="heroNext">Pick up where you left off.</p>
         <div class="cta">
-          <button class="btn" data-act="new" type="button">+ Plan a question</button>
-          <button class="btn" data-tab="plan" type="button">Continue learning</button>
-          <button class="btn" data-tab="rep" type="button">See reports</button>
+          <button class="btn pri" data-act="resume" type="button" id="heroBtn">▶ Continue learning</button>
+          <button class="btn" data-act="scrollwatch" type="button">📌 Scratch board</button>
         </div>
       </div>
       <div class="ringbox">
@@ -616,11 +714,34 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
     <p class="hint">Lines light up as you unlock what comes next.</p>
     <div class="mapwrap" id="skillmap"></div>
     <div class="legend">
-      <span><i style="background:var(--ok)"></i>Complete</span>
-      <span><i style="background:var(--brand)"></i>In progress</span>
-      <span><i style="background:var(--cyan)"></i>Ready</span>
-      <span><i style="background:var(--line)"></i>Not loaded</span>
+      <span><i style="background:#16a34a"></i>Complete</span>
+      <span><i style="background:#f59e0b"></i>In progress</span>
+      <span><i style="background:#2563eb"></i>Ready to start</span>
+      <span><i style="background:#cbd5e1"></i>Later in your path</span>
     </div>
+  </div>
+
+  <div class="panel">
+    <div class="rowb" style="margin-block-end:4px">
+      <h2 style="margin:0">📌 Scratch board</h2>
+      <span class="sp"></span>
+      <span style="font-size:12.5px;color:var(--muted)" id="watchCount"></span>
+    </div>
+    <p class="hint">Anything you want to come back to. Leave a topic alone for a week and its questions surface here by themselves; revise it and it goes quiet, then returns a little later each time.</p>
+    <form class="quick" id="watchForm" autocomplete="off">
+      <div class="field grow"><label for="wTopic">Topic to revisit</label>
+        <input id="wTopic" list="topicList" placeholder="e.g. Dictionaries, slicing, recursion" required></div>
+      <div class="field grow"><label for="wNote">Why (optional)</label>
+        <input id="wNote" placeholder="e.g. still confused by nested loops"></div>
+      <button class="btn pri" type="submit">Add to board</button>
+    </form>
+    <datalist id="topicList"></datalist>
+    <div id="watchList" style="margin-block-start:12px"></div>
+    <details style="margin-block-start:12px">
+      <summary style="cursor:pointer;font-size:13px;font-weight:650;color:var(--brand)">✎ Free notes</summary>
+      <textarea id="scratchBox" rows="4" style="margin-block-start:8px"
+        placeholder="Anything at all — half-remembered syntax, a question to look up, an idea to try…"></textarea>
+    </details>
   </div>
 
   <div class="grid2">
@@ -661,33 +782,24 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   </div>
 
   <div class="panel">
-    <h2>This month</h2>
-    <p class="hint">Rolling monthly summary.</p>
+    <div class="rowb" style="margin-block-end:4px">
+      <h2 style="margin:0" id="monthTitle">This month</h2>
+      <span class="sp"></span>
+      <button class="btn xs" data-act="mprev" type="button">← Earlier</button>
+      <button class="btn xs" data-act="mthis" type="button">This month</button>
+      <button class="btn xs" data-act="mnext" type="button">Later →</button>
+    </div>
+    <p class="hint">Every month you have used LearnTrack is kept — browse back at any time.</p>
     <div class="kpis" id="monthly" style="margin:0"></div>
-  </div>
-
-  <div class="panel">
-    <h2>Log something you just finished</h2>
-    <p class="hint">Fastest path — it lands on today and gets a timestamp instantly.</p>
-    <form class="quick" id="quickForm" autocomplete="off">
-      <div class="field grow"><label for="qTitle">Question / task</label>
-        <input id="qTitle" placeholder="e.g. Two Sum — LeetCode 1" required></div>
-      <div class="field"><label for="qTopic">Topic</label><input id="qTopic" list="topicList" placeholder="Arrays" size="12"></div>
-      <div class="field"><label for="qLang">Language</label><select id="qLang"><option>C</option><option>C++</option><option selected>Python</option><option>JavaScript</option><option>Java</option><option>SQL</option><option>Other</option></select></div>
-      <div class="field"><label for="qDiff">Level</label><select id="qDiff"><option>Easy</option><option selected>Medium</option><option>Hard</option></select></div>
-      <div class="field"><label for="qDue">Date</label><input type="date" id="qDue"></div>
-      <div class="field"><label for="qDone">Status</label>
-        <select id="qDone"><option value="done" selected>Completed now</option><option value="planned">Just planning it</option></select></div>
-      <button class="btn pri" type="submit">Log it</button>
-    </form>
-    <datalist id="topicList"></datalist>
+    <div id="monthBars" style="margin-block-start:14px"></div>
   </div>
 
   <div class="grid2">
     <div class="panel">
       <h2>Last 14 days — planned vs completed</h2>
-      <p class="hint">Filled area is what you actually finished.</p>
-      <svg class="chart" id="c14" viewBox="0 0 620 220" role="img" aria-label="Planned versus completed, last 14 days"></svg>
+      <p class="hint">Filled bars are what you actually finished.</p>
+      <div class="statrow" id="c14Stats"></div>
+      <svg class="chart chart14" id="c14" viewBox="0 0 620 250" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Planned versus completed, last 14 days"></svg>
       <div class="legend"><span><i style="background:var(--line)"></i>Planned</span><span><i style="background:var(--brand)"></i>Completed</span></div>
     </div>
     <div class="panel">
@@ -700,7 +812,8 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   <div class="panel">
     <h2>Consistency heatmap</h2>
     <p class="hint">Last 26 weeks of learning activity — darker means more questions completed that day.</p>
-    <svg class="chart" id="heat" viewBox="0 0 760 132" role="img" aria-label="Daily consistency heatmap"></svg>
+    <div class="statrow" id="heatStats"></div>
+    <div class="heatwrap"><svg class="chart heatsvg" id="heat" preserveAspectRatio="xMinYMid meet" role="img" aria-label="Daily consistency heatmap"></svg></div>
     <div class="scale"><span>Less</span><i style="background:var(--h0)"></i><i style="background:var(--h1)"></i><i style="background:var(--h2)"></i><i style="background:var(--h3)"></i><i style="background:var(--h4)"></i><span>More</span></div>
   </div>
 </section>
@@ -735,7 +848,13 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
       <button class="btn pri" data-lang="python" type="button">🐍 Python</button>
       <button class="btn" data-lang="c" type="button">📘 C</button>
       <button class="btn" data-lang="cpp" type="button">📗 C++</button>
+      <button class="btn" data-lang="java" type="button">☕ Java</button>
+      <button class="btn" data-lang="js" type="button">🟨 JavaScript</button>
     </div>
+  </div>
+  <div class="panel" id="javaBox" hidden>
+    <h2>☕ Learning Java without a browser compiler</h2>
+    <div id="javaHub"></div>
   </div>
   <div id="basicsBody"></div>
 </section>
@@ -853,6 +972,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
       <button class="btn" data-track="slow" type="button" aria-pressed="false">Track 0 · Slow plan (6 months, 2 questions/day)</button>
       <button class="btn" data-track="job" type="button" aria-pressed="false">Track 2 · Job readiness (14 weeks)</button>
       <button class="btn" data-track="work" type="button" aria-pressed="false">Track 3 · Python for Work ⭐</button>
+      <button class="btn" data-track="lang" type="button" aria-pressed="false">📚 Other languages</button>
       <button class="btn" data-track="assess" type="button" aria-pressed="false">Assessment &amp; paths</button>
     </div>
   </div>
@@ -953,16 +1073,39 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
       <p class="hint">The next scheduled reviews.</p>
       <div id="revNext"></div>
     </div>
+    <div class="panel" id="tipPanel">
+      <h2>Where you are struggling</h2>
+      <p class="hint">Targeted guidance for your weakest topics.</p>
+      <div id="strugTips"></div>
+    </div>
+  </div>
+
+  <div class="panel quotecard" id="quoteCard"></div>
+
+  <div class="panel">
+    <div class="rowb" style="margin-block-end:4px">
+      <h2 style="margin:0">Study techniques that actually work</h2>
+      <span class="sp"></span>
+      <span style="font-size:12.5px;color:var(--muted)">Evidence-based · click any to expand</span>
+    </div>
+    <p class="hint">Ten methods from cognitive science and productivity research, with how each one fits your routine.</p>
+    <div id="techList"></div>
+  </div>
+
+  <div class="grid2">
     <div class="panel">
-      <h2>Why this works</h2>
-      <p class="hint" style="margin-block-end:9px">The forgetting curve, in short.</p>
-      <ul style="font-size:13.5px; line-height:1.8; padding-inline-start:19px; margin:0; color:var(--ink2)">
-        <li>You forget roughly 70% of new material within a week unless you revisit it.</li>
-        <li>Re-solving at <b>1 day</b>, <b>7 days</b> and <b>30 days</b> moves it into long-term memory.</li>
-        <li>Re-solve from a blank file — recognising your old code is not the same as recalling it.</li>
-        <li>A revision takes 5 minutes. It is the cheapest learning in this whole app.</li>
-        <li>Any task card also has a <b>schedule revision</b> option if you want to add one manually.</li>
-      </ul>
+      <div class="rowb" style="margin-block-end:4px">
+        <h2 style="margin:0" id="factTitle">Language facts</h2>
+        <span class="sp"></span>
+        <span style="font-size:12px;color:var(--muted)">Follows your language switcher</span>
+      </div>
+      <p class="hint">Who built it, when, and the problem it was created to solve.</p>
+      <div id="factList"></div>
+    </div>
+    <div class="panel">
+      <h2>Study &amp; concentration tips</h2>
+      <p class="hint">Practical habits, grouped by what you need right now.</p>
+      <div id="tipsList"></div>
     </div>
   </div>
 </section>
@@ -973,12 +1116,13 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
     <div class="rowb">
       <div style="flex:1 1 300px">
         <h2>Project tracker</h2>
-        <p class="hint" style="margin-block-end:0">Ten portfolio projects, each broken into steps. Start one and every step becomes available to work on.</p>
+        <p class="hint" style="margin-block-end:0">Thirty projects from your first program to a compiler, graded Starter through Expert. Each breaks into steps you can tick off. Follows your language switcher.</p>
       </div>
       <span style="font-size:12.5px;color:var(--muted)" id="projSummary"></span>
     </div>
   </div>
   <div id="projects"></div>
+  <div id="projectsOld" hidden></div>
 </section>
 
 <!-- ================= CODE LAB ================= -->
@@ -993,7 +1137,15 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
       <div class="panel" style="margin-block-start:0">
         <div class="runbar">
           <select id="cbTask" style="flex:1 1 220px"><option value="">— scratchpad (not linked to a question) —</option></select>
-          <select id="cbLang"><option value="python">Python 3</option><option value="javascript">JavaScript</option><option value="other">Other (save only)</option></select>
+          <select id="cbLang">
+            <option value="python">Python 3 — runs</option>
+            <option value="javascript">JavaScript — runs</option>
+            <option value="c">C — runs</option>
+            <option value="cpp">C++ — runs</option>
+            <option value="java">Java — trace &amp; save</option>
+            <option value="sql">SQL — save only</option>
+            <option value="other">Other — save only</option>
+          </select>
           <button class="btn" id="btnRun" type="button">▶ Run</button>
           <button class="btn pri" id="btnSubmit" type="button">✓ Run tests &amp; submit</button>
           <button class="btn" data-act="csave" type="button">💾 Save</button>
@@ -1049,7 +1201,8 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
         <ul style="font-size:13.5px; line-height:1.8; padding-inline-start:19px; margin:0; color:var(--ink2)">
           <li><b>Python 3</b> — full standard library, plus numpy and pandas on demand. First run downloads the engine, then it is cached.</li>
           <li><b>JavaScript</b> — runs instantly, no download.</li>
-          <li><b>Anything else</b> (C, C++, Java, SQL) — the editor saves your code, but it cannot execute it here.</li>
+          <li><b>C and C++</b> — run here through a JavaScript interpreter. Core language works: variables, arrays, pointers, loops, functions, structs, printf and cout. It does <b>not</b> support classes, namespaces, templates or the STL.</li>
+          <li><b>Java</b> — needs a JVM, which no browser has. See the Java section in Learn from Basics for trace-the-output practice (auto-checked), a local setup guide, and where to practise with a real compiler.</li>
           <li>No file system, no network, no <span class="mono">pip install</span> of arbitrary packages.</li>
           <li>Code is saved in this browser alongside your tasks, and is included in your JSON backup.</li>
         </ul>
@@ -1090,10 +1243,10 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
 <!-- ================= DATA ================= -->
 <section class="tab" id="tab-data" hidden>
   <div class="panel">
-    <h2>Your data</h2>
-    <p class="hint">Everything is stored privately in this browser. Nothing is uploaded. Export a backup to move between machines.</p>
+    <h2>💾 Backup &amp; restore</h2>
+    <p class="hint">Everything lives in this browser only. Download a backup to keep a copy, move to another device, or share it for support. The file is plain JSON — your tasks, code, notes, streak and XP.</p>
     <div class="rowb">
-      <button class="btn" data-act="export" type="button">⬇ Backup (JSON)</button>
+      <button class="btn pri" data-act="export" type="button">⬇ Download backup (JSON)</button>
       <button class="btn" data-act="import" type="button">⬆ Restore backup</button>
       <button class="btn" data-act="csv" type="button">⬇ Export CSV</button>
       <button class="btn" data-act="sample" type="button">✨ Load sample data</button>
@@ -1201,7 +1354,8 @@ var KEY="learntrack.v2", NS="http://www.w3.org/2000/svg";
 /* ============ state ============ */
 var S={tasks:[],notes:{},logins:[],events:[],goals:{topics:{},hours:8,minDaily:1,stretchDaily:2,dailyMinutes:20},
        timer:null,settings:{theme:"dark",autoRev:true},
-       scratch:"",gh:{token:"",gist:"",auto:false,last:""},projRepos:{},resources:[],resDone:{},resNotes:{}};
+       scratch:"",gh:{token:"",gist:"",auto:false,last:""},projRepos:{},resources:[],resDone:{},resNotes:{},
+       watch:[],scratchNotes:"",javaTrace:{},javaTraceAns:{},achSeen:{}};
 var ui={week:0,tab:"dash",cur:""};
 var PY={state:"idle",mod:null,loading:null};
 
@@ -1213,6 +1367,8 @@ function load(){
       S.goals=r.goals||{topics:{},hours:8}; S.timer=r.timer||null; S.settings=r.settings||{theme:"dark"};
       S.scratch=r.scratch||""; S.gh=r.gh||{token:"",gist:"",auto:false,last:""};
       S.projRepos=r.projRepos||{}; S.resources=r.resources||[]; S.resDone=r.resDone||{}; S.resNotes=r.resNotes||{};
+      S.watch=r.watch||[]; S.scratchNotes=r.scratchNotes||"";
+      S.javaTrace=r.javaTrace||{}; S.javaTraceAns=r.javaTraceAns||{}; S.achSeen=r.achSeen||{};
       if(!S.goals.topics) S.goals.topics={};
       if(S.goals.minDaily==null) S.goals.minDaily=1;
       if(S.goals.stretchDaily==null) S.goals.stretchDaily=2;
@@ -1308,36 +1464,90 @@ function drawRing(){
   sv("text",{x:60,y:66,"text-anchor":"middle",fill:"#fff","font-size":"27","font-weight":"800"},g).textContent=pct+"%";
   document.getElementById("ringSub").textContent=d+" of "+w.length+" done";
 }
+function statStrip(host,rows){
+  var h=document.getElementById(host); if(!h) return; clr(h);
+  rows.forEach(function(r){
+    var c=document.createElement("div"); c.className="stcell";
+    var v=document.createElement("div"); v.className="stv"; v.textContent=r[1];
+    if(r[2]) v.style.color=r[2];
+    var l=document.createElement("div"); l.className="stl"; l.textContent=r[0];
+    c.appendChild(v); c.appendChild(l); h.appendChild(c);
+  });
+}
 function draw14(){
-  var svg=document.getElementById("c14"); clr(svg);
-  var W=620,H=220,L=34,R=10,T=14,B=36,iw=W-L-R,ih=H-T-B;
-  var dm=doneByDay(), pm=planByDay(), lab=[],dv=[],pv=[],i;
-  for(i=13;i>=0;i--){ var d=addD(new Date(),-i),k=iso(d); lab.push(short(d)); dv.push(dm[k]||0); pv.push(pm[k]||0); }
+  var svg=document.getElementById("c14"); if(!svg) return; clr(svg);
+  var W=620,H=250,L=36,R=12,T=16,B=40,iw=W-L-R,ih=H-T-B;
+  var dm=doneByDay(), pm=planByDay(), lab=[],full=[],dv=[],pv=[],i;
+  for(i=13;i>=0;i--){
+    var d=addD(new Date(),-i),k=iso(d);
+    lab.push(short(d));
+    full.push(d.toLocaleDateString(undefined,{weekday:"short",day:"numeric",month:"short"}));
+    dv.push(dm[k]||0); pv.push(pm[k]||0);
+  }
+  var totP=pv.reduce(function(a,b){return a+b;},0);
+  var totD=dv.reduce(function(a,b){return a+b;},0);
+  var rate=totP>0?Math.round(totD/totP*100):0;
+  var st=streaks();
+  statStrip("c14Stats",[
+    ["Planned",totP],
+    ["Completed",totD,"var(--brand)"],
+    ["Completion",(totP>0?rate+"%":"—"),rate>=80?"var(--ok)":rate>=50?"var(--warn)":""],
+    ["Streak",st.cur+"d","var(--amber)"]
+  ]);
   var max=Math.max.apply(null,dv.concat(pv).concat([3]));
   axis(svg,max,L,R,T,ih,W);
   var bw=iw/14;
   for(i=0;i<14;i++){
     var x=L+i*bw;
     var hp=pv[i]/max*ih, hd=dv[i]/max*ih;
-    var a=sv("rect",{x:x+bw*.14,y:T+ih-hp,width:bw*.34,height:Math.max(hp,pv[i]?2:0),rx:3,fill:"var(--line)"},svg); tip(a,lab[i]+" · planned "+pv[i]);
-    var b=sv("rect",{x:x+bw*.52,y:T+ih-hd,width:bw*.34,height:Math.max(hd,dv[i]?2:0),rx:3,fill:"var(--brand)"},svg); tip(b,lab[i]+" · completed "+dv[i]);
-    if(i%3===0) sv("text",{x:x+bw/2,y:H-14,"text-anchor":"middle",fill:"var(--muted)","font-size":"9.5"},svg).textContent=lab[i];
+    var a=sv("rect",{x:x+bw*.14,y:T+ih-hp,width:bw*.34,height:Math.max(hp,pv[i]?2:0),rx:3,fill:"var(--line)"},svg);
+    tip(a,full[i]+" — planned "+pv[i]);
+    var b=sv("rect",{x:x+bw*.52,y:T+ih-hd,width:bw*.34,height:Math.max(hd,dv[i]?2:0),rx:3,fill:"var(--brand)"},svg);
+    tip(b,full[i]+" — completed "+dv[i]);
+    if(!pv[i]&&!dv[i]){
+      var z=sv("circle",{cx:x+bw/2,cy:T+ih-2,r:1.6,fill:"var(--line)"},svg);
+      tip(z,full[i]+" — no activity");
+    }
+    if(i%2===0) sv("text",{x:x+bw/2,y:H-16,"text-anchor":"middle",fill:"var(--muted)","font-size":"10"},svg).textContent=lab[i];
   }
 }
 function drawHeat(){
-  var svg=document.getElementById("heat"); clr(svg);
-  var cm=doneByDay(), cell=11, gap=3, x0=30, y0=18, start=addD(sow(),-25*7), mon={};
-  for(var w=0;w<26;w++) for(var dd=0;dd<7;dd++){
-    var day=addD(start,w*7+dd); if(day>new Date()) continue;
-    var k=iso(day), c=cm[k]||0;
-    var f=c>=5?"var(--h4)":c>=3?"var(--h3)":c>=2?"var(--h2)":c>=1?"var(--h1)":(k in S.notes?"var(--h1)":"var(--h0)");
-    var r=sv("rect",{x:x0+w*(cell+gap),y:y0+dd*(cell+gap),width:cell,height:cell,rx:3,fill:f},svg);
-    tip(r,k+" — "+c+" completed"+(S.notes[k]?" · journal entry":""));
-    if(dd===0){ var m=day.toLocaleDateString(undefined,{month:"short"}); if(!(m in mon)) mon[m]=x0+w*(cell+gap); }
+  var svg=document.getElementById("heat"); if(!svg) return; clr(svg);
+  var WEEKS=26, x0=34, y0=20, gap=3;
+  /* size the cells from the card's real width so nothing is left empty */
+  var wrap=svg.parentElement;
+  var avail=(wrap&&wrap.clientWidth)?wrap.clientWidth:620;
+  var cell=Math.max(10,Math.min(34,Math.floor((avail-x0-10)/WEEKS)-gap));
+  var step=cell+gap;
+  var W=x0+WEEKS*step+6, H=y0+7*step+4;
+  svg.setAttribute("viewBox","0 0 "+W+" "+H);
+  svg.style.maxInlineSize=W+"px";
+  var cm=doneByDay(), start=addD(sow(),-(WEEKS-1)*7), mon={}, now=new Date();
+  var active=0, best=0, byDow=[0,0,0,0,0,0,0];
+  for(var w=0;w<WEEKS;w++) for(var dd=0;dd<7;dd++){
+    var day=addD(start,w*7+dd); if(day>now) continue;
+    var k=iso(day), c=cm[k]||0, note=(k in S.notes);
+    if(c>0){ active++; byDow[(day.getDay()+6)%7]+=c; if(c>best) best=c; }
+    var f=c>=5?"var(--h4)":c>=3?"var(--h3)":c>=2?"var(--h2)":c>=1?"var(--h1)":(note?"var(--h1)":"var(--h0)");
+    var lvl=c>=5?"very high":c>=3?"high":c>=2?"medium":c>=1?"light":(note?"note only":"none");
+    var r=sv("rect",{x:x0+w*step,y:y0+dd*step,width:cell,height:cell,rx:Math.max(2,Math.round(cell/4)),fill:f},svg);
+    tip(r,day.toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long",year:"numeric"})+
+      "\n"+c+" question"+(c===1?"":"s")+" completed"+(note?" · journal entry":"")+"\nActivity: "+lvl);
+    if(dd===0){ var m=day.toLocaleDateString(undefined,{month:"short"}); if(!(m in mon)) mon[m]=x0+w*step; }
   }
+  var fs=Math.max(9,Math.min(11,Math.round(cell*0.72)));
   ["Mon","","Wed","","Fri","","Sun"].forEach(function(l,i){
-    if(l) sv("text",{x:x0-6,y:y0+i*(cell+gap)+9,"text-anchor":"end",fill:"var(--muted)","font-size":"9.5"},svg).textContent=l; });
-  for(var mm in mon) sv("text",{x:mon[mm],y:12,fill:"var(--muted)","font-size":"9.5"},svg).textContent=mm;
+    if(l) sv("text",{x:x0-7,y:y0+i*step+cell*0.78,"text-anchor":"end",fill:"var(--muted)","font-size":fs},svg).textContent=l; });
+  for(var mm in mon) sv("text",{x:mon[mm],y:13,fill:"var(--muted)","font-size":fs},svg).textContent=mm;
+  var st=streaks();
+  var names=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+  var topI=0; for(var i2=1;i2<7;i2++) if(byDow[i2]>byDow[topI]) topI=i2;
+  statStrip("heatStats",[
+    ["Active days",st.days,"var(--brand)"],
+    ["Current streak",st.cur+"d","var(--amber)"],
+    ["Longest streak",st.best+"d","var(--ok)"],
+    ["Best day",byDow[topI]?names[topI]:"—"]
+  ]);
 }
 function drawWeekly(){
   var svg=document.getElementById("cWeekly"); clr(svg);
@@ -1494,7 +1704,38 @@ function renderTop(){
   document.getElementById("pToday").textContent=dm[today()]||0;
   document.getElementById("pWeek").textContent=pct+"%";
   var hr=new Date().getHours();
-  document.getElementById("heroHi").textContent=(hr<12?"Good morning.":hr<17?"Good afternoon.":"Good evening.")+" Keep your coding plan on track.";
+  var greet=hr<12?"Good morning":hr<17?"Good afternoon":"Good evening";
+  /* the hero reflects where you actually are, not a generic pitch */
+  var q=solvableQueue();
+  var nextT=q.filter(function(x){return x.status!=="done";})[0];
+  var solved=q.filter(function(x){return x.status==="done";}).length;
+  var eyeb=document.getElementById("heroWhere");
+  var head=document.getElementById("heroHi");
+  var sub=document.getElementById("heroNext");
+  var btn=document.getElementById("heroBtn");
+  if(nextT){
+    var wkLab="";
+    if(nextT.road&&nextT.road.indexOf("mp:")===0){
+      var wn=+nextT.road.split(":")[1];
+      if(typeof MYPATH!=="undefined") MYPATH.forEach(function(M){ M.weeks.forEach(function(W){
+        if(W.w===wn) wkLab="Week "+W.w+" · "+W.title; }); });
+    }
+    if(eyeb) eyeb.textContent=wkLab||(nextT.topic||"Your learning path");
+    if(head) head.textContent=greet+", "+(displayTitle(nextT)||"ready when you are");
+    if(sub) sub.textContent=(nextT.type==="learn"?"📖 Read this next":"✍️ Solve this next")+
+      " · "+solved+" of "+q.length+" solved so far"+(dm[today()]?" · "+dm[today()]+" today":"");
+    if(btn) btn.textContent=(nextT.type==="learn"?"📖 Read it":"▶ Solve it");
+  } else if(q.length){
+    if(eyeb) eyeb.textContent="All caught up";
+    if(head) head.textContent=greet+". Everything you have opened is solved.";
+    if(sub) sub.textContent=q.length+" questions complete · open the next week whenever you are ready.";
+    if(btn) btn.textContent="▶ Start the next week";
+  } else {
+    if(eyeb) eyeb.textContent="Getting started";
+    if(head) head.textContent=greet+". Ready to begin?";
+    if(sub) sub.textContent="Open Week 1 and your first question takes about ten minutes.";
+    if(btn) btn.textContent="▶ Start Week 1";
+  }
 }
 function kpi(host,rows){
   var k=document.getElementById(host); clr(k);
@@ -1522,7 +1763,7 @@ function renderDash(){
     ["Study time",dur(secs)||"0m","across "+S.tasks.filter(function(t){return t.seconds;}).length+" timed sessions","⏱"],
     ["This week",wd+"/"+w.length,"questions completed","📈"]
   ]);
-  drawRing(); draw14(); drawHeat(); renderXP(); renderMap(); renderToday(); renderMicro(); renderCatchup(); renderBadges(); renderWeak(); renderMonthly();
+  drawRing(); draw14(); drawHeat(); renderXP(); renderMap(); renderWatch(); renderToday(); renderMicro(); renderCatchup(); renderBadges(); renderWeak(); renderMonthly();
   var at=document.getElementById("attention"); clr(at);
   var l=S.tasks.filter(function(t){return bucket(t)==="ready";}).sort(function(a,b){return a.due.localeCompare(b.due);}).slice(0,5);
   if(!l.length){
@@ -1581,7 +1822,20 @@ function renderPlanner(){
     e.appendChild(em); host.appendChild(e);
   }
 }
+/* if you have not set goals, derive sensible ones from your open topics */
+function seedGoals(){
+  if(S.goals.seeded) return;
+  var counts={};
+  S.tasks.forEach(function(t){ if(t.topic) counts[t.topic]=(counts[t.topic]||0)+1; });
+  var names=Object.keys(counts).sort(function(a,b){return counts[b]-counts[a];}).slice(0,5);
+  if(!names.length) return;
+  names.forEach(function(n){
+    if(S.goals.topics[n]==null) S.goals.topics[n]=Math.max(2,Math.min(8,Math.round(counts[n]/3)));
+  });
+  S.goals.seeded=true; save();
+}
 function renderGoals(){
+  seedGoals();
   var host=document.getElementById("goalList"); clr(host);
   var wk=weekTasks(0).filter(function(t){return t.status==="done";});
   var names=Object.keys(S.goals.topics);
@@ -1755,7 +2009,7 @@ function fillPickers(){
   list.forEach(function(t){ var o=document.createElement("option"); o.value=t; o.textContent=t; sel.appendChild(o); });
   sel.value=cur;
 }
-function render(){ fillPickers(); renderTop(); renderDash(); renderPlanner(); renderBasics(); renderGoals(); renderReports(); renderRoad(); renderResources(); renderRevision(); renderProjects(); renderCode(); renderJournal(); tickTimer(); }
+function render(){ renderLangBar(); renderStudy(); renderJavaHub(); fillPickers(); renderTop(); renderDash(); renderPlanner(); renderBasics(); renderGoals(); renderReports(); renderRoad(); renderResources(); renderRevision(); renderProjects(); renderCode(); renderJournal(); tickTimer(); }
 
 /* ============ timer ============ */
 function tickTimer(){
@@ -1840,11 +2094,11 @@ function setTab(name){
   var els=document.querySelectorAll("nav.tabs button");
   for(var i=0;i<els.length;i++) els[i].setAttribute("aria-selected", els[i].getAttribute("data-tab")===name?"true":"false");
   ["dash","plan","basics","goals","rep","road","res","rev","proj","code","jrnl","data"].forEach(function(n){ document.getElementById("tab-"+n).hidden=(n!==name); });
-  if(name==="basics") renderBasics();
+  if(name==="basics"){ renderBasics(); renderJavaHub(); }
   if(name==="rep") renderReports();
   if(name==="road") renderRoad();
   if(name==="res") renderResources();
-  if(name==="rev") renderRevision();
+  if(name==="rev"){ renderRevision(); renderStudy(); }
   if(name==="proj") renderProjects();
   if(name==="code") renderCode();
   if(name==="data") ghUI();
@@ -1907,6 +2161,8 @@ function sample(){
 
 /* ============ events ============ */
 document.addEventListener("click",function(e){
+  var sl=e.target.closest?e.target.closest("[data-setlang]"):null;
+  if(sl){ setLang(sl.getAttribute("data-setlang")); return; }
   var lg=e.target.closest?e.target.closest("[data-lang]"):null;
   if(lg){ ui.lang=lg.getAttribute("data-lang"); ui.openMod=null; renderBasics(); return; }
   var tr=e.target.closest?e.target.closest("[data-track]"):null;
@@ -1920,6 +2176,41 @@ document.addEventListener("click",function(e){
     var id=n.getAttribute("data-id");
     if(doAct==="goalrm"){ delete S.goals.topics[id]; save(); renderGoals(); return; }
     if(doAct==="mapnode"){ showNode(id); return; }
+    if(doAct==="skillopen"){
+      var parts=id.split("|"), wk=+parts[0], nodeId=parts[1];
+      var added=mpLoad(wk,true);
+      if(added){ ev("road","Started Week "+wk+" from the skill map"); save(); render();
+        toast("▶ Week "+wk+" opened — "+added+" items ready"); }
+      else toast("Already open");
+      showNode(nodeId);
+      return;
+    }
+    if(doAct==="jtcheck"){ javaCheck(); return; }
+    if(doAct==="jtnext"){ ui.jtIdx=Math.min(JAVA_TRACE.length-1,(ui.jtIdx||0)+1); renderJavaHub(); return; }
+    if(doAct==="jtprev"){ ui.jtIdx=Math.max(0,(ui.jtIdx||0)-1); renderJavaHub(); return; }
+    if(doAct==="tech"){ ui.openTech=(ui.openTech===+id)?null:+id; renderStudy(); return; }
+    if(doAct==="tipg"){ ui.openTip=(ui.openTip===+id)?null:+id; renderStudy(); return; }
+    if(doAct==="newquote"){ ui.qBump=(ui.qBump||0)+1; 
+      var qc2=document.getElementById("quoteCard");
+      if(qc2){ var q2=QUOTES[(dailyIndex(QUOTES.length)+ui.qBump)%QUOTES.length];
+        qc2.querySelector(".qtext2").textContent=q2[0];
+        var w2=qc2.querySelector(".qwho"); clr(w2);
+        var bb=document.createElement("b"); bb.textContent=q2[1];
+        w2.appendChild(bb); w2.appendChild(document.createTextNode(" · "+q2[2])); }
+      return; }
+    if(doAct==="watchtopic"){ watchAdd(id,"Flagged from weak areas"); save(); renderWatch(); toast("📌 Added to your scratch board"); return; }
+    if(doAct==="wtouch"){ watchTouch(id); return; }
+    if(doAct==="wpull"){
+      var ww=watchList().filter(function(x){return x.id===id;})[0];
+      if(ww){ var got=watchPull(ww,false); ww.lastPull=today(); save(); render();
+        toast(got?("Surfaced "+got+" item"+(got===1?"":"s")+" from "+ww.topic)
+                 :"No questions opened for that topic yet — start it from the Roadmap"); }
+      return;
+    }
+    if(doAct==="wdel"){
+      S.watch=watchList().filter(function(x){return x.id!==id;});
+      save(); renderWatch(); toast("Removed from the board"); return;
+    }
     if(doAct==="modtheory"){ ui.openMod=(ui.openMod===id)?null:id; renderBasics(); return; }
     if(doAct==="toggletheory"){
       ui.theoryOpen=(ui.theoryOpen===id)?null:id;
@@ -1962,6 +2253,29 @@ document.addEventListener("click",function(e){
     if(doAct==="rdtoggle"){ rdOpen[id]=!rdOpen[id]; renderRoad(); return; }
     if(doAct==="slload"){ rdOpen["sl:"+id]=true; slowLoad(+id,false); return; }
     if(doAct==="mpload"){ rdOpen["mp:"+id]=true; mpLoad(+id,false); return; }
+    if(doAct==="lgload"){
+      var lp=id.split(":"), lgL=lp[0], lgW=+lp[1];
+      rdOpen["lg:"+lgL+":"+lgW]=true;
+      var got=langLoad(lgL,lgW,false); if(got){ render(); renderRoad(); } return;
+    }
+    if(doAct==="lgnext"){
+      var L2=curLang(), T2=LANG_TRACKS[L2];
+      if(!T2){ toast("Pick C, C++, Java or JavaScript first"); return; }
+      var nw=null;
+      for(var i3=0;i3<T2.weeks.length&&!nw;i3++){
+        var W3=T2.weeks[i3];
+        if(langItems(W3).some(function(it){ return !langFind(L2,W3,it); })) nw=W3;
+      }
+      if(nw){ rdOpen["lg:"+L2+":"+nw.w]=true; langLoad(L2,nw.w,false); render(); renderRoad(); }
+      else toast("Every week is already open");
+      return;
+    }
+    if(doAct==="lgall"){
+      var L3=curLang(), n3=0;
+      if(LANG_TRACKS[L3]){ LANG_TRACKS[L3].weeks.forEach(function(W4){ n3+=langLoad(L3,W4.w,true); });
+        save(); render(); renderRoad(); toast(n3?("Opened "+n3+" items"):"Already open"); }
+      return;
+    }
     if(doAct==="mpall"){ var na=mpLoad(null,true); ev("road","Loaded My Path"); save(); render(); renderRoad();
       toast(na?("Opened "+na+" items across 24 weeks"):"Already open"); return; }
     if(doAct==="mpnext"){
@@ -2053,6 +2367,23 @@ document.addEventListener("click",function(e){
       }
       return;
     }
+    if(doAct==="pjsteps"){ ui.openProj=(ui.openProj===id)?null:id; renderProjects(); return; }
+    if(doAct==="pjlib"){
+      var P2=PROJECT_LIB.filter(function(x){return x.id===id;})[0];
+      if(!P2) return;
+      ui.openProj=id;
+      var added=0, base=new Date(), L4=curLang(), meta4=langMeta(L4);
+      P2.steps.forEach(function(x,i){
+        if(projTaskLib(id,i)) return;
+        var t3=addTask({title:P2.name+" — "+x,topic:"Projects",lang:meta4.name,
+          diff:P2.lvl==="Expert"?"Hard":P2.lvl==="Advanced"?"Hard":P2.lvl==="Intermediate"?"Medium":"Easy",
+          due:iso(addD(base,i*2)),notes:P2.lvl+" project · "+P2.name+" ("+meta4.name+")"});
+        t3.proj=id+":"+i; t3.type="project"; t3.track=L4==="python"?"mypath":L4; added++;
+      });
+      save(); render();
+      toast(added?("▶ "+P2.name+" started — "+added+" steps"):"Already started");
+      return;
+    }
     if(doAct==="pjload"){
       var P=PROJECTS.filter(function(x){return x.id===id;})[0];
       if(!P) return;
@@ -2129,6 +2460,27 @@ document.addEventListener("click",function(e){
     case "wnext": ui.week++; renderReports(); break;
     case "wthis": ui.week=0; renderReports(); break;
     case "print": window.print(); break;
+    case "mprev": ui.month=(ui.month||0)-1; renderMonthly(); break;
+    case "mnext": ui.month=Math.min(0,(ui.month||0)+1); renderMonthly(); break;
+    case "mthis": ui.month=0; renderMonthly(); break;
+    case "mjump": ui.month=+n.getAttribute("data-off")||0; renderMonthly(); break;
+    case "resume":
+      var rq=solvableQueue();
+      var nx3=rq.filter(function(x){return x.status!=="done";})[0];
+      if(nx3){ setTab("code"); loadIntoEditor(nx3.id); }
+      else if(openNextWeek()){ render(); var rq2=solvableQueue();
+        var nx4=rq2.filter(function(x){return x.status!=="done";})[0];
+        if(nx4){ setTab("code"); loadIntoEditor(nx4.id); } }
+      else toast("Nothing left to open — you have finished the path");
+      break;
+    case "scrollwatch":
+      setTab("dash");
+      setTimeout(function(){
+        var el=document.getElementById("watchList");
+        if(el&&el.scrollIntoView){ el.scrollIntoView({behavior:"smooth",block:"center"}); }
+        var wt=document.getElementById("wTopic"); if(wt) wt.focus();
+      },220);
+      break;
     case "rdall": rdLoadAll(rdTrack==="assess"?"basics":rdTrack); break;
     case "rdclear": rdClear(); break;
     case "rdproj": rdProjects(); break;
@@ -2178,6 +2530,8 @@ document.addEventListener("input",function(e){
   if(["fSearch","fBucket","fTopic","fDiff"].indexOf(e.target.id)>=0) renderPlanner();
   if(["resSearch","resType"].indexOf(e.target.id)>=0) renderResources();
   if(e.target.id==="bSearch") renderBasics();
+  if(e.target.id==="scratchBox"){ S.scratchNotes=e.target.value; clearTimeout(window.__ltSc);
+    window.__ltSc=setTimeout(save,700); }
   if(e.target.id==="editor"){
     gutter();
     clearTimeout(window.__ltDraft);
@@ -5126,6 +5480,135 @@ function checkOutput(out,exp){
   }
   return {ok:true,why:"Output produced"};
 }
+/* ================= LANGUAGE TRACKS =================
+   Same week/day shape as MYPATH so every renderer, loader and difficulty
+   rule works unchanged. Questions here are save-and-review: a browser
+   cannot compile C, C++ or Java, so they are not auto-verified.        */
+function W_(w,title,cover,qs,project){
+  return {w:w,title:title,cover:cover,qs:qs,project:project||null};
+}
+var LANG_TRACKS={
+ c:{name:"C",icon:"📘",weeks:[
+  W_(1,"Getting started with C",["main()","#include","printf","Compiling with gcc","return 0"],
+   ["Print a fixed greeting to the screen.","Print your name and course on two separate lines.","Print an integer, a float and a character using the correct format specifiers.","Write a program that compiles with no warnings using -Wall."]),
+  W_(2,"Variables and data types",["int","float","double","char","sizeof","Constants"],
+   ["Declare one variable of each basic type and print each with its correct specifier.","Print the size in bytes of int, float, double and char.","Swap two integers using a third variable.","Swap two integers without using a third variable."]),
+  W_(3,"Input and operators",["scanf","& operator","Arithmetic","Relational","Logical","Increment"],
+   ["Read two integers and print their sum, difference, product and quotient.","Read a number and print whether it is even or odd.","Read three numbers and print the largest.","Demonstrate the difference between i++ and ++i."]),
+  W_(4,"Conditions",["if","else if","else","switch","Ternary"],
+   ["Classify a number as positive, negative or zero.","Read a character and report whether it is a vowel or a consonant.","Build a menu-driven calculator using switch.","Read a year and determine whether it is a leap year."],"Grade Calculator"),
+  W_(5,"Loops",["for","while","do-while","break","continue","Nested loops"],
+   ["Print the first N natural numbers.","Print the multiplication table of a given number.","Sum the digits of an integer.","Reverse an integer.","Print a right-angled triangle pattern of stars.","Check whether a number is prime."]),
+  W_(6,"Arrays",["Declaration","Traversal","Searching","Insertion","Deletion"],
+   ["Read N integers into an array and print the maximum and minimum.","Compute the average of an array.","Search for a value using linear search.","Reverse an array in place.","Count how many values appear more than once."]),
+  W_(7,"Two-dimensional arrays",["2-D declaration","Row and column traversal","Matrix operations"],
+   ["Read and print a matrix.","Add two matrices.","Multiply two matrices.","Transpose a matrix.","Find the sum of the leading diagonal."]),
+  W_(8,"Strings",["char arrays","Null terminator","string.h","gets vs fgets"],
+   ["Read a string and print its length without using strlen.","Copy one string into another without using strcpy.","Reverse a string in place.","Check whether a string is a palindrome.","Count vowels, consonants, digits and spaces."],"Word Frequency Counter"),
+  W_(9,"Functions",["Declaration","Definition","Parameters","Return values","Scope"],
+   ["Write a function that returns the factorial of a number.","Write a function that returns the greatest common divisor of two numbers.","Write a function that checks whether a number is prime.","Pass an array to a function and return its sum."]),
+  W_(10,"Recursion",["Base case","Recursive case","Call stack","Stack depth"],
+   ["Compute a factorial recursively.","Generate the Nth Fibonacci number recursively.","Reverse a string using recursion.","Compute the sum of digits recursively.","Solve the Tower of Hanoi for N discs."]),
+  W_(11,"Pointers",["Address-of","Dereference","Pointer arithmetic","Pointers and arrays","NULL"],
+   ["Print the address and value of a variable using a pointer.","Swap two numbers using pointers.","Traverse an array using pointer arithmetic.","Pass a pointer to a function to modify a caller's variable.","Explain the difference between an array name and a pointer in a comment, then demonstrate it."]),
+  W_(12,"Dynamic memory",["malloc","calloc","realloc","free","Memory leaks"],
+   ["Allocate an array of N integers at runtime and fill it.","Resize a dynamic array with realloc.","Write a program that frees everything it allocates.","Demonstrate what a dangling pointer is and how to avoid it."]),
+  W_(13,"Structures",["struct","typedef","Nested structs","Arrays of structs","Pointers to structs"],
+   ["Define a struct for a student and print one record.","Store and print an array of student records.","Sort an array of structs by a field.","Access struct members through a pointer."],"Student Record System"),
+  W_(14,"File handling",["fopen","fclose","fprintf","fscanf","Modes","EOF"],
+   ["Write text to a file and read it back.","Count the lines in a file.","Append a record to an existing file.","Copy one file to another.","Search a file for a given word and report the line numbers."],"Contact Book with File Storage")
+ ]},
+ cpp:{name:"C++",icon:"📗",weeks:[
+  W_(1,"C++ basics",["iostream","cout","cin","namespace","auto"],
+   ["Print a greeting using cout.","Read two numbers with cin and print their sum.","Print an int, a double and a string on separate lines.","Use auto for three different types and print each one."]),
+  W_(2,"Control flow and loops",["if/else","switch","for","while","range-based for"],
+   ["Classify a number as positive, negative or zero.","Print the first N even numbers.","Sum the digits of an integer.","Print a pyramid pattern of stars.","Iterate a vector using a range-based for loop."]),
+  W_(3,"Functions and references",["Parameters","Default arguments","Overloading","References","inline"],
+   ["Write an overloaded add() for int and double.","Swap two values using references.","Write a function with a default argument and call it both ways.","Write a function that returns multiple values via reference parameters."]),
+  W_(4,"Vectors and strings",["vector","string","size","push_back","iterators"],
+   ["Read N values into a vector and print the largest.","Remove duplicates from a vector.","Reverse a string using std::reverse.","Split a sentence into words and print each on its own line.","Count the frequency of each character in a string."],"Inventory Tracker"),
+  W_(5,"Classes and objects",["class","Constructors","Destructors","this","Access specifiers"],
+   ["Define a Rectangle class with area and perimeter methods.","Add a parameterised constructor and a destructor that logs.","Create an array of objects and print each one.","Demonstrate the difference between public and private members."]),
+  W_(6,"Operator overloading",["Operator functions","Friend functions","Copy constructor"],
+   ["Overload + for a Complex number class.","Overload << so an object can be printed with cout.","Overload == to compare two objects.","Write a copy constructor and show when it is called."]),
+  W_(7,"Inheritance",["Base and derived","Access modes","Multilevel","Multiple","virtual"],
+   ["Create a Shape base class and Circle and Square derived classes.","Demonstrate constructor call order in inheritance.","Use a virtual function to override behaviour.","Create an abstract base class with a pure virtual method."]),
+  W_(8,"Polymorphism",["Compile-time","Runtime","vtable","Virtual destructors"],
+   ["Demonstrate function overloading as compile-time polymorphism.","Demonstrate virtual dispatch through a base-class pointer.","Show why a base class needs a virtual destructor.","Store mixed derived objects in a vector of base pointers and call a virtual method on each."],"Shape Area Calculator"),
+  W_(9,"STL containers",["vector","map","set","unordered_map","pair","deque"],
+   ["Count word frequency using a map.","Store unique values in a set and print them sorted.","Use a pair to return two values from a function.","Compare the behaviour of map and unordered_map on the same data.","Implement a queue using deque."]),
+  W_(10,"STL algorithms",["sort","find","count","accumulate","lower_bound","lambda"],
+   ["Sort a vector of structs by a custom comparator.","Use accumulate to total a vector.","Use find to locate a value and report its position.","Use lower_bound on a sorted vector.","Sort using a lambda expression."]),
+  W_(11,"Templates",["Function templates","Class templates","Type deduction"],
+   ["Write a generic max() function template.","Write a generic Stack class template.","Write a template that works with both int and string.","Explain in a comment when a template is instantiated, then demonstrate it."]),
+  W_(12,"Memory and smart pointers",["new","delete","unique_ptr","shared_ptr","RAII"],
+   ["Allocate and free a dynamic array correctly.","Replace raw pointers with unique_ptr in a small program.","Demonstrate shared_ptr reference counting.","Write a RAII wrapper for a file handle."]),
+  W_(13,"Data structures",["Linked list","Stack","Queue","Binary tree"],
+   ["Implement a singly linked list with insert, delete and print.","Implement a stack using a linked list.","Implement a queue using two stacks.","Implement a binary search tree with insert and inorder traversal.","Find the height of a binary tree."]),
+  W_(14,"Algorithms and complexity",["Big-O","Sorting","Searching","Two pointers","Recursion"],
+   ["Implement bubble sort and count the comparisons.","Implement merge sort.","Implement binary search iteratively and recursively.","Solve a two-sum problem using a hash map.","State the time and space complexity of each solution in a comment."],"Mini Algorithm Library")
+ ]},
+ java:{name:"Java",icon:"☕",weeks:[
+  W_(1,"Java fundamentals",["JVM","class","main method","System.out.println","javac"],
+   ["Print a greeting from a main method.","Print your name and course on separate lines.","Print the result of an arithmetic expression.","Explain in comments what the JVM does, then compile and run the file."]),
+  W_(2,"Variables and types",["Primitives","String","var","Casting","Wrapper classes"],
+   ["Declare one variable of each primitive type and print each.","Demonstrate implicit and explicit casting.","Convert a String to an int and back.","Show autoboxing between int and Integer."]),
+  W_(3,"Operators and conditions",["Arithmetic","Relational","Logical","if/else","switch"],
+   ["Read two numbers and print the larger.","Classify a number as positive, negative or zero.","Build a calculator using enhanced switch.","Determine whether a year is a leap year."]),
+  W_(4,"Loops",["for","while","do-while","enhanced for","break","continue"],
+   ["Print the first N natural numbers.","Print a multiplication table.","Sum the digits of a number.","Print a star pyramid.","Check whether a number is prime."],"Number Analyzer"),
+  W_(5,"Arrays",["Declaration","Traversal","Arrays class","2-D arrays"],
+   ["Read N integers and print the maximum and minimum.","Reverse an array in place.","Sort an array using Arrays.sort.","Add two matrices.","Find the second largest value in an array."]),
+  W_(6,"Strings",["Immutability","Methods","StringBuilder","Formatting"],
+   ["Reverse a string without using a library method.","Check whether a string is a palindrome.","Count the vowels in a string.","Compare String concatenation with StringBuilder in a loop.","Format a report line using String.format."]),
+  W_(7,"Methods",["Parameters","Return types","Overloading","varargs","static","Recursion"],
+   ["Write an overloaded add() for int and double.","Write a varargs method that sums any number of arguments.","Compute a factorial recursively.","Explain in comments when to use static, then demonstrate it."]),
+  W_(8,"Classes and objects",["Fields","Constructors","this","Encapsulation","Getters and setters"],
+   ["Define a Student class with fields and a constructor.","Add getters and setters with validation.","Create an array of objects and print each one.","Override toString() and demonstrate it."],"Library Management System"),
+  W_(9,"Inheritance and interfaces",["extends","super","Overriding","abstract","interface"],
+   ["Create an Animal base class and Dog and Cat subclasses.","Override a method and call the parent version with super.","Create an abstract class with one abstract method.","Define an interface and implement it in two classes.","Demonstrate a default method on an interface."]),
+  W_(10,"Collections framework",["List","ArrayList","Set","HashSet","Map","HashMap"],
+   ["Store and iterate a list of names.","Remove duplicates using a Set.","Count word frequency using a HashMap.","Sort a list of objects with a Comparator.","Compare ArrayList and LinkedList performance in a comment, then measure it."]),
+  W_(11,"Exception handling",["try/catch/finally","Checked vs unchecked","Custom exceptions","try-with-resources"],
+   ["Handle a division by zero gracefully.","Handle invalid numeric input from the user.","Define and throw a custom exception.","Read a file using try-with-resources."]),
+  W_(12,"Streams and lambdas",["Lambda syntax","Functional interfaces","map/filter/reduce","Optional"],
+   ["Filter a list of numbers using a stream.","Map a list of names to uppercase.","Sum a list using reduce.","Group a list of objects by a field using Collectors.","Use Optional to avoid a null check."]),
+  W_(13,"File I/O",["File","Scanner","BufferedReader","Files","Paths"],
+   ["Write text to a file and read it back.","Count the lines in a file.","Read a CSV file into a list of objects.","Append a record to an existing file."],"Expense Tracker with File Storage"),
+  W_(14,"Concurrency and DSA",["Thread","Runnable","synchronized","ExecutorService","Sorting","Searching"],
+   ["Create and start two threads.","Demonstrate a race condition and then fix it with synchronized.","Use an ExecutorService to run several tasks.","Implement binary search.","Implement a stack and a queue from scratch."],"Multithreaded Task Runner")
+ ]},
+ js:{name:"JavaScript",icon:"🟨",weeks:[
+  W_(1,"JavaScript basics",["console.log","let","const","var","Template literals"],
+   ["Print a greeting to the console.","Declare values with let and const and show what happens when you reassign each.","Build a sentence using a template literal.","Print three values on separate lines."]),
+  W_(2,"Types and coercion",["Primitives","typeof","== vs ===","Truthy and falsy","null vs undefined"],
+   ["Print the type of six different values.","Demonstrate three cases where == and === disagree.","List which values are falsy, then verify each in code.","Convert a string to a number three different ways."]),
+  W_(3,"Operators and conditions",["Arithmetic","Comparison","Logical","Ternary","Nullish coalescing"],
+   ["Classify a number as positive, negative or zero.","Determine whether a year is a leap year.","Use the ternary operator to pick between two messages.","Use ?? to supply a default and show how it differs from ||."]),
+  W_(4,"Loops",["for","while","for...of","for...in","break","continue"],
+   ["Print the numbers 1 to N.","Sum the digits of a number.","Iterate an array with for...of.","Iterate an object's keys with for...in.","Print a star pyramid."],"FizzBuzz Variations"),
+  W_(5,"Arrays",["map","filter","reduce","find","sort","destructuring"],
+   ["Double every value in an array using map.","Filter an array to only even numbers.","Sum an array using reduce.","Find the first value matching a condition.","Sort an array of objects by a property.","Remove duplicates from an array."]),
+  W_(6,"Strings",["Methods","Template literals","split","join","Regex basics"],
+   ["Reverse a string.","Check whether a string is a palindrome.","Count the words in a sentence.","Capitalise the first letter of every word.","Extract all numbers from a string using a regular expression."]),
+  W_(7,"Objects",["Literals","Destructuring","Spread","Object methods","JSON"],
+   ["Create an object and print its keys and values.","Destructure an object into variables.","Merge two objects with the spread operator.","Convert an object to JSON and back.","Count occurrences using an object as a map."]),
+  W_(8,"Functions and closures",["Declarations","Arrow functions","Closures","this","Higher-order functions"],
+   ["Write the same function as a declaration and an arrow function.","Write a counter using a closure.","Write a function that returns another function.","Demonstrate how this differs between a regular and an arrow function.","Write a function that takes a callback."],"Utility Function Library"),
+  W_(9,"Classes",["class","constructor","Methods","Inheritance","static","Private fields"],
+   ["Define a Person class with a constructor and a method.","Extend it with a Student subclass.","Add a static method and call it.","Use a private field and expose it through a getter."]),
+  W_(10,"Asynchronous JavaScript",["Callbacks","Promises","async/await","Error handling","Event loop"],
+   ["Write a function that returns a Promise and resolve it.","Convert a callback-based function to a Promise.","Use async/await to sequence two operations.","Handle a rejected Promise with try/catch.","Run several Promises in parallel with Promise.all."]),
+  W_(11,"DOM manipulation",["querySelector","createElement","Events","Delegation","Forms"],
+   ["Select an element and change its text.","Create and append a new element.","Attach a click handler that toggles a class.","Read the value of a form input on submit.","Use event delegation to handle clicks on a list."]),
+  W_(12,"Fetch and APIs",["fetch","Headers","JSON","Error handling","async data"],
+   ["Fetch data from a public API and log the JSON.","Handle a non-200 response gracefully.","Send a request with a custom header.","Render fetched data into the DOM."],"Weather Dashboard"),
+  W_(13,"Storage and modules",["localStorage","sessionStorage","import","export","npm"],
+   ["Save and read a value from localStorage.","Persist an array of objects as JSON.","Split code into two modules and import one from the other.","Clear stored data safely."]),
+  W_(14,"Algorithms in JavaScript",["Map","Set","Recursion","Sorting","Complexity"],
+   ["Solve two-sum using a Map.","Find the first non-repeating character.","Flatten a nested array recursively.","Implement binary search.","Group an array of objects by a key."],"Interactive To-Do App")
+ ]}
+};
 var CONF=[
  [1,"I do not understand it yet","var(--bad)"],
  [2,"I recognize the concept","var(--warn)"],
@@ -5228,6 +5711,77 @@ var SLOW=[
   ["Project: Expense Tracker",["Record expenses with an amount and a category.","Print a total per category."],60],
   ["Ship it",["Write a README for one project.","Push the project to GitHub."],45]]}
 ];
+function PJ(id,name,lvl,lang,desc,steps){ return {id:id,name:name,lvl:lvl,lang:lang,desc:desc,steps:steps}; }
+var PROJECT_LIB=[
+ /* ---------- starter: first programs ---------- */
+ PJ("p-greet","Greeting Card","Starter","any","Your very first program — output and variables",
+  ["Print a fixed greeting","Read a name and greet that person","Add the date to the message","Format it neatly across three lines"]),
+ PJ("p-conv","Unit Converter","Starter","any","Input, arithmetic and formatted output",
+  ["Convert Celsius to Fahrenheit","Add the reverse conversion","Add kilometres to miles","Add a menu to choose the conversion","Validate the input"]),
+ PJ("p-calc","Calculator","Starter","any","Branching and input validation",
+  ["Add and subtract two numbers","Add multiply and divide","Handle division by zero","Loop until the user quits","Add power and remainder"]),
+ PJ("p-guess","Guess the Number","Starter","any","Random values, loops and conditions",
+  ["Pick a random number","Loop until the guess is correct","Give higher or lower hints","Limit the attempts","Track a best score"]),
+ PJ("p-grade","Grade Calculator","Starter","any","Thresholds and multi-branch logic",
+  ["Read a score and print a grade","Handle every boundary correctly","Read several subjects","Compute the average","Print a formatted report card"]),
+ PJ("p-pattern","Pattern Printer","Starter","any","Nested loops",
+  ["Print a square of stars","Print a right triangle","Print a pyramid","Print a diamond","Let the user choose the size"]),
+ /* ---------- basic: collections and text ---------- */
+ PJ("p-todo","To-Do List","Basic","any","Collections plus file persistence",
+  ["Add a task","List all tasks","Mark one complete","Delete a task","Save to a file","Load on start"]),
+ PJ("p-pass","Password Generator","Basic","any","Randomness and string building",
+  ["Generate a random string","Let the user set the length","Optionally include symbols and digits","Generate several at once","Rate the strength"]),
+ PJ("p-word","Word Frequency Counter","Basic","any","Dictionaries and text processing",
+  ["Count the words in a sentence","Count each word's frequency","Ignore case and punctuation","Print the top 10","Read the text from a file"]),
+ PJ("p-contact","Contact Book","Basic","any","Records, search and persistence",
+  ["Store a contact with name and number","List all contacts","Search by name","Edit and delete","Save to a file"]),
+ PJ("p-quiz","Quiz Game","Basic","any","Data structures and scoring",
+  ["Ask one hardcoded question","Store several questions in a list","Track the score","Shuffle the order","Load questions from a file","Show a results summary"]),
+ PJ("p-matrix","Matrix Operations","Basic","any","Two-dimensional arrays",
+  ["Read and print a matrix","Add two matrices","Multiply two matrices","Transpose a matrix","Find the determinant of a 3x3"]),
+ /* ---------- intermediate ---------- */
+ PJ("p-expense","Expense Tracker","Intermediate","any","Records, aggregation and reporting",
+  ["Record an expense with amount and category","List all expenses","Total per category","Filter by date range","Save to CSV","Print a monthly summary"]),
+ PJ("p-bank","Bank Account System","Intermediate","any","Object-oriented design",
+  ["Create an Account class","Deposit and withdraw with validation","Prevent overdrafts","Add a transaction history","Support several accounts","Persist to a file"]),
+ PJ("p-file","File Organizer","Intermediate","any","File system operations",
+  ["List every file in a folder","Group them by extension","Create destination folders","Move the files","Print a summary","Add an undo option"]),
+ PJ("p-log","Log Analyzer","Intermediate","any","Parsing and pattern matching",
+  ["Read a log file line by line","Count lines by severity","Extract timestamps","Find the most common error","Filter by a time window","Output a summary report"]),
+ PJ("p-lib","Library Management","Intermediate","any","Classes, relationships and search",
+  ["Model a Book class","Model a Member class","Issue and return books","Prevent double issues","Search the catalogue","Report overdue items"]),
+ PJ("p-hangman","Hangman","Intermediate","any","State management and game loop",
+  ["Pick a word and mask it","Accept letter guesses","Reveal matching letters","Track wrong guesses","End on win or loss","Load words from a file"]),
+ PJ("p-tictac","Tic-Tac-Toe","Intermediate","any","Grid state and win detection",
+  ["Draw the board","Accept player moves","Validate the move","Detect a win or a draw","Add a second player","Add a simple computer opponent"]),
+ /* ---------- advanced ---------- */
+ PJ("p-crud","SQL CRUD Application","Advanced","any","Database integration",
+  ["Create the database and table","Insert records","Read and display them","Update a record","Delete a record","Add search and filtering","Add a menu interface"]),
+ PJ("p-api","Weather / API Client","Advanced","any","Network requests and JSON",
+  ["Call a public API","Parse the JSON response","Print a formatted forecast","Accept a city as input","Handle errors and timeouts","Cache recent results"]),
+ PJ("p-report","Report Generator","Advanced","any","Data pipeline end to end",
+  ["Read a source data file","Clean and validate the rows","Group and summarise","Produce a formatted output file","Add charts or totals","Schedule or document the run"]),
+ PJ("p-scraper","Data Collector","Advanced","any","Fetching and structuring data",
+  ["Fetch data from a source","Extract the fields you need","Handle missing values","Save to CSV or JSON","Add retry logic","Produce a summary"]),
+ PJ("p-chat","Chat Application","Advanced","any","Sockets and concurrency",
+  ["Open a socket connection","Send a message between two clients","Handle several clients","Add usernames","Broadcast messages","Handle disconnects cleanly"]),
+ PJ("p-inter","Mini Interpreter","Advanced","any","Parsing and evaluation",
+  ["Tokenise an arithmetic expression","Parse it into a tree","Evaluate the tree","Add variables","Add conditionals","Report syntax errors clearly"]),
+ /* ---------- expert ---------- */
+ PJ("p-ds","Data Structure Library","Expert","any","Implement the fundamentals yourself",
+  ["Implement a dynamic array","Implement a linked list","Implement a stack and a queue","Implement a hash map","Implement a binary search tree","Implement a graph with BFS and DFS","Document the complexity of each"]),
+ PJ("p-algo","Algorithm Visualiser","Expert","any","Algorithms plus presentation",
+  ["Implement bubble, merge and quick sort","Count operations for each","Implement binary search","Show the steps as output","Compare performance on large inputs","Chart the results"]),
+ PJ("p-compiler","Expression Compiler","Expert","any","Lexing, parsing, code generation",
+  ["Write a lexer","Write a recursive-descent parser","Build an abstract syntax tree","Generate stack-machine instructions","Execute them","Add error recovery"]),
+ PJ("p-db","Mini Database Engine","Expert","any","Storage, indexing and queries",
+  ["Define a record format","Write and read records from disk","Add an in-memory index","Support simple queries","Add insert, update and delete","Handle concurrent access"]),
+ PJ("p-web","Full Web Application","Expert","js","Front end, back end and storage",
+  ["Build the interface","Handle user input and validation","Persist data","Add an API layer","Add authentication","Deploy it publicly"]),
+ PJ("p-port","Portfolio Site","Expert","js","Ship something public",
+  ["Design the layout","Build the project pages","Make it responsive","Optimise loading","Deploy to GitHub Pages","Link every project you have built"])
+];
+var PROJ_LEVELS=["Starter","Basic","Intermediate","Advanced","Expert"];
 var PROJECTS=[
  {id:"calc", name:"Calculator", desc:"Console arithmetic with input validation",
   steps:["Add and subtract two numbers","Multiply and divide","Handle divide-by-zero","Loop until the user quits","Write a README"]},
@@ -5250,6 +5804,96 @@ var PROJECTS=[
  {id:"log", name:"Log Analyzer", desc:"Parse log files, count errors, summarise patterns",
   steps:["Read a log file","Count lines by severity","Extract timestamps","Find the most common error","Output a summary report"]}
 ];
+/* ================= ACHIEVEMENTS =================
+   Generated rather than hand-listed: a set of metric "families", each with a
+   long ladder of thresholds. Only the ones you have earned (plus the next few
+   in reach) are ever rendered, so 10k definitions stay cheap.              */
+function ladder(base,count,growth){
+  var out=[],v=base;
+  for(var i=0;i<count;i++){ out.push(Math.round(v)); v=v*growth<v+1?v+1:v*growth; }
+  return out;
+}
+/* keep every tier reachable: cap each family so the ladder stops at a
+   sensible ceiling rather than running to millions */
+function capLadder(steps,ceil){
+  var out=[];
+  for(var i=0;i<steps.length;i++){ if(steps[i]>ceil) break; out.push(steps[i]); }
+  return out.length?out:[steps[0]];
+}
+var ACH_FAMILIES=[
+ {key:"done",  icon:"✅", name:"Questions Solved",   unit:"questions",
+  steps:capLadder(ladder(1,20000,1.010),20000), get:function(s){return s.done;}},
+ {key:"streak",icon:"🔥", name:"Day Streak",         unit:"days in a row",
+  steps:capLadder(ladder(2,20000,1.004),1500), get:function(s){return s.best;}},
+ {key:"xp",    icon:"⭐", name:"Experience",         unit:"XP",
+  steps:capLadder(ladder(25,4000,1.02),2000000), get:function(s){return s.xp;}},
+ {key:"hours", icon:"⏱️", name:"Study Time",         unit:"hours",
+  steps:capLadder(ladder(1,20000,1.007),5000), get:function(s){return Math.floor(s.hours);}},
+ {key:"tests", icon:"🎯", name:"Test Cases Passed",  unit:"test cases",
+  steps:capLadder(ladder(3,4000,1.02),100000), get:function(s){return s.tests;}},
+ {key:"topics",icon:"🧩", name:"Topics Touched",     unit:"topics",
+  steps:capLadder(ladder(1,20000,1.008),400), get:function(s){return s.topics;}},
+ {key:"code",  icon:"⌨️", name:"Solutions Saved",    unit:"solutions",
+  steps:capLadder(ladder(1,20000,1.008),8000), get:function(s){return s.coded;}},
+ {key:"notes", icon:"📓", name:"Journal Entries",    unit:"entries",
+  steps:capLadder(ladder(1,20000,1.006),3000), get:function(s){return s.notes;}},
+ {key:"rev",   icon:"🧠", name:"Revisions Done",     unit:"revisions",
+  steps:capLadder(ladder(1,20000,1.009),9000), get:function(s){return s.revs;}},
+ {key:"days",  icon:"📅", name:"Active Days",        unit:"active days",
+  steps:capLadder(ladder(1,20000,1.005),3650), get:function(s){return s.days;}},
+ {key:"proj",  icon:"🚀", name:"Projects Shipped",   unit:"projects",
+  steps:capLadder(ladder(1,4000,1.02),300), get:function(s){return s.projects;}},
+ {key:"weeks", icon:"🗓️", name:"Weeks Completed",    unit:"weeks",
+  steps:capLadder(ladder(1,20000,1.008),500), get:function(s){return s.weeksDone;}},
+ {key:"perf",  icon:"💯", name:"First-Try Solves",   unit:"first-try solves",
+  steps:capLadder(ladder(1,20000,1.008),5000), get:function(s){return s.firstTry;}},
+ {key:"conf",  icon:"🎓", name:"Mastered Topics",    unit:"rated 5/5",
+  steps:capLadder(ladder(1,20000,1.007),2000), get:function(s){return s.mastered;}},
+ {key:"lang",  icon:"🌐", name:"Language Variety",   unit:"languages used",
+  steps:capLadder(ladder(1,900,1.5),8), get:function(s){return s.langs;}},
+ {key:"early", icon:"🌅", name:"Early Sessions",     unit:"before 9am",
+  steps:capLadder(ladder(1,20000,1.006),1200), get:function(s){return s.early;}},
+ {key:"night", icon:"🌙", name:"Night Sessions",     unit:"after 9pm",
+  steps:capLadder(ladder(1,20000,1.006),1200), get:function(s){return s.night;}},
+ {key:"wknd",  icon:"🏖️", name:"Weekend Study",      unit:"weekend days",
+  steps:capLadder(ladder(1,20000,1.006),1000), get:function(s){return s.weekend;}},
+ {key:"watch", icon:"📌", name:"Board Revisions",    unit:"topics revised",
+  steps:capLadder(ladder(1,20000,1.006),1500), get:function(s){return s.watchRev;}},
+ {key:"perfw", icon:"🏆", name:"Perfect Weeks",      unit:"perfect weeks",
+  steps:capLadder(ladder(1,20000,1.008),400), get:function(s){return s.perfectWeeks;}}
+];
+function achTierName(i){
+  var t=["Bronze","Silver","Gold","Platinum","Diamond","Master","Grandmaster","Legend","Mythic","Eternal"];
+  return t[Math.min(t.length-1,Math.floor(i/6))];
+}
+function achTotal(){
+  var n=0; ACH_FAMILIES.forEach(function(f){ n+=f.steps.length; }); return n;
+}
+/* every earned badge + the next unearned one per family */
+function achEarned(st){
+  var earned=[],next=[];
+  ACH_FAMILIES.forEach(function(f){
+    var v=f.get(st)||0, hit=0;
+    for(var i=0;i<f.steps.length;i++){
+      if(v>=f.steps[i]){
+        hit=i+1;
+        earned.push({id:f.key+":"+i,icon:f.icon,tier:achTierName(i),
+          name:achTierName(i)+" "+f.name,
+          desc:f.steps[i].toLocaleString()+" "+f.unit,
+          val:f.steps[i],fam:f.name});
+      } else {
+        next.push({id:f.key+":"+i,icon:f.icon,tier:achTierName(i),
+          name:achTierName(i)+" "+f.name,
+          desc:f.steps[i].toLocaleString()+" "+f.unit,
+          have:v,need:f.steps[i],
+          pct:Math.min(99,Math.round(v/f.steps[i]*100))});
+        break;
+      }
+    }
+    void hit;
+  });
+  return {earned:earned,next:next};
+}
 var BADGES=[
  {id:"first",  icon:"🌱", name:"First Step",        desc:"Complete your first question",       test:function(s){return s.done>=1;}},
  {id:"s3",     icon:"🔥", name:"3 Day Streak",      desc:"Learn three days in a row",          test:function(s){return s.best>=3;}},
@@ -5310,6 +5954,37 @@ function mpItems(W){
   return out;
 }
 var DAYMAP=[0,1,3,4,5];
+/* difficulty from what the task actually demands: number of test cases,
+   edge cases, concepts combined and week depth — never just the week number */
+function rateDifficulty(it,W){
+  if(it.kind==="learn") return "Easy";
+  if(it.kind==="revision") return "Easy";
+  if(it.kind==="project") return W.w>=16?"Hard":"Medium";
+  var q=(typeof IO!=="undefined")?(IO[it.label]||null):null;
+  var suite=(typeof TESTS!=="undefined")?(TESTS[it.label]||null):null;
+  var score=0;
+  if(W.w>=17) score+=2.2; else if(W.w>=13) score+=1.6; else if(W.w>=9) score+=1;
+  if(q){
+    var n=q.cases.length;
+    if(n>=6) score+=2; else if(n>=4) score+=1.2; else if(n>=3) score+=0.6;
+    var edge=q.cases.filter(function(c){
+      return /empty|zero|single|negative|boundary|duplicate|all |tie|invalid/i.test(c.name||""); }).length;
+    score+=Math.min(1.5,edge*0.5);
+    var txt=(q.statement||"")+" "+(q.objective||"");
+    if(/until|loop|repeat|each|every/i.test(txt)) score+=0.5;
+    if(/dictionar|set |nested|sort|group|count .*by/i.test(txt)) score+=0.8;
+    if(/error|except|invalid|crash/i.test(txt)) score+=0.8;
+    if((q.statement||"").split("\n").length>=3) score+=0.4;
+  }
+  if(suite){
+    score+=1;
+    if(suite.cases&&suite.cases.length>=5) score+=0.8;
+    if(suite.setup) score+=0.6;
+  }
+  if(/api|sql|pandas|numpy|regex|recursion|graph|tree|complexity|optimi/i.test(it.label)) score+=1.2;
+  if(/decorator|generator|comprehension|lambda|closure/i.test(it.label)) score+=1;
+  return score>=4.2?"Hard":score>=2.4?"Medium":"Easy";
+}
 function mpLoad(wnum,silent){
   var base=rdStartDate(), added=0;
   MYPATH.forEach(function(M){
@@ -5319,7 +5994,7 @@ function mpLoad(wnum,silent){
       mpItems(W).forEach(function(it){
         if(rdFind(it.key)) return;
         var t=addTask({title:it.label,topic:W.title,lang:"Python",
-          diff: it.kind==="project"?"Hard":(W.w<=8?"Easy":"Medium"),
+          diff: rateDifficulty(it,W),
           due:iso(addD(ws,DAYMAP[Math.min(4,it.day)])),
           notes:"Month "+M.m+" · Week "+W.w+" — "+W.title});
         t.road=it.key; t.type=it.kind; t.track="mypath"; t.phase=M.m; t.est=it.min;
@@ -5330,6 +6005,89 @@ function mpLoad(wnum,silent){
   save();
   if(!silent){ render(); renderRoad(); toast(added?("Opened "+added+" items"):"Already open"); }
   return added;
+}
+function renderLangTrack(host){
+  var L=curLang();
+  if(L==="python"){
+    var w0=document.createElement("div"); w0.className="panel"; w0.style.marginBlockStart="0";
+    var h0=document.createElement("h2"); h0.textContent="Pick a language above";
+    var p0=document.createElement("p"); p0.className="hint";
+    p0.textContent="Use the language switcher in the header to choose C, C++, Java or JavaScript. Python has its own dedicated tracks — see ⭐ My Path.";
+    w0.appendChild(h0); w0.appendChild(p0); host.appendChild(w0);
+    return;
+  }
+  var T=LANG_TRACKS[L], st=langStats(L);
+  var intro=document.createElement("div"); intro.className="panel"; intro.style.marginBlockStart="0";
+  var ih=document.createElement("h2"); ih.textContent=T.icon+"  "+T.name+" — 14 weeks";
+  var ip=document.createElement("p"); ip.className="hint";
+  ip.textContent="Weeks open automatically as you work — whenever fewer than "+KEEP_OPEN+" items remain unsolved, the next week unlocks by itself. "+
+    (L==="js"?"JavaScript runs fully in the Code lab.":"Write and save your solutions in the Code lab; compiled languages cannot run in a browser, so run them locally and keep the code here.");
+  intro.appendChild(ih); intro.appendChild(ip);
+  var ib=document.createElement("div"); ib.className="rowb";
+  var b1=document.createElement("button"); b1.type="button"; b1.className="btn pri";
+  b1.textContent="▶ Open the next week"; b1.setAttribute("data-do","lgnext");
+  var b2=document.createElement("button"); b2.type="button"; b2.className="btn";
+  b2.textContent="Open all 14 weeks"; b2.setAttribute("data-do","lgall");
+  ib.appendChild(b1); ib.appendChild(b2); intro.appendChild(ib);
+  var g=document.createElement("div"); g.className="goal"; g.style.marginBlockStart="12px";
+  var gl=document.createElement("div"); gl.className="gl";
+  var ga=document.createElement("span"); ga.textContent=T.name+" progress";
+  var gb=document.createElement("span"); gb.textContent=st.done+" / "+st.total+" · "+st.open+" opened";
+  gl.appendChild(ga); gl.appendChild(gb); g.appendChild(gl);
+  g.appendChild(bar(st.total?Math.round(st.done/st.total*100):0));
+  intro.appendChild(g);
+  host.appendChild(intro);
+  T.weeks.forEach(function(W){
+    var items=langItems(W), loaded=0, done=0;
+    items.forEach(function(it){ var t=langFind(L,W,it); if(t){ loaded++; if(t.status==="done") done++; } });
+    var pct=items.length?Math.round(done/items.length*100):0;
+    var sec=document.createElement("div"); sec.className="wk";
+    var hd=document.createElement("div"); hd.className="wkh";
+    hd.setAttribute("data-do","rdtoggle"); hd.setAttribute("data-id","lg:"+L+":"+W.w);
+    var bx=document.createElement("div"); bx.className="wkb"+(pct>=100?" done":loaded?"":" lock");
+    bx.textContent=pct>=100?"✓":("WK\n"+W.w); bx.style.whiteSpace="pre";
+    var tw=document.createElement("div"); tw.style.minInlineSize="180px";
+    var t1=document.createElement("div"); t1.className="phttl"; t1.textContent="Week "+W.w+": "+W.title;
+    var t2=document.createElement("div"); t2.className="phwk";
+    t2.textContent=items.length+" items"+(W.project?" · project week":"")+" · "+(pct>=100?"completed":loaded?"in progress":"not opened");
+    tw.appendChild(t1); tw.appendChild(t2);
+    var bw=document.createElement("div"); bw.className="phbar"; bw.appendChild(bar(pct));
+    var pc=document.createElement("div"); pc.className="phpct"; pc.textContent=loaded?(done+"/"+items.length+" · "+pct+"%"):"—";
+    var btn=document.createElement("button"); btn.type="button"; btn.className="btn sm"+(loaded?"":" pri");
+    btn.textContent=loaded>=items.length?"✓ Opened":(loaded?"+ Open the rest":"▶ Start this week");
+    btn.setAttribute("data-do","lgload"); btn.setAttribute("data-id",L+":"+W.w);
+    hd.appendChild(bx); hd.appendChild(tw); hd.appendChild(bw); hd.appendChild(pc); hd.appendChild(btn);
+    sec.appendChild(hd);
+    var body=document.createElement("div"); body.className="phbody"; body.style.paddingBlockStart="13px";
+    if(!rdOpen["lg:"+L+":"+W.w]) body.hidden=true;
+    if(W.cover&&W.cover.length){
+      var cv=document.createElement("div"); cv.className="topics";
+      W.cover.forEach(function(c){ cv.appendChild(tag(c)); });
+      body.appendChild(cv);
+    }
+    items.forEach(function(it){
+      var t=langFind(L,W,it);
+      var row=document.createElement("div"); row.className="q"+(t&&t.status==="done"?" qdone":"");
+      var ic=document.createElement("span"); ic.className="qn";
+      ic.textContent=it.kind==="learn"?"📖":it.kind==="project"?"🚀":"✍️";
+      var tx=document.createElement("span"); tx.className="qt"; tx.textContent=it.label;
+      row.appendChild(ic); row.appendChild(tx);
+      var b3=document.createElement("div"); b3.className="qb";
+      if(t){
+        var tg=document.createElement("button"); tg.type="button";
+        tg.className="btn xs"+(t.status==="done"?" ok":"");
+        tg.textContent=t.status==="done"?"✓":"done";
+        tg.setAttribute("data-do","toggle"); tg.setAttribute("data-id",t.id);
+        b3.appendChild(tg);
+        var cd=document.createElement("button"); cd.type="button"; cd.className="btn xs";
+        cd.textContent=t.code&&t.code.trim()?"⌨●":"⌨";
+        cd.setAttribute("data-do","ccode"); cd.setAttribute("data-id",t.id);
+        cd.style.marginInlineStart="4px"; b3.appendChild(cd);
+      }
+      row.appendChild(b3); body.appendChild(row);
+    });
+    sec.appendChild(body); host.appendChild(sec);
+  });
 }
 function renderMyPath(host){
   var intro=document.createElement("div"); intro.className="panel"; intro.style.marginBlockStart="0";
@@ -5449,8 +6207,34 @@ function renderConfPicker(t,host){
 }
 
 /* ============ resources ============ */
+var LANG_RES={
+ c:[["C Programming — cppreference","Documentation","Reference","https://en.cppreference.com/w/c","cppreference","Reference","High"],
+    ["Learn-C.org interactive tutorial","Course","Foundations","https://www.learn-c.org/","learn-c.org","~6 h","High"],
+    ["GNU C Manual","Documentation","Reference","https://www.gnu.org/software/gnu-c-manual/","GNU","Reference","Medium"],
+    ["Beej's Guide to C","Article","Foundations","https://beej.us/guide/bgc/","beej.us","~8 h","High"]],
+ cpp:[["cppreference — C++","Documentation","Reference","https://en.cppreference.com/w/cpp","cppreference","Reference","High"],
+    ["learncpp.com","Course","Foundations","https://www.learncpp.com/","learncpp","~30 h","High"],
+    ["C++ Core Guidelines","Documentation","Best practice","https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines","isocpp","Reference","Medium"],
+    ["STL algorithms reference","Documentation","STL","https://en.cppreference.com/w/cpp/algorithm","cppreference","Reference","High"]],
+ java:[["Java Tutorials — Oracle","Documentation","Foundations","https://docs.oracle.com/javase/tutorial/","Oracle","~20 h","High"],
+    ["Java API documentation","Documentation","Reference","https://docs.oracle.com/en/java/javase/21/docs/api/","Oracle","Reference","High"],
+    ["Baeldung","Article","Practical","https://www.baeldung.com/","Baeldung","Reference","High"],
+    ["Java Collections guide","Documentation","Collections","https://docs.oracle.com/javase/tutorial/collections/","Oracle","~4 h","High"]],
+ js:[["MDN JavaScript Guide","Documentation","Foundations","https://developer.mozilla.org/docs/Web/JavaScript/Guide","MDN","~15 h","High"],
+    ["MDN JavaScript Reference","Documentation","Reference","https://developer.mozilla.org/docs/Web/JavaScript/Reference","MDN","Reference","High"],
+    ["JavaScript.info","Course","Foundations","https://javascript.info/","javascript.info","~25 h","High"],
+    ["Eloquent JavaScript (free book)","Documentation","Foundations","https://eloquentjavascript.net/","eloquentjavascript.net","~12 h","High"],
+    ["MDN Web APIs","Documentation","DOM","https://developer.mozilla.org/docs/Web/API","MDN","Reference","Medium"]]
+};
 function allResources(){
   var custom=S.resources||[];
+  var L=curLang();
+  if(L!=="python"&&LANG_RES[L]){
+    return LANG_RES[L].map(function(r,i){
+      return {id:L+"r"+i,title:r[0],type:r[1],topic:r[2],url:r[3],src:r[4],dur:r[5],pri:r[6],builtin:true};
+    }).concat(custom.filter(function(c){ return !c.lang||c.lang===L; }));
+  }
+  custom=custom.filter(function(c){ return !c.lang||c.lang==="python"; });
   return RESOURCES.map(function(r,i){
     return {id:"r"+i,title:r[0],type:r[1],topic:r[2],url:r[3],src:r[4],dur:r[5],pri:r[6],builtin:true};
   }).concat(custom);
@@ -5499,6 +6283,759 @@ function renderResources(){
   });
   var n=allResources().length, dn=Object.keys(done).filter(function(k){return done[k];}).length;
   document.getElementById("resCount").textContent=dn+" of "+n+" completed";
+}
+
+function renderStudy(){
+  /* quote of the day */
+  var qc=document.getElementById("quoteCard");
+  if(qc){
+    clr(qc);
+    var q=QUOTES[dailyIndex(QUOTES.length)];
+    var mark=document.createElement("div"); mark.className="qmark"; mark.textContent="\u201C";
+    var txt=document.createElement("div"); txt.className="qtext2"; txt.textContent=q[0];
+    var who=document.createElement("div"); who.className="qwho";
+    var b=document.createElement("b"); b.textContent=q[1];
+    who.appendChild(b); who.appendChild(document.createTextNode(" · "+q[2]));
+    var nx=document.createElement("button"); nx.type="button"; nx.className="btn xs";
+    nx.textContent="↻ Another"; nx.setAttribute("data-do","newquote");
+    qc.appendChild(mark); qc.appendChild(txt); qc.appendChild(who); qc.appendChild(nx);
+  }
+  /* techniques */
+  var tl=document.getElementById("techList");
+  if(tl){
+    clr(tl);
+    TECHNIQUES.forEach(function(t,i){
+      var d=document.createElement("div"); d.className="tech"+(ui.openTech===i?" topen":"");
+      var hd=document.createElement("div"); hd.className="techh";
+      hd.setAttribute("data-do","tech"); hd.setAttribute("data-id",String(i));
+      var ic=document.createElement("span"); ic.className="techi"; ic.textContent=t.icon;
+      var tw=document.createElement("div"); tw.style.minInlineSize="0";
+      var nm=document.createElement("div"); nm.className="techn"; nm.textContent=t.n;
+      var wo=document.createElement("div"); wo.className="techw"; wo.textContent=t.who;
+      tw.appendChild(nm); tw.appendChild(wo);
+      var ar=document.createElement("span"); ar.className="techa"; ar.textContent=ui.openTech===i?"▲":"▼";
+      hd.appendChild(ic); hd.appendChild(tw);
+      var sp=document.createElement("span"); sp.className="sp"; hd.appendChild(sp); hd.appendChild(ar);
+      d.appendChild(hd);
+      if(ui.openTech===i){
+        var bd=document.createElement("div"); bd.className="techb";
+        var w1=document.createElement("p"); w1.className="techp"; w1.textContent=t.what; bd.appendChild(w1);
+        var l1=document.createElement("div"); l1.className="specl"; l1.textContent="Why it works"; bd.appendChild(l1);
+        var w2=document.createElement("p"); w2.className="techp"; w2.textContent=t.why; bd.appendChild(w2);
+        var l2=document.createElement("div"); l2.className="specl"; l2.style.marginBlockStart="9px";
+        l2.textContent="How to do it"; bd.appendChild(l2);
+        var ol=document.createElement("ol"); ol.className="lpts";
+        t.how.forEach(function(x){ var li=document.createElement("li"); li.textContent=x; ol.appendChild(li); });
+        bd.appendChild(ol);
+        var fit=document.createElement("div"); fit.className="techfit"; fit.textContent="For you: "+t.fit;
+        bd.appendChild(fit);
+        d.appendChild(bd);
+      }
+      tl.appendChild(d);
+    });
+  }
+  /* language facts */
+  var fl=document.getElementById("factList");
+  if(fl){
+    clr(fl);
+    var L=curLang(), meta=langMeta(L), facts=LANG_FACTS[L]||LANG_FACTS.python;
+    var ft=document.getElementById("factTitle");
+    if(ft) ft.textContent=meta.icon+"  "+meta.name+" — how it came to be";
+    facts.forEach(function(f){
+      var d=document.createElement("div"); d.className="fact";
+      var t2=document.createElement("div"); t2.className="factt"; t2.textContent=f.t;
+      var b2=document.createElement("div"); b2.className="factd"; b2.textContent=f.d;
+      d.appendChild(t2); d.appendChild(b2); fl.appendChild(d);
+    });
+  }
+  /* study tips */
+  var tp=document.getElementById("tipsList");
+  if(tp){
+    clr(tp);
+    STUDY_TIPS.forEach(function(g,i){
+      var d=document.createElement("div"); d.className="tipg";
+      var hd=document.createElement("div"); hd.className="tiph";
+      hd.setAttribute("data-do","tipg"); hd.setAttribute("data-id",String(i));
+      var ic=document.createElement("span"); ic.textContent=g.icon;
+      var nm=document.createElement("span"); nm.className="tipn"; nm.textContent=g.c;
+      hd.appendChild(ic); hd.appendChild(nm);
+      var sp=document.createElement("span"); sp.className="sp"; hd.appendChild(sp);
+      var ar=document.createElement("span"); ar.className="techa"; ar.textContent=ui.openTip===i?"▲":"▼";
+      hd.appendChild(ar);
+      d.appendChild(hd);
+      if(ui.openTip===i){
+        var ul=document.createElement("ul"); ul.className="lpts";
+        g.tips.forEach(function(x){ var li=document.createElement("li"); li.textContent=x; ul.appendChild(li); });
+        d.appendChild(ul);
+      }
+      tp.appendChild(d);
+    });
+  }
+  /* struggling topics */
+  var sg=document.getElementById("strugTips");
+  if(sg){
+    clr(sg);
+    var m=topicStats();
+    var weak=Object.keys(m).filter(function(n){ return m[n].q>=2&&(m[n].d/m[n].q)<0.7; })
+      .sort(function(a,b){ return (m[a].d/m[a].q)-(m[b].d/m[b].q); }).slice(0,3);
+    var lowConf={};
+    S.tasks.forEach(function(t){ if(t.status==="done"&&t.conf&&t.conf<=2&&t.topic) lowConf[t.topic]=(lowConf[t.topic]||0)+1; });
+    Object.keys(lowConf).forEach(function(n){ if(weak.indexOf(n)<0&&weak.length<4) weak.push(n); });
+    if(!weak.length){
+      var e=document.createElement("div"); e.className="empty";
+      var big=document.createElement("span"); big.className="big"; big.textContent="👍";
+      e.appendChild(big);
+      e.appendChild(document.createTextNode("Nothing is standing out as a weak spot. Guidance appears here as soon as a topic starts giving you trouble."));
+      sg.appendChild(e);
+    }
+    weak.forEach(function(n){
+      var help=topicHelpFor(n);
+      var d=document.createElement("div"); d.className="strug";
+      var hd=document.createElement("div"); hd.className="wtop";
+      var nm=document.createElement("span"); nm.className="wname"; nm.textContent=n;
+      hd.appendChild(nm);
+      var sp=document.createElement("span"); sp.className="sp"; hd.appendChild(sp);
+      if(m[n]){ var tg=document.createElement("span"); tg.className="tag y";
+        tg.textContent=m[n].d+"/"+m[n].q+" solved"; hd.appendChild(tg); }
+      if(lowConf[n]){ var tg2=document.createElement("span"); tg2.className="tag r";
+        tg2.textContent=lowConf[n]+" rated low"; hd.appendChild(tg2); }
+      d.appendChild(hd);
+      if(help){
+        var ul=document.createElement("ul"); ul.className="lpts";
+        help.forEach(function(x){ var li=document.createElement("li"); li.textContent=x; ul.appendChild(li); });
+        d.appendChild(ul);
+      } else {
+        var p2=document.createElement("div"); p2.className="hint"; p2.style.margin="6px 0 0";
+        p2.textContent="Re-solve these from a blank file, then rate your confidence honestly.";
+        d.appendChild(p2);
+      }
+      var act=document.createElement("div"); act.className="tacts";
+      var open1=S.tasks.filter(function(t){ return (t.topic||"")===n&&t.status!=="done"; })[0]
+        ||S.tasks.filter(function(t){ return (t.topic||"")===n; })[0];
+      if(open1){
+        var b3=document.createElement("button"); b3.type="button"; b3.className="btn xs pri";
+        b3.textContent="▶ Practise this";
+        b3.setAttribute("data-do","ccode"); b3.setAttribute("data-id",open1.id);
+        act.appendChild(b3);
+      }
+      var b4=document.createElement("button"); b4.type="button"; b4.className="btn xs";
+      b4.textContent="📌 Add to board"; b4.setAttribute("data-do","watchtopic"); b4.setAttribute("data-id",n);
+      act.appendChild(b4);
+      d.appendChild(act);
+      sg.appendChild(d);
+    });
+  }
+}
+
+/* ================= JAVA: knowledge-first =================
+   No JVM in the browser, and embedding a third-party compiler in an iframe
+   is neither reliable nor safe to depend on. So Java is taught through
+   trace-the-output questions, which ARE auto-checked, plus a local setup
+   guide and curated external practice.                                  */
+var JAVA_TRACE=[
+ {q:"What does this print?",code:'public class Main {\n    public static void main(String[] args) {\n        int a = 7, b = 2;\n        System.out.println(a / b);\n    }\n}',
+  a:"3",why:"Integer division truncates. 7 / 2 is 3, not 3.5. To get a decimal you need at least one double operand."},
+ {q:"What does this print?",code:'public class Main {\n    public static void main(String[] args) {\n        String s = "Java";\n        s.concat(" rocks");\n        System.out.println(s);\n    }\n}',
+  a:"Java",why:"Strings are immutable. concat() returns a NEW string; it does not modify s. You would need s = s.concat(...)."},
+ {q:"What does this print?",code:'public class Main {\n    public static void main(String[] args) {\n        int i = 0;\n        System.out.println(i++);\n        System.out.println(i);\n    }\n}',
+  a:"0\n1",why:"i++ is post-increment: it yields the old value, then increments. So the first line prints 0 and i becomes 1."},
+ {q:"What does this print?",code:'public class Main {\n    public static void main(String[] args) {\n        System.out.println(0.1 + 0.2 == 0.3);\n    }\n}',
+  a:"false",why:"Binary floating point cannot represent 0.1 or 0.2 exactly. Compare doubles with a tolerance, or use BigDecimal for money."},
+ {q:"What does this print?",code:'public class Main {\n    public static void main(String[] args) {\n        String a = "hi";\n        String b = "hi";\n        System.out.println(a == b);\n        System.out.println(a.equals(b));\n    }\n}',
+  a:"true\ntrue",why:"Both are string literals, so they share the same object from the string pool — == happens to work here. With new String(\"hi\") it would print false. Always use equals() for content."},
+ {q:"What does this print?",code:'public class Main {\n    public static void main(String[] args) {\n        int[] arr = new int[3];\n        System.out.println(arr[0]);\n    }\n}',
+  a:"0",why:"Java initialises numeric array elements to 0, booleans to false, and object references to null. There is no uninitialised memory as in C."},
+ {q:"What does this print?",code:'public class Main {\n    public static void main(String[] args) {\n        for (int i = 0; i < 3; i++) {\n            if (i == 1) continue;\n            System.out.print(i);\n        }\n    }\n}',
+  a:"02",why:"continue skips the rest of that iteration only. i == 1 is skipped, so 0 and 2 print with no separator because print does not add a newline."},
+ {q:"What does this print?",code:'public class Main {\n    public static void main(String[] args) {\n        System.out.println(10 + 20 + "30");\n        System.out.println("10" + 20 + 30);\n    }\n}',
+  a:"3030\n102030",why:"+ evaluates left to right. In the first, 10+20 is numeric addition giving 30, then string concatenation. In the second, everything after the string is concatenated."},
+ {q:"What does this print?",code:'public class Main {\n    static void change(int x) { x = 99; }\n    public static void main(String[] args) {\n        int n = 5;\n        change(n);\n        System.out.println(n);\n    }\n}',
+  a:"5",why:"Java is strictly pass-by-value. change() receives a copy, so the caller's n is untouched. Objects behave differently — the reference is copied, so their contents CAN be changed."},
+ {q:"What does this print?",code:'public class Main {\n    public static void main(String[] args) {\n        StringBuilder sb = new StringBuilder("ab");\n        sb.append("c");\n        System.out.println(sb);\n    }\n}',
+  a:"abc",why:"StringBuilder is mutable, unlike String. This is why you use it for concatenation inside loops — String would create a new object every iteration."},
+ {q:"What does this print?",code:'import java.util.*;\npublic class Main {\n    public static void main(String[] args) {\n        List<Integer> l = new ArrayList<>();\n        l.add(3); l.add(1); l.add(2);\n        Collections.sort(l);\n        System.out.println(l);\n    }\n}',
+  a:"[1, 2, 3]",why:"Collections.sort sorts in place. ArrayList prints with square brackets and comma-space separators."},
+ {q:"What does this print?",code:'import java.util.*;\npublic class Main {\n    public static void main(String[] args) {\n        Map<String,Integer> m = new HashMap<>();\n        m.put("a", 1);\n        m.put("a", 2);\n        System.out.println(m.size());\n    }\n}',
+  a:"1",why:"Map keys are unique. Putting the same key twice replaces the value rather than adding an entry."},
+ {q:"What does this print?",code:'public class Main {\n    public static void main(String[] args) {\n        try {\n            System.out.println(1 / 0);\n        } catch (ArithmeticException e) {\n            System.out.println("caught");\n        } finally {\n            System.out.println("finally");\n        }\n    }\n}',
+  a:"caught\nfinally",why:"Integer division by zero throws ArithmeticException. finally always runs, whether or not an exception occurred."},
+ {q:"What does this print?",code:'public class Main {\n    public static void main(String[] args) {\n        String s = null;\n        System.out.println("value: " + s);\n    }\n}',
+  a:"value: null",why:"String concatenation converts null to the text \"null\" rather than throwing. Calling a method on s would throw NullPointerException."},
+ {q:"What does this print?",code:'class Animal { String speak() { return "..."; } }\nclass Dog extends Animal { String speak() { return "Woof"; } }\npublic class Main {\n    public static void main(String[] args) {\n        Animal a = new Dog();\n        System.out.println(a.speak());\n    }\n}',
+  a:"Woof",why:"Runtime polymorphism. The reference type is Animal but the object is a Dog, and Java dispatches on the actual object type."},
+ {q:"What does this print?",code:'public class Main {\n    public static void main(String[] args) {\n        System.out.println("abc".length() + "abc".charAt(1));\n    }\n}',
+  a:"101",why:"length() gives 3 and charAt(1) gives the char 'b'. Adding an int to a char promotes the char to its code point 98, so 3 + 98 = 101."},
+ {q:"What does this print?",code:'public class Main {\n    public static void main(String[] args) {\n        int x = 5;\n        System.out.println(x > 3 ? "big" : "small");\n    }\n}',
+  a:"big",why:"The ternary operator: condition ? valueIfTrue : valueIfFalse. Useful for short branches, but avoid nesting them."},
+ {q:"What does this print?",code:'public class Main {\n    public static void main(String[] args) {\n        System.out.println(Math.round(-2.5));\n    }\n}',
+  a:"-2",why:"Math.round adds 0.5 then floors, so -2.5 becomes -2, not -3. This asymmetry catches people out regularly."},
+ {q:"What does this print?",code:'import java.util.*;\npublic class Main {\n    public static void main(String[] args) {\n        Set<String> s = new HashSet<>();\n        s.add("x"); s.add("x"); s.add("y");\n        System.out.println(s.size());\n    }\n}',
+  a:"2",why:"A Set stores only unique elements. Adding a duplicate is silently ignored."},
+ {q:"What does this print?",code:'public class Main {\n    public static void main(String[] args) {\n        int[] a = {1,2,3};\n        int[] b = a;\n        b[0] = 99;\n        System.out.println(a[0]);\n    }\n}',
+  a:"99",why:"Arrays are objects. b = a copies the reference, not the contents, so both names point at the same array. Use Arrays.copyOf() for a real copy."}
+];
+var JAVA_SETUP=[
+ {t:"1 · Install a JDK",d:"Download Temurin (Eclipse Adoptium) or Oracle JDK 21. Verify with java -version and javac -version in a terminal. If javac is missing you installed a JRE rather than a JDK."},
+ {t:"2 · Pick an editor",d:"IntelliJ IDEA Community Edition is free and by far the smoothest for Java. VS Code with the Extension Pack for Java is lighter if you already use it."},
+ {t:"3 · Your first program",d:"Create Main.java with a public class Main and a main method. Compile with javac Main.java, then run with java Main — note there is no .class extension on the run command."},
+ {t:"4 · The filename rule",d:"A public class must live in a file of exactly the same name. Class Main means the file must be Main.java. This trips up nearly every beginner once."},
+ {t:"5 · Use the debugger early",d:"IntelliJ's debugger is excellent. Set a breakpoint, step line by line, and watch the variables change. It teaches more than any amount of println."},
+ {t:"6 · Learn the build tools eventually",d:"Maven or Gradle handle dependencies and packaging. Not needed for week one, but essential for anything real."}
+];
+var JAVA_PRACTICE=[
+ ["Oracle Java Tutorials","The official course. Dry but authoritative and complete.","https://docs.oracle.com/javase/tutorial/"],
+ ["Exercism — Java track","Free exercises with mentor feedback. Runs locally with a test suite.","https://exercism.org/tracks/java"],
+ ["HackerRank — Java","Structured problems with an in-browser compiler, from basics upward.","https://www.hackerrank.com/domains/java"],
+ ["LeetCode","Interview-style problems, full Java support in the browser.","https://leetcode.com/problemset/"],
+ ["Baeldung","The best practical Java reference on the web for real-world tasks.","https://www.baeldung.com/"],
+ ["Java Visualizer","Step through Java code and see the stack and heap update live. Excellent for understanding references.","https://cscircles.cemc.uwaterloo.ca/java_visualize/"]
+];
+function renderJavaHub(){
+  var host=document.getElementById("javaHub"); if(!host) return; clr(host);
+  var box=document.getElementById("javaBox");
+  if(box) box.hidden=(curLang()!=="java");
+  if(curLang()!=="java") return;
+
+  var intro=document.createElement("div"); intro.className="warn";
+  intro.style.cssText="border-color:var(--cyan);background:var(--cyan-soft);color:var(--ink2)";
+  intro.textContent="Java needs a JVM, which a browser does not have — so instead of a half-working compiler, Java is taught three ways: trace-the-output questions that ARE auto-checked here, a local setup guide, and curated places to practise with a real compiler.";
+  host.appendChild(intro);
+
+  /* trace-the-output practice */
+  var th=document.createElement("div"); th.className="specl"; th.style.marginBlockStart="16px";
+  th.textContent="Trace the output — "+JAVA_TRACE.length+" questions, checked here";
+  host.appendChild(th);
+  var hint=document.createElement("p"); hint.className="hint";
+  hint.textContent="Read the code, work out exactly what it prints, and type your answer. This is how interviews test Java, and it builds a mental model faster than typing code you already understand.";
+  host.appendChild(hint);
+
+  var idx=ui.jtIdx||0;
+  if(idx>=JAVA_TRACE.length) idx=0;
+  var Q=JAVA_TRACE[idx];
+  var card=document.createElement("div"); card.className="qpanel";
+  var top=document.createElement("div"); top.className="rowb";
+  var lb=document.createElement("span"); lb.className="qlab"; lb.textContent="QUESTION "+(idx+1)+" OF "+JAVA_TRACE.length;
+  top.appendChild(lb);
+  var sp=document.createElement("span"); sp.className="sp"; top.appendChild(sp);
+  var solved=(S.javaTrace&&S.javaTrace[idx])?true:false;
+  if(solved){ var dn=document.createElement("span"); dn.className="tag g"; dn.textContent="✓ answered"; top.appendChild(dn); }
+  card.appendChild(top);
+  var qq=document.createElement("div"); qq.className="qtext"; qq.textContent=Q.q; card.appendChild(qq);
+  var pre=document.createElement("div"); pre.className="specout"; pre.textContent=Q.code; card.appendChild(pre);
+  var lab2=document.createElement("div"); lab2.className="specl"; lab2.style.marginBlockStart="11px";
+  lab2.textContent="Your answer — exactly what it prints"; card.appendChild(lab2);
+  var ta=document.createElement("textarea"); ta.id="jtAns"; ta.rows=2; ta.className="expbox";
+  ta.placeholder="Type the exact output, line by line…";
+  ta.value=(S.javaTraceAns&&S.javaTraceAns[idx])||"";
+  card.appendChild(ta);
+  var acts=document.createElement("div"); acts.className="rowb"; acts.style.marginBlockStart="10px";
+  [["✓ Check answer","jtcheck"],["← Previous","jtprev"],["Next →","jtnext"]].forEach(function(p,i){
+    var b=document.createElement("button"); b.type="button"; b.className="btn xs"+(i===0?" pri":"");
+    b.textContent=p[0]; b.setAttribute("data-do",p[1]); acts.appendChild(b);
+  });
+  card.appendChild(acts);
+  var res=document.createElement("div"); res.id="jtResult"; card.appendChild(res);
+  host.appendChild(card);
+
+  /* setup guide */
+  var sh=document.createElement("div"); sh.className="specl"; sh.style.marginBlockStart="20px";
+  sh.textContent="Set up Java locally"; host.appendChild(sh);
+  JAVA_SETUP.forEach(function(f){
+    var d=document.createElement("div"); d.className="fact";
+    var a=document.createElement("div"); a.className="factt"; a.textContent=f.t;
+    var b=document.createElement("div"); b.className="factd"; b.textContent=f.d;
+    d.appendChild(a); d.appendChild(b); host.appendChild(d);
+  });
+
+  /* external practice */
+  var ph=document.createElement("div"); ph.className="specl"; ph.style.marginBlockStart="18px";
+  ph.textContent="Practise with a real compiler"; host.appendChild(ph);
+  var pl=document.createElement("p"); pl.className="hint";
+  pl.textContent="These run Java properly on their own servers. Opens in a new tab.";
+  host.appendChild(pl);
+  JAVA_PRACTICE.forEach(function(r){
+    var d=document.createElement("div"); d.className="res";
+    var a=document.createElement("a"); a.className="rtitle"; a.href=r[2];
+    a.target="_blank"; a.rel="noopener noreferrer"; a.textContent=r[0];
+    var b=document.createElement("div"); b.className="tcd"; b.textContent=r[1];
+    d.appendChild(a); d.appendChild(b); host.appendChild(d);
+  });
+}
+function javaCheck(){
+  var idx=ui.jtIdx||0, Q=JAVA_TRACE[idx];
+  var ta=document.getElementById("jtAns"); if(!ta) return;
+  S.javaTraceAns=S.javaTraceAns||{}; S.javaTraceAns[idx]=ta.value;
+  var got=normOut(ta.value), want=normOut(Q.a);
+  var ok=got===want;
+  var host=document.getElementById("jtResult"); clr(host);
+  var box=document.createElement("div"); box.className="vbox "+(ok?"vok":"vno");
+  box.style.marginBlockStart="11px";
+  var h=document.createElement("div"); h.className="vh";
+  h.textContent=ok?"✓ Correct":"✗ Not quite";
+  box.appendChild(h);
+  if(ok){
+    S.javaTrace=S.javaTrace||{};
+    if(!S.javaTrace[idx]){
+      S.javaTrace[idx]=new Date().toISOString();
+      ev("done","Java trace solved: question "+(idx+1));
+      setTimeout(function(){ awardXP(15,"Java trace solved"); },150);
+    }
+  } else {
+    var g=document.createElement("div"); g.className="vp";
+    g.textContent="You answered: "+(got||"(nothing)");
+    box.appendChild(g);
+  }
+  var w=document.createElement("div"); w.className="specl"; w.style.marginBlockStart="9px";
+  w.textContent="Correct output"; box.appendChild(w);
+  var pre=document.createElement("div"); pre.className="specout"; pre.textContent=Q.a; box.appendChild(pre);
+  var why=document.createElement("div"); why.className="techfit"; why.textContent=Q.why;
+  box.appendChild(why);
+  host.appendChild(box);
+  save(); render();
+}
+
+/* ============ study science, quotes, facts ============ */
+var TECHNIQUES=[
+ {n:"Pomodoro Technique",icon:"🍅",who:"Francesco Cirillo, late 1980s",
+  what:"Work in a focused 25-minute block, then take a 5-minute break. After four blocks, take a longer 15–30 minute break.",
+  why:"A short, fixed commitment defeats the urge to procrastinate, and the enforced break stops the mental fatigue that quietly destroys comprehension.",
+  how:["Pick one question — not a vague 'study Python'.","Start the timer in the Code lab and work only on that.","When it rings, stop even mid-thought. That unfinished thread makes restarting easier.","Tick off the block. Four blocks is a genuinely productive evening."],
+  fit:"Perfect for your 20-minute daily target — one Pomodoro is your whole session."},
+ {n:"Spaced Repetition",icon:"🧠",who:"Hermann Ebbinghaus, 1885",
+  what:"Review material at widening intervals — one day, one week, one month — rather than cramming it once.",
+  why:"Ebbinghaus showed we forget roughly 70% of new material within a week. Each well-timed review flattens that curve dramatically.",
+  how:["Solve a question today.","Re-solve it tomorrow from a blank file.","Again in a week, then in a month.","Each successful recall pushes the next review further out."],
+  fit:"This is exactly what the Revision tab does automatically for you."},
+ {n:"Active Recall",icon:"🎯",who:"Well established in cognitive psychology",
+  what:"Retrieve the answer from memory instead of re-reading it.",
+  why:"Recognising code you have seen before feels like knowing it, but it is not the same skill. Retrieval is what builds durable memory.",
+  how:["Close the solution before you start.","Write the code from scratch, even if you saw it yesterday.","Struggling for 30 seconds before checking is where the learning happens.","Only look at the answer after a genuine attempt."],
+  fit:"Always start a revision from an empty editor — never from your saved solution."},
+ {n:"Feynman Technique",icon:"👨‍🏫",who:"Richard Feynman, Nobel laureate in physics",
+  what:"Explain the concept in plain language as though teaching a beginner. Wherever you stumble, that is your gap.",
+  why:"Fluent jargon can hide a shallow understanding. Simple words cannot.",
+  how:["Write the concept name at the top of a page.","Explain it as if to a twelve-year-old.","Notice exactly where you get vague or reach for jargon.","Go back to the source, then simplify again."],
+  fit:"Use the journal for this — two lines a day compounds into real understanding."},
+ {n:"Interleaving",icon:"🔀",who:"Robert Bjork, UCLA — 'desirable difficulties'",
+  what:"Mix different topics in one session rather than drilling one thing repeatedly.",
+  why:"Blocked practice feels smoother and produces worse retention. Mixing forces you to identify which approach a problem needs, which is the real skill.",
+  how:["Do one loops question, then one strings question, then one dictionary question.","Resist grouping by topic even though it feels harder.","It will feel worse and work better."],
+  fit:"Your scratch board surfaces older topics precisely to create this mix."},
+ {n:"Deliberate Practice",icon:"⚙️",who:"Anders Ericsson, 1993",
+  what:"Target the specific things you cannot yet do, with immediate feedback, at the edge of your ability.",
+  why:"Hours alone do not produce expertise. Focused effort on weaknesses does.",
+  how:["Work on what you get wrong, not what you already enjoy.","Use the failing test-case feedback rather than skipping past it.","Keep it slightly uncomfortable — comfortable means too easy."],
+  fit:"The weak-areas panel exists to point you at exactly these."},
+ {n:"Rubber Duck Debugging",icon:"🦆",who:"From 'The Pragmatic Programmer', 1999",
+  what:"Explain your broken code line by line, out loud, to an inanimate object.",
+  why:"Articulating the logic forces you to check each assumption. Most bugs surface mid-sentence.",
+  how:["Read the code aloud, line by line.","Say what each line is supposed to do.","The moment you say 'wait…' you have found it."],
+  fit:"Try it before reaching for a hint on a failing test case."},
+ {n:"The 2-Minute Rule",icon:"⏱️",who:"David Allen, 'Getting Things Done'",
+  what:"If starting takes under two minutes, start now.",
+  why:"Starting is almost always the hardest part. Two minutes of momentum usually turns into twenty.",
+  how:["Tell yourself you will only open the editor.","Read one question.","You will nearly always keep going."],
+  fit:"The minimum daily goal of one question is built on this idea."},
+ {n:"Sleep Consolidation",icon:"😴",who:"Matthew Walker, 'Why We Sleep'",
+  what:"Memory moves into long-term storage during deep sleep. Learning without sleep largely does not stick.",
+  why:"A late-night cram session with poor sleep can be worse than a shorter session followed by proper rest.",
+  how:["Study earlier in the evening where possible.","Do a five-minute review just before bed — it is well retained.","Protect seven or more hours. It is study time, not lost time."],
+  fit:"If it is late and you are tired, one short question beats forcing an hour."},
+ {n:"Time Blocking",icon:"📅",who:"Cal Newport, 'Deep Work'",
+  what:"Give a task a specific slot in the day rather than a place on a list.",
+  why:"Unscheduled intentions lose to whatever is urgent. A slot in the calendar wins.",
+  how:["Pick a consistent 20-minute window.","Attach it to something existing — after dinner, before the commute.","Protect it the way you would a meeting."],
+  fit:"Consistency at a fixed time beats a longer session at a random one."}
+];
+var QUOTES=[
+ ["Programs must be written for people to read, and only incidentally for machines to execute.","Harold Abelson","MIT computer scientist"],
+ ["The only way to learn a new programming language is by writing programs in it.","Dennis Ritchie","Creator of C"],
+ ["Simplicity is prerequisite for reliability.","Edsger W. Dijkstra","Turing Award winner"],
+ ["Talk is cheap. Show me the code.","Linus Torvalds","Creator of Linux and Git"],
+ ["First, solve the problem. Then, write the code.","John Johnson","Software engineer"],
+ ["Any fool can write code that a computer can understand. Good programmers write code that humans can understand.","Martin Fowler","Author of Refactoring"],
+ ["Truth can only be found in one place: the code.","Robert C. Martin","Author of Clean Code"],
+ ["It is not that I'm so smart, it's just that I stay with problems longer.","Albert Einstein","Physicist"],
+ ["I have not failed. I've just found 10,000 ways that won't work.","Thomas Edison","Inventor"],
+ ["The important thing is not to stop questioning.","Albert Einstein","Physicist"],
+ ["Nothing in life is to be feared, it is only to be understood.","Marie Curie","Two-time Nobel laureate"],
+ ["What I cannot create, I do not understand.","Richard Feynman","Nobel laureate in physics"],
+ ["Study hard what interests you the most in the most undisciplined, irreverent and original manner possible.","Richard Feynman","Nobel laureate in physics"],
+ ["Premature optimization is the root of all evil.","Donald Knuth","Author of The Art of Computer Programming"],
+ ["Everybody in this country should learn to program a computer, because it teaches you how to think.","Steve Jobs","Co-founder of Apple"],
+ ["The computer was born to solve problems that did not exist before.","Bill Gates","Co-founder of Microsoft"],
+ ["Debugging is twice as hard as writing the code in the first place.","Brian Kernighan","Co-author of The C Programming Language"],
+ ["Testing shows the presence, not the absence of bugs.","Edsger W. Dijkstra","Turing Award winner"],
+ ["Make it work, make it right, make it fast.","Kent Beck","Creator of Extreme Programming"],
+ ["Science is a way of thinking much more than it is a body of knowledge.","Carl Sagan","Astronomer"],
+ ["Somewhere, something incredible is waiting to be known.","Carl Sagan","Astronomer"],
+ ["An expert is a person who has made all the mistakes that can be made in a very narrow field.","Niels Bohr","Nobel laureate in physics"],
+ ["If I have seen further it is by standing on the shoulders of giants.","Isaac Newton","Physicist and mathematician"],
+ ["Perfection is achieved not when there is nothing more to add, but when there is nothing left to take away.","Antoine de Saint-Exupéry","Writer and aviator"],
+ ["Controlling complexity is the essence of computer programming.","Brian Kernighan","Computer scientist"],
+ ["A language that doesn't affect the way you think about programming is not worth knowing.","Alan Perlis","First Turing Award winner"],
+ ["The best error message is the one that never shows up.","Thomas Fuchs","Developer"],
+ ["Code is like humour. When you have to explain it, it's bad.","Cory House","Developer"],
+ ["The most disastrous thing that you can ever learn is your first programming language.","Alan Kay","Pioneer of object-oriented programming"],
+ ["Learning never exhausts the mind.","Leonardo da Vinci","Polymath"]
+];
+var LANG_FACTS={
+ python:[
+  {t:"Created in 1991 by Guido van Rossum",d:"He began it as a Christmas hobby project in December 1989 while at CWI in the Netherlands, wanting a language that bridged shell scripting and C."},
+  {t:"Named after Monty Python",d:"Not the snake. Van Rossum was reading Monty Python's Flying Circus scripts and wanted a name that was short, unique and slightly mysterious."},
+  {t:"Why it exists",d:"Its predecessor ABC was elegant but could not talk to the operating system. Python was built to keep the readability while being genuinely useful for real systems work."},
+  {t:"Indentation is deliberate",d:"Most languages let formatting and logic disagree. Python makes the visual structure the actual structure, so code that looks right generally is right."},
+  {t:"The Zen of Python",d:"Type import this in any Python interpreter for 19 guiding aphorisms written by Tim Peters — 'Readable counts' and 'Simple is better than complex' among them."},
+  {t:"Powers a huge amount of the modern world",d:"Instagram, Spotify, Netflix, NASA and most machine-learning research run substantially on Python."}],
+ c:[
+  {t:"Created in 1972 by Dennis Ritchie",d:"Built at Bell Labs to rewrite the Unix operating system, which until then was written in assembly and could not be moved between machines."},
+  {t:"Why it exists",d:"Unix needed to be portable. C gave low-level control comparable to assembly while remaining readable and machine-independent — a genuinely new combination."},
+  {t:"The ancestor of nearly everything",d:"C++, Java, C#, JavaScript, Go, Rust and Python's own interpreter all inherit C's syntax or are implemented in it."},
+  {t:"Deliberately small",d:"C has roughly 32 keywords. Almost everything else lives in libraries — a design choice that keeps the language learnable and the compiler simple."},
+  {t:"Still everywhere",d:"Linux, Windows kernels, embedded devices, car firmware and space hardware are overwhelmingly C. It has been in continuous production use for over 50 years."},
+  {t:"'Hello, World!' started here",d:"The phrase was popularised by Kernighan and Ritchie's 1978 book, and is now the traditional first program in every language."}],
+ cpp:[
+  {t:"Created in 1979 by Bjarne Stroustrup",d:"He started it as 'C with Classes' while working on his PhD, wanting Simula's object-oriented design with C's speed."},
+  {t:"Why it exists",d:"Stroustrup had used Simula, which was expressive but slow, and BCPL, which was fast but unstructured. C++ was an attempt to stop choosing between the two."},
+  {t:"Named with a joke",d:"++ is C's increment operator, so C++ literally means 'one better than C'."},
+  {t:"Zero-overhead principle",d:"A core design rule: you should not pay in performance for features you do not use. It is why C++ remains dominant in games and finance."},
+  {t:"The STL changed everything",d:"Alexander Stepanov's Standard Template Library brought generic programming into the mainstream — write an algorithm once, use it with any container."},
+  {t:"Where it runs",d:"Unreal Engine, Adobe Photoshop, most browsers, high-frequency trading systems and the Mars rovers."}],
+ java:[
+  {t:"Created in 1995 by James Gosling",d:"Developed at Sun Microsystems, originally for interactive television — an application that turned out to be far ahead of the available hardware."},
+  {t:"Write Once, Run Anywhere",d:"Java compiles to bytecode that runs on a virtual machine rather than to native code, so the same program runs unchanged across operating systems."},
+  {t:"Why it exists",d:"C++ programs had to be recompiled for every platform, and manual memory management produced constant crashes. Java added portability and garbage collection."},
+  {t:"Originally called Oak",d:"Named after a tree outside Gosling's window, then renamed Java after the coffee — the trademark was already taken."},
+  {t:"Runs at enormous scale",d:"Android apps, most banking systems, Netflix's backend and much of enterprise software. Billions of devices run a JVM."},
+  {t:"Not related to JavaScript",d:"The name was a marketing decision during a partnership. The two languages are entirely unrelated in design and lineage."}],
+ js:[
+  {t:"Created in just 10 days, in 1995",d:"Brendan Eich wrote the first version at Netscape in ten days under intense deadline pressure. Many of its quirks trace directly to that."},
+  {t:"Why it exists",d:"Web pages were completely static. Netscape wanted a lightweight scripting language so designers could add interactivity without writing Java applets."},
+  {t:"Renamed for marketing",d:"It was Mocha, then LiveScript, then JavaScript — renamed to ride the hype around Java, with which it shares almost nothing."},
+  {t:"The only browser language",d:"Every browser on earth runs JavaScript and nothing else natively. That accident of history made it the most widely deployed language ever written."},
+  {t:"It escaped the browser",d:"Node.js took the V8 engine out of Chrome in 2009, making JavaScript viable for servers, desktop apps and command-line tools."},
+  {t:"ECMAScript is the real name",d:"'JavaScript' is trademarked, so the standard is formally called ECMAScript. ES6 in 2015 was the release that modernised the language."}]
+};
+var STUDY_TIPS=[
+ {c:"Focus",icon:"🎯",tips:[
+  "Put your phone in another room. Face-down on the desk is measurably not enough.",
+  "One question at a time. Close every other tab.",
+  "If you are stuck for more than 15 minutes, take the hint. Struggling has a point of diminishing returns.",
+  "Work at the same time each day — the habit does the hard part for you.",
+  "Background music without lyrics, or none at all. Lyrics compete with the language centres you are using to read code."]},
+ {c:"Retention",icon:"🧠",tips:[
+  "Always re-solve from a blank file. Reading your old solution teaches you almost nothing.",
+  "Explain the solution out loud after solving it. If you cannot, you have not understood it.",
+  "Write down what confused you, not just what worked.",
+  "Review just before sleep — that material is consolidated overnight.",
+  "Space your reviews. Four short sessions beat one long one, reliably."]},
+ {c:"When stuck",icon:"🔍",tips:[
+  "Read the error message properly. It usually names the line and the problem.",
+  "Print the intermediate values. Assumptions about what a variable holds are where most bugs live.",
+  "Shrink the input. If it fails on 100 items, try 2.",
+  "Explain it to a rubber duck, out loud, line by line.",
+  "Walk away for ten minutes. The solution arriving in the shower is a real and well-documented phenomenon."]},
+ {c:"Consistency",icon:"🔥",tips:[
+  "One question a day beats seven on a Sunday. Every time.",
+  "Missing a day is fine. Missing two starts to become the new pattern.",
+  "Lower the bar on bad days rather than skipping entirely — read one theory section.",
+  "Track it visibly. The heatmap exists because seeing the gaps works.",
+  "Never break the chain twice."]},
+ {c:"Deep work",icon:"⚡",tips:[
+  "Decide what you are working on before you sit down, not after.",
+  "25 focused minutes genuinely beats two distracted hours.",
+  "Keep a scrap file for stray thoughts so they stop interrupting you.",
+  "Finish mid-problem rather than at a natural end — restarting is much easier.",
+  "Protect your best hours for the hardest material."]},
+ {c:"Long term",icon:"🌱",tips:[
+  "Build things, do not just solve exercises. Projects expose gaps that questions never will.",
+  "Read other people's code — it is the fastest way to learn idiom.",
+  "Teach someone. It is the strongest test of understanding there is.",
+  "Keep every solution. In six months your own archive becomes your best reference.",
+  "Compare yourself to yourself last month, never to someone else's timeline."]}
+];
+/* targeted guidance driven by your actual weak topics */
+var TOPIC_HELP={
+ "Loops":["Off-by-one errors are the classic trap: range(1, n) stops at n-1.","Print the loop variable on the first pass to confirm where it starts.","If a while loop hangs, you almost certainly forgot to change the counter."],
+ "For Loops":["range(a, b) excludes b. To include it, use b+1.","Set the accumulator before the loop, never inside it.","Use enumerate() when you need both the index and the value."],
+ "While Loops":["Something inside the loop must eventually make the condition false.","Check the boundary carefully: < stops one earlier than <=.","Use break for an early exit rather than a flag variable."],
+ "Lists":["Indexing starts at 0. The last item is [-1].","sorted(x) returns a new list; x.sort() changes it in place.","Never remove items from a list while looping over that same list."],
+ "Dictionaries":["Use .get(key, default) instead of [key] to avoid KeyError.","Counting pattern: d[k] = d.get(k, 0) + 1.","Loop with .items() when you need both key and value."],
+ "Strings":["Strings are immutable — every method returns a NEW string.","s[::-1] reverses. s[a:b] slices.","Remember .strip() when comparing anything read from input or a file."],
+ "Functions":["return sends a value back; print only displays it. They are not interchangeable.","A function without return gives you None.","Keep each function doing one thing."],
+ "Error handling":["Catch the specific exception, never a bare except.","Keep the try block as small as possible so you know what failed.","finally always runs — use it for cleanup."],
+ "Conditions":["Use == to compare, = to assign.","Check the boundary: is 40 a pass, or only 41?","Cover every case including zero and the empty value."],
+ "Sets":["Sets have no order and no indexing.","{} creates a dict — use set() for an empty set.","Use them to deduplicate: set(mylist)."],
+ "Classes":["self is always the first parameter of an instance method.","__init__ runs when the object is created.","Instance attributes belong on self, not on the class body."],
+ "Pandas basics":["Check .shape and .info() before anything else.","Most operations return a new DataFrame — assign the result.","Use .copy() when you need an independent copy."],
+ "Recursion":["Every recursive function needs a base case, written first.","Each call must move toward that base case.","If it hangs, your base case is unreachable."]
+};
+function topicHelpFor(topic){
+  if(!topic) return null;
+  if(TOPIC_HELP[topic]) return TOPIC_HELP[topic];
+  var keys=Object.keys(TOPIC_HELP);
+  for(var i=0;i<keys.length;i++){
+    if(topic.indexOf(keys[i])>=0||keys[i].indexOf(topic)>=0) return TOPIC_HELP[keys[i]];
+  }
+  return null;
+}
+function dailyIndex(len){
+  var d=new Date();
+  var n=d.getFullYear()*372+d.getMonth()*31+d.getDate();
+  return n%len;
+}
+
+/* ============ multi-language tracks ============ */
+function langKey(lang,w,kind,i){ return "lt:"+lang+":"+w+":"+kind+":"+i; }
+function langItems(W){
+  var out=[];
+  (W.cover||[]).forEach(function(c,ci){ out.push({kind:"learn",label:"Learn: "+c,day:Math.min(3,Math.floor(ci/2)),min:6,idx:"c"+ci}); });
+  (W.qs||[]).forEach(function(q,qi){ out.push({kind:"practice",label:q,day:qi%4,min:15,idx:"q"+qi}); });
+  if(W.project) out.push({kind:"project",label:"Project: "+W.project,day:4,min:60,idx:"p0"});
+  return out;
+}
+function langFind(lang,W,it){ 
+  var k=langKey(lang,W.w,it.idx,0);
+  for(var i=0;i<S.tasks.length;i++) if(S.tasks[i].road===k) return S.tasks[i];
+  return null;
+}
+function langLoad(lang,wnum,silent){
+  var T=LANG_TRACKS[lang]; if(!T) return 0;
+  var base=rdStartDate(), added=0;
+  T.weeks.forEach(function(W){
+    if(wnum&&W.w!==wnum) return;
+    var ws=addD(base,(W.w-1)*7);
+    langItems(W).forEach(function(it){
+      if(langFind(lang,W,it)) return;
+      var t=addTask({title:it.label,topic:W.title,lang:T.name,
+        diff:rateDifficulty(it,W),
+        due:iso(addD(ws,DAYMAP[Math.min(4,it.day)])),
+        notes:T.name+" · Week "+W.w+" — "+W.title});
+      t.road=langKey(lang,W.w,it.idx,0); t.type=it.kind; t.track=lang; t.est=it.min;
+      added++;
+    });
+  });
+  save();
+  if(!silent&&added) toast("Opened "+added+" "+T.name+" items");
+  return added;
+}
+function langStats(lang){
+  var T=LANG_TRACKS[lang]; if(!T) return {total:0,open:0,done:0};
+  var total=0,open=0,done=0;
+  T.weeks.forEach(function(W){ langItems(W).forEach(function(it){
+    total++; var t=langFind(lang,W,it); if(t){ open++; if(t.status==="done") done++; } }); });
+  return {total:total,open:open,done:done};
+}
+/* ---- rolling auto-load: keep a healthy queue of unsolved work ----
+   Whenever fewer than KEEP_OPEN items remain unsolved for the active
+   language, open the next week automatically. No manual button needed. */
+var KEEP_OPEN=7;
+function autoTopUp(lang){
+  lang=lang||curLang();
+  var opened=0,guard=0;
+  while(guard++<6){
+    var unsolved;
+    if(lang==="python"){
+      unsolved=S.tasks.filter(function(t){
+        return t.status!=="done"&&(!t.track||t.track==="mypath"); }).length;
+      if(unsolved>=KEEP_OPEN) break;
+      if(!openNextWeek()) break;
+      opened++;
+    } else {
+      unsolved=S.tasks.filter(function(t){
+        return t.status!=="done"&&t.track===lang; }).length;
+      if(unsolved>=KEEP_OPEN) break;
+      var T=LANG_TRACKS[lang]; if(!T) break;
+      var nextW=null;
+      for(var i=0;i<T.weeks.length&&!nextW;i++){
+        var W=T.weeks[i];
+        if(langItems(W).some(function(it){ return !langFind(lang,W,it); })) nextW=W;
+      }
+      if(!nextW) break;
+      var got=langLoad(lang,nextW.w,true);
+      if(!got) break;
+      ev("road",T.name+" Week "+nextW.w+" opened automatically: "+nextW.title);
+      opened++;
+    }
+  }
+  if(opened) save();
+  return opened;
+}
+function curLang(){ return S.settings.lang||"python"; }
+function setLang(l){
+  S.settings.lang=l; ui.lang=l; save();
+  autoTopUp(l);
+  render();
+  var T=l==="python"?{name:"Python",icon:"🐍"}:LANG_TRACKS[l];
+  toast((T?T.icon+" ":"")+"Switched to "+(T?T.name:l));
+}
+function langMeta(l){
+  if(l==="python") return {name:"Python",icon:"🐍"};
+  return LANG_TRACKS[l]||{name:l,icon:"•"};
+}
+function renderLangBar(){
+  var host=document.getElementById("langBar"); if(!host) return; clr(host);
+  ["python","c","cpp","java","js"].forEach(function(l){
+    var m=langMeta(l), st=(l==="python")?null:langStats(l);
+    var b=document.createElement("button"); b.type="button";
+    b.className="langbtn"+(curLang()===l?" on":"");
+    b.setAttribute("data-setlang",l);
+    var ic=document.createElement("span"); ic.className="lgi"; ic.textContent=m.icon;
+    var nm=document.createElement("span"); nm.className="lgn"; nm.textContent=m.name;
+    b.appendChild(ic); b.appendChild(nm);
+    if(st&&st.open){ var pc=document.createElement("span"); pc.className="lgp";
+      pc.textContent=st.done+"/"+st.open; b.appendChild(pc); }
+    host.appendChild(b);
+  });
+}
+
+/* ============ scratch board / watchlist ============ */
+/* Topics you flag get resurfaced on a widening schedule. Nothing is ever
+   "late" — an item simply becomes due, and stays due until you touch it.  */
+var WATCH_STEPS=[3,7,14,30,60];   /* days between resurfacings */
+var WATCH_COLD=7;                  /* untouched for this long -> pull questions in */
+
+function watchList(){ return (S.watch=S.watch||[]); }
+function watchAdd(topic,note){
+  topic=(topic||"").trim(); if(!topic) return null;
+  var list=watchList();
+  for(var i=0;i<list.length;i++) if(list[i].topic.toLowerCase()===topic.toLowerCase()){
+    if(note) list[i].note=note;
+    toast("Already on your board"); return list[i];
+  }
+  var w={id:uid(),topic:topic,note:note||"",added:new Date().toISOString(),
+         lastSeen:null,step:0,pulled:0};
+  list.push(w); ev("watch","Added to scratch board: "+topic);
+  return w;
+}
+function watchTasks(w){
+  var t=w.topic.toLowerCase();
+  return S.tasks.filter(function(x){
+    var tp=(x.topic||"").toLowerCase();
+    return tp===t || tp.indexOf(t)>=0 || t.indexOf(tp)>=0;
+  });
+}
+/* the last time you actually completed something in this topic */
+function watchActivity(w){
+  var last=w.lastSeen;
+  watchTasks(w).forEach(function(x){
+    if(x.status==="done"&&x.completedAt&&(!last||x.completedAt>last)) last=x.completedAt;
+  });
+  return last;
+}
+function daysSince(iso2){
+  if(!iso2) return null;
+  return Math.floor((Date.now()-new Date(iso2).getTime())/864e5);
+}
+function watchState(w){
+  var last=watchActivity(w), d=daysSince(last);
+  var wait=WATCH_STEPS[Math.min(w.step,WATCH_STEPS.length-1)];
+  if(d===null) return {k:"new",d:null,wait:wait,label:"never studied",due:true};
+  if(d>=WATCH_COLD&&!last) return {k:"cold",d:d,wait:wait,label:d+" days untouched",due:true};
+  if(d>=wait) return {k:"due",d:d,wait:wait,label:"ready to revise · "+d+" days since last time",due:true};
+  return {k:"resting",d:d,wait:wait,label:"next nudge in "+(wait-d)+" day"+((wait-d)===1?"":"s"),due:false};
+}
+/* pull unsolved questions for a topic to the front of the queue */
+function watchPull(w,silent){
+  var all=watchTasks(w);
+  var open=all.filter(function(x){ return x.status!=="done"; });
+  if(open.length){
+    open.slice(0,3).forEach(function(x){ x.due=today(); });
+    w.pulled=(w.pulled||0)+Math.min(3,open.length);
+    if(!silent) ev("watch","Surfaced "+Math.min(3,open.length)+" question(s) from "+w.topic);
+    save();
+    return Math.min(3,open.length);
+  }
+  /* everything solved — schedule the solved ones as revisions instead */
+  var solved=all.filter(function(x){ return x.status==="done"&&!(x.rev||[]).some(function(r){return !r.done;}); });
+  if(solved.length){
+    solved.slice(0,2).forEach(function(x){ scheduleRevision(x,0); });
+    if(!silent) ev("watch","Queued revision for "+w.topic);
+    save();
+    return solved.length?Math.min(2,solved.length):0;
+  }
+  return 0;
+}
+/* run on load: anything due gets surfaced automatically */
+function watchSweep(){
+  var n=0;
+  watchList().forEach(function(w){
+    var st=watchState(w);
+    if(st.due && w.lastPull!==today()){
+      var got=watchPull(w,true);
+      if(got){ w.lastPull=today(); n+=got; }
+    }
+  });
+  if(n) save();
+  return n;
+}
+function watchTouch(id){
+  var w=watchList().filter(function(x){return x.id===id;})[0];
+  if(!w) return;
+  w.lastSeen=new Date().toISOString();
+  w.step=Math.min(w.step+1,WATCH_STEPS.length-1);
+  w.lastPull=null;
+  save(); renderWatch();
+  toast("Marked as revised — back in "+WATCH_STEPS[w.step]+" days");
+}
+function renderWatch(){
+  var host=document.getElementById("watchList"); if(!host) return; clr(host);
+  var list=watchList();
+  if(!list.length){
+    var e=document.createElement("div"); e.className="empty";
+    var big=document.createElement("span"); big.className="big"; big.textContent="📌";
+    e.appendChild(big);
+    e.appendChild(document.createTextNode("Nothing on your board yet. Add any topic you want to come back to — it will resurface on its own."));
+    host.appendChild(e);
+  }
+  var order={new:0,cold:1,due:2,resting:3};
+  list.slice().sort(function(a,b){
+    var sa=watchState(a), sb=watchState(b);
+    return (order[sa.k]-order[sb.k]) || ((sb.d||0)-(sa.d||0));
+  }).forEach(function(w){
+    var st=watchState(w), all=watchTasks(w);
+    var done=all.filter(function(x){return x.status==="done";}).length;
+    var row=document.createElement("div"); row.className="wrow "+("w"+st.k);
+    var top=document.createElement("div"); top.className="wtop";
+    var dot=document.createElement("span"); dot.className="wdot";
+    dot.textContent=st.k==="resting"?"🌱":st.k==="new"?"✨":"🔔";
+    var nm=document.createElement("span"); nm.className="wname"; nm.textContent=w.topic;
+    top.appendChild(dot); top.appendChild(nm);
+    var sp=document.createElement("span"); sp.className="sp"; top.appendChild(sp);
+    var tg=document.createElement("span");
+    tg.className="tag "+(st.k==="resting"?"g":st.k==="new"?"c":"y");
+    tg.textContent=st.label; top.appendChild(tg);
+    row.appendChild(top);
+    if(w.note){ var nt=document.createElement("div"); nt.className="wnote"; nt.textContent=w.note; row.appendChild(nt); }
+    var meta=document.createElement("div"); meta.className="wmeta";
+    meta.textContent=all.length?(done+" of "+all.length+" questions solved"+(w.pulled?" · "+w.pulled+" surfaced so far":""))
+      :"No questions opened for this topic yet";
+    row.appendChild(meta);
+    var acts=document.createElement("div"); acts.className="tacts";
+    var open1=all.filter(function(x){return x.status!=="done";})[0];
+    if(open1){
+      var b1=document.createElement("button"); b1.type="button"; b1.className="btn xs pri";
+      b1.textContent="▶ Practise now";
+      b1.setAttribute("data-do","ccode"); b1.setAttribute("data-id",open1.id);
+      acts.appendChild(b1);
+    }
+    var b2=document.createElement("button"); b2.type="button"; b2.className="btn xs";
+    b2.textContent="⤴ Surface questions"; b2.setAttribute("data-do","wpull"); b2.setAttribute("data-id",w.id);
+    acts.appendChild(b2);
+    var b3=document.createElement("button"); b3.type="button"; b3.className="btn xs ok";
+    b3.textContent="✓ Revised"; b3.setAttribute("data-do","wtouch"); b3.setAttribute("data-id",w.id);
+    acts.appendChild(b3);
+    var b4=document.createElement("button"); b4.type="button"; b4.className="btn xs dgr";
+    b4.textContent="✕"; b4.setAttribute("data-do","wdel"); b4.setAttribute("data-id",w.id);
+    acts.appendChild(b4);
+    row.appendChild(acts);
+    host.appendChild(row);
+  });
+  var due=list.filter(function(w){return watchState(w).due;}).length;
+  var c=document.getElementById("watchCount");
+  if(c) c.textContent=list.length?(due?due+" ready to revise · "+list.length+" on the board":list.length+" resting"):"";
+  var sc=document.getElementById("scratchBox");
+  if(sc&&document.activeElement!==sc) sc.value=S.scratchNotes||"";
 }
 
 /* ============ revision (spaced repetition) ============ */
@@ -5690,6 +7227,44 @@ var CURRIC={
   {id:"c-file",  t:"File handling",           depth:"broad",topics:[],
    note:"fopen, fclose, fscanf, fprintf, modes"}
  ]},
+ java:{name:"Java",icon:"☕",modules:[
+  {id:"jv-basic",t:"Java basics",depth:"core",topics:[],note:"JVM, class structure, main method, System.out.println, compiling with javac"},
+  {id:"jv-var",  t:"Variables & data types",depth:"core",topics:[],note:"Primitives vs objects, int/double/char/boolean, String, var, casting"},
+  {id:"jv-op",   t:"Operators",depth:"core",topics:[],note:"Arithmetic, relational, logical, ternary, compound assignment"},
+  {id:"jv-if",   t:"Conditions",depth:"broad",topics:[],note:"if/else if/else, switch, enhanced switch expressions"},
+  {id:"jv-loop", t:"Loops",depth:"broad",topics:[],note:"for, while, do-while, enhanced for, break, continue"},
+  {id:"jv-arr",  t:"Arrays",depth:"deep",topics:[],note:"Declaration, initialisation, multi-dimensional, Arrays utility class"},
+  {id:"jv-str",  t:"Strings",depth:"deep",topics:[],note:"Immutability, StringBuilder, common methods, formatting, text blocks"},
+  {id:"jv-meth", t:"Methods",depth:"deep",topics:[],note:"Parameters, return types, overloading, varargs, static vs instance, recursion"},
+  {id:"jv-oop",  t:"Classes & objects",depth:"deep",topics:[],note:"Fields, constructors, this, encapsulation, getters and setters"},
+  {id:"jv-inh",  t:"Inheritance & polymorphism",depth:"deep",topics:[],note:"extends, super, overriding, abstract classes, interfaces, default methods"},
+  {id:"jv-coll", t:"Collections framework",depth:"deep",topics:[],note:"List, ArrayList, LinkedList, Set, HashSet, Map, HashMap, Queue, Deque"},
+  {id:"jv-gen",  t:"Generics",depth:"broad",topics:[],note:"Type parameters, bounded types, wildcards, generic methods"},
+  {id:"jv-exc",  t:"Exception handling",depth:"broad",topics:[],note:"try/catch/finally, checked vs unchecked, custom exceptions, try-with-resources"},
+  {id:"jv-stream",t:"Streams & lambdas",depth:"deep",topics:[],note:"Lambda syntax, functional interfaces, map/filter/reduce, collectors, Optional"},
+  {id:"jv-file", t:"File I/O",depth:"broad",topics:[],note:"File, Scanner, BufferedReader, Files/Paths, NIO basics"},
+  {id:"jv-thread",t:"Concurrency",depth:"broad",topics:[],note:"Thread, Runnable, synchronized, ExecutorService, CompletableFuture"},
+  {id:"jv-dsa",  t:"Data structures & algorithms",depth:"deep",topics:[],note:"Linked lists, stacks, queues, trees, graphs, sorting, searching"}
+ ]},
+ js:{name:"JavaScript",icon:"🟨",modules:[
+  {id:"js-basic",t:"JavaScript basics",depth:"core",topics:[],note:"console.log, script tags, let/const/var, semicolons, strict mode"},
+  {id:"js-type", t:"Types & coercion",depth:"core",topics:[],note:"string, number, boolean, null, undefined, symbol, bigint, == vs ==="},
+  {id:"js-op",   t:"Operators",depth:"core",topics:[],note:"Arithmetic, comparison, logical, nullish coalescing, optional chaining, spread"},
+  {id:"js-if",   t:"Conditions",depth:"broad",topics:[],note:"if/else, switch, ternary, truthy and falsy values"},
+  {id:"js-loop", t:"Loops",depth:"broad",topics:[],note:"for, while, for...of, for...in, break, continue, labelled loops"},
+  {id:"js-arr",  t:"Arrays",depth:"deep",topics:[],note:"map, filter, reduce, find, some, every, sort, slice, splice, destructuring"},
+  {id:"js-str",  t:"Strings",depth:"deep",topics:[],note:"Template literals, methods, regex basics, unicode"},
+  {id:"js-obj",  t:"Objects",depth:"deep",topics:[],note:"Literals, destructuring, spread, Object.keys/values/entries, JSON"},
+  {id:"js-fn",   t:"Functions",depth:"deep",topics:[],note:"Declarations, expressions, arrow functions, closures, this, call/apply/bind"},
+  {id:"js-cls",  t:"Classes",depth:"broad",topics:[],note:"class syntax, constructors, methods, inheritance, static, private fields"},
+  {id:"js-async",t:"Asynchronous JavaScript",depth:"deep",topics:[],note:"Callbacks, Promises, async/await, error handling, Promise.all, the event loop"},
+  {id:"js-dom",  t:"DOM manipulation",depth:"deep",topics:[],note:"querySelector, createElement, events, delegation, forms, attributes"},
+  {id:"js-fetch",t:"Fetch & APIs",depth:"broad",topics:[],note:"fetch, headers, JSON, error handling, CORS, async data loading"},
+  {id:"js-mod",  t:"Modules & tooling",depth:"broad",topics:[],note:"import/export, npm, bundlers, package.json"},
+  {id:"js-err",  t:"Error handling",depth:"broad",topics:[],note:"try/catch/finally, Error types, throwing, debugging with devtools"},
+  {id:"js-store",t:"Browser storage",depth:"small",topics:[],note:"localStorage, sessionStorage, cookies, IndexedDB basics"},
+  {id:"js-dsa",  t:"Data structures & algorithms",depth:"deep",topics:[],note:"Maps, Sets, recursion, sorting, searching, complexity"}
+ ]},
  cpp:{name:"C++",icon:"📗",modules:[
   {id:"cpp-basic",t:"C++ basics",             depth:"core", topics:[],
    note:"iostream, cin/cout, namespaces, auto"},
@@ -5726,7 +7301,7 @@ function moduleTasks(m){
 }
 function renderBasics(){
   var host=document.getElementById("basicsBody"); if(!host) return; clr(host);
-  var lang=ui.lang||"python";
+  var lang=ui.lang||curLang();
   document.querySelectorAll("[data-lang]").forEach(function(b){
     b.classList.toggle("pri", b.getAttribute("data-lang")===lang); });
   var q=((document.getElementById("bSearch")||{}).value||"").toLowerCase();
@@ -5821,8 +7396,9 @@ function renderMap(){
       var p=SKILLMAP.filter(function(x){return x.id===d;})[0]; if(!p) return;
       var st=nodeStats(n);
       var ln=sv("line",{x1:p.x,y1:p.y+3,x2:n.x,y2:n.y-3,
-        stroke:st.pct>0?"var(--brand)":"var(--line)","stroke-width":.35,
-        "stroke-dasharray":st.pct>0?"":"1.2 1.2"},svg);
+        stroke:st.pct>=100?"#16a34a":st.pct>0?"#f59e0b":st.total?"#2563eb":"#cbd5e1",
+        "stroke-width":st.pct>0?.55:.35,
+        "stroke-dasharray":st.total?"":"1.2 1.2","stroke-opacity":st.total?.85:.5},svg);
       void ln;
     });
   });
@@ -5864,9 +7440,48 @@ function showNode(id){
     var tp=(t.topic||"");
     return n.topics.some(function(x){ return tp===x||tp.indexOf(x)>=0||x.indexOf(tp)>=0; });
   }).sort(function(x,y){ return (x.status==="done"?1:0)-(y.status==="done"?1:0)||x.due.localeCompare(y.due); });
-  if(!rel.length){
+  /* which My Path weeks cover this skill, and are any not yet opened? */
+  var cover=[];
+  if(typeof MYPATH!=="undefined") MYPATH.forEach(function(M){ M.weeks.forEach(function(W){
+    var hits=mpItems(W).filter(function(it){
+      var tp=(W.title||"");
+      return n.topics.some(function(x){
+        return tp===x||tp.indexOf(x)>=0||x.indexOf(tp)>=0||it.label.indexOf(x)>=0;
+      });
+    });
+    if(hits.length){
+      var open=hits.filter(function(it){ return !!rdFind(it.key); }).length;
+      cover.push({w:W.w,title:W.title,total:hits.length,open:open});
+    }
+  }); });
+  var notOpen=cover.filter(function(c){ return c.open<c.total; });
+  if(notOpen.length){
+    var box=document.createElement("div"); box.className="exp"; box.style.marginBlockStart="12px";
+    var bh=document.createElement("div"); bh.className="exph";
+    bh.textContent=rel.length?"More of this skill is available":"Start this skill";
+    box.appendChild(bh);
+    var bp=document.createElement("div"); bp.className="hint"; bp.style.margin="0 0 9px";
+    bp.textContent="Open it right here — no need to go to the Roadmap tab.";
+    box.appendChild(bp);
+    notOpen.slice(0,4).forEach(function(c){
+      var r2=document.createElement("div"); r2.className="q"; r2.style.marginBlockEnd="6px";
+      var tx2=document.createElement("span"); tx2.className="qt";
+      tx2.textContent="Week "+c.w+" · "+c.title;
+      var tg2=document.createElement("span"); tg2.className="tag n";
+      tg2.textContent=c.open?(c.open+"/"+c.total+" open"):(c.total+" items");
+      var bb2=document.createElement("div"); bb2.className="qb";
+      var ob=document.createElement("button"); ob.type="button"; ob.className="btn xs pri";
+      ob.textContent=c.open?"▶ Open the rest":"▶ Start now";
+      ob.setAttribute("data-do","skillopen"); ob.setAttribute("data-id",c.w+"|"+n.id);
+      bb2.appendChild(ob);
+      r2.appendChild(tx2); r2.appendChild(tg2); r2.appendChild(bb2);
+      box.appendChild(r2);
+    });
+    b.appendChild(box);
+  }
+  if(!rel.length&&!notOpen.length){
     var e=document.createElement("div"); e.className="empty"; e.style.marginBlockStart="12px";
-    e.textContent="Nothing opened for this skill yet — go to the Roadmap tab and start a week that covers it.";
+    e.textContent="This skill is covered later in your path — it will open as you progress.";
     b.appendChild(e);
   }
   rel.slice(0,12).forEach(function(t){
@@ -5957,7 +7572,35 @@ function badgeStats(){
   var phase1=p1.length===rdPhaseTotal(ph) && p1.every(function(t){return t.status==="done";});
   var perfectWeek=false;
   for(var i=0;i>=-12;i--){ var w=weekTasks(i); if(w.length>=3 && w.every(function(t){return t.status==="done";})){ perfectWeek=true; break; } }
-  return {done:done.length,best:st.best,cur:st.cur,projects:projects,coded:coded,hours:hours,notes:notes,phase1:phase1,perfectWeek:perfectWeek};
+  var tests=0,firstTry=0,mastered=0,revs=0,early=0,night=0,weekend=0,langs={};
+  done.forEach(function(t){
+    var io2=(typeof ioFor==="function")?ioFor(t):null;
+    if(t.verified) tests+=(io2&&io2.cases?io2.cases.length:3);
+    if(t.verified&&!t.attempts) firstTry++;
+    if(t.conf>=5) mastered++;
+    if(t.lang) langs[t.lang]=1;
+    if(t.completedAt){
+      var d2=new Date(t.completedAt), hr=d2.getHours(), dw=d2.getDay();
+      if(hr<9) early++;
+      if(hr>=21) night++;
+      if(dw===0||dw===6) weekend++;
+    }
+  });
+  S.tasks.forEach(function(t){ (t.rev||[]).forEach(function(r){ if(r.done) revs++; }); });
+  var topicsSet={}; done.forEach(function(t){ if(t.topic) topicsSet[t.topic]=1; });
+  var perfectWeeks=0;
+  for(var wi=0;wi>=-40;wi--){ var w2=weekTasks(wi); if(w2.length>=3&&w2.every(function(x){return x.status==="done";})) perfectWeeks++; }
+  var weeksDone=0;
+  if(typeof MYPATH!=="undefined") MYPATH.forEach(function(M){ M.weeks.forEach(function(W){
+    var its=mpItems(W), lo=its.map(function(it){return rdFind(it.key);}).filter(Boolean);
+    if(lo.length===its.length&&lo.every(function(x){return x.status==="done";})) weeksDone++;
+  }); });
+  var watchRev=(S.watch||[]).reduce(function(a,w){return a+(w.step||0);},0);
+  return {done:done.length,best:st.best,cur:st.cur,days:st.days,projects:projects,coded:coded,
+    hours:hours,notes:notes,phase1:phase1,perfectWeek:perfectWeek,xp:totalXP(),
+    tests:tests,topics:Object.keys(topicsSet).length,revs:revs,firstTry:firstTry,mastered:mastered,
+    langs:Object.keys(langs).length,early:early,night:night,weekend:weekend,
+    weeksDone:weeksDone,watchRev:watchRev,perfectWeeks:perfectWeeks};
 }
 function topicStats(){
   var m={};
@@ -5971,6 +7614,11 @@ function topicStats(){
 }
 function recommendations(){
   var m=topicStats(), out=[], now=new Date();
+  watchList().forEach(function(w){
+    var st=watchState(w);
+    if(st.due) out.push({p:0,txt:"📌 "+w.topic+" — "+st.label+".",
+      act:w.note?("You noted: "+w.note):"On your scratch board. Practise it or mark it revised."});
+  });
   Object.keys(m).forEach(function(n){
     var a=m[n];
     if(a.q<2) return;
@@ -5987,8 +7635,40 @@ function recommendations(){
   if(st.cur>=5) out.push({p:2,txt:st.cur+" day streak going.",act:"Keep it alive with a single short question."});
   var w=weekTasks(0);
   if(!w.length) out.push({p:1,txt:"Nothing planned for this week.",act:"Load the next week of your roadmap."});
+  var st2=streaks(), dm2=doneByDay(), tdCount=dm2[today()]||0;
+  var q2=(typeof solvableQueue==="function")?solvableQueue():[];
+  var openQ=q2.filter(function(x){return x.status!=="done";});
+  var due2=(typeof dueRevisions==="function")?dueRevisions():[];
+  if(due2.length) out.push({p:0,txt:due2.length+" revision"+(due2.length===1?" is":"s are")+" ready.",
+    act:"Five minutes on the Revision tab locks in what you already learned."});
+  if(openQ.length) out.push({p:1,txt:"Next up: "+displayTitle(openQ[0])+".",
+    act:(openQ[0].est||12)+" minutes · "+(openQ[0].topic||"practice")});
+  if(!tdCount&&openQ.length) out.push({p:1,txt:"Nothing solved yet today.",
+    act:"One question keeps the streak alive — that is all it takes."});
+  if(tdCount>=(S.goals.stretchDaily||2)) out.push({p:2,txt:"Stretch goal reached today ("+tdCount+" solved).",
+    act:"Anything further is a bonus. Consider a revision instead."});
+  var noCode=S.tasks.filter(function(t){return t.status==="done"&&!(t.code&&t.code.trim());}).length;
+  if(noCode>=5) out.push({p:2,txt:noCode+" solved questions have no saved solution.",
+    act:"Re-solve one in the Code lab so you can look it up later."});
+  var noConf=S.tasks.filter(function(t){return t.status==="done"&&!t.conf;}).length;
+  if(noConf>=8) out.push({p:2,txt:noConf+" completed questions have no confidence rating.",
+    act:"Rating them shows you which topics actually need revisiting."});
+  var jr=Object.keys(S.notes).filter(function(k){return S.notes[k];}).length;
+  if(jr===0&&st2.days>=3) out.push({p:2,txt:"No journal entries yet.",
+    act:"Two lines a day becomes a genuinely useful record in a few months."});
+  if(st2.cur>=7) out.push({p:2,txt:st2.cur+" day streak — your best is "+st2.best+".",
+    act:st2.cur>=st2.best?"That is a new record. Keep it rolling.":"You are "+(st2.best-st2.cur+1)+" days from a new record."});
+  var hrs=S.tasks.reduce(function(a,t){return a+(t.seconds||0);},0)/3600;
+  if(hrs<0.5&&S.tasks.filter(function(t){return t.status==="done";}).length>=5)
+    out.push({p:2,txt:"You are not timing your sessions.",
+      act:"Press ▶ Start on a question — the minutes feed your weekly report."});
+  var wl=(S.watch||[]).length;
+  if(!wl&&st2.days>=2) out.push({p:2,txt:"Your scratch board is empty.",
+    act:"Add any topic you want to revisit — it resurfaces on its own."});
   if(!out.length) out.push({p:2,txt:"Everything looks balanced.",act:"Keep going at your current pace."});
-  return out.sort(function(a,b){return a.p-b.p;}).slice(0,4);
+  var seen={};
+  out=out.filter(function(r){ if(seen[r.txt]) return false; seen[r.txt]=1; return true; });
+  return out.sort(function(a,b){return a.p-b.p;}).slice(0,6);
 }
 function todaysTasks(){
   var td=today();
@@ -6158,20 +7838,50 @@ function renderJournalStats(){
   });
 }
 function renderBadges(){
-  var host=document.getElementById("badges"); clr(host);
-  var s=badgeStats(), earned=0;
-  BADGES.forEach(function(b){
-    var got=false; try{ got=!!b.test(s); }catch(e){}
-    if(got) earned++;
-    var d=document.createElement("div"); d.className="badge"+(got?" got":"");
-    var i=document.createElement("div"); i.className="bi"; i.textContent=b.icon;
-    var n=document.createElement("div"); n.className="bn"; n.textContent=b.name;
-    var x=document.createElement("div"); x.className="bd"; x.textContent=b.desc;
+  var host=document.getElementById("badges"); if(!host) return; clr(host);
+  var st=badgeStats();
+  var r=achEarned(st);
+  var seen=S.achSeen=S.achSeen||{};
+  var fresh=[];
+  r.earned.forEach(function(a){ if(!seen[a.id]){ seen[a.id]=Date.now(); fresh.push(a); } });
+  if(fresh.length){
+    save();
+    setTimeout(function(){
+      toast("🏅 "+fresh.length+" new achievement"+(fresh.length===1?"":"s")+" — "+fresh[fresh.length-1].name);
+    },900);
+  }
+  /* newest first, so a fresh unlock is immediately visible */
+  var list=r.earned.slice().sort(function(a,b){ return (seen[b.id]||0)-(seen[a.id]||0); });
+  list.forEach(function(a){
+    var d=document.createElement("div"); d.className="badge got t"+a.tier.toLowerCase().replace(/\s/g,"");
+    if(fresh.indexOf(a)>=0) d.classList.add("bnew");
+    var i=document.createElement("div"); i.className="bi"; i.textContent=a.icon;
+    var n=document.createElement("div"); n.className="bn"; n.textContent=a.name;
+    var x=document.createElement("div"); x.className="bd"; x.textContent=a.desc;
     d.appendChild(i); d.appendChild(n); d.appendChild(x);
-    if(!got){ var lk=document.createElement("div"); lk.className="bl"; lk.textContent="🔒"; d.appendChild(lk); }
+    var tr=document.createElement("div"); tr.className="btier"; tr.textContent=a.tier;
+    d.appendChild(tr);
     host.appendChild(d);
   });
-  document.getElementById("badgeCount").textContent=earned+" of "+BADGES.length+" unlocked";
+  /* the next rung of each family, shown as progress */
+  r.next.slice().sort(function(a,b){ return b.pct-a.pct; }).forEach(function(a){
+    var d=document.createElement("div"); d.className="badge bnext";
+    var i=document.createElement("div"); i.className="bi"; i.textContent=a.icon;
+    var n=document.createElement("div"); n.className="bn"; n.textContent=a.name;
+    var x=document.createElement("div"); x.className="bd"; x.textContent=a.have.toLocaleString()+" / "+a.need.toLocaleString();
+    d.appendChild(i); d.appendChild(n); d.appendChild(x);
+    var pb=document.createElement("div"); pb.className="bprog";
+    var pi=document.createElement("i"); pi.style.inlineSize=a.pct+"%"; pb.appendChild(pi);
+    d.appendChild(pb);
+    var lk=document.createElement("div"); lk.className="bl"; lk.textContent="🔒"; d.appendChild(lk);
+    host.appendChild(d);
+  });
+  if(!list.length&&!r.next.length){
+    var e=document.createElement("div"); e.className="empty"; e.textContent="Solve your first question to start unlocking achievements.";
+    host.appendChild(e);
+  }
+  var c=document.getElementById("badgeCount");
+  if(c) c.textContent=list.length.toLocaleString()+" of "+achTotal().toLocaleString()+" unlocked";
 }
 function renderWeak(){
   var host=document.getElementById("weakList"); clr(host);
@@ -6203,19 +7913,27 @@ function renderWeak(){
   });
 }
 function renderMonthly(){
-  var host=document.getElementById("monthly"); clr(host);
-  var now=new Date(), mStart=new Date(now.getFullYear(),now.getMonth(),1);
-  var mk=iso(mStart);
-  var done=S.tasks.filter(function(t){return t.status==="done"&&t.completedAt&&t.completedAt.slice(0,10)>=mk;});
-  var secs=S.tasks.reduce(function(s,t){
-    return s+((t.lastSession&&t.lastSession.slice(0,10)>=mk)?(t.seconds||0):0); },0);
+  var host=document.getElementById("monthly"); if(!host) return; clr(host);
+  var off=ui.month||0, now=new Date();
+  var mStart=new Date(now.getFullYear(),now.getMonth()+off,1);
+  var mEnd=new Date(now.getFullYear(),now.getMonth()+off+1,1);
+  var mk=iso(mStart), mke=iso(mEnd);
+  var tt=document.getElementById("monthTitle");
+  if(tt) tt.textContent=(off===0?"This month · ":"")+mStart.toLocaleDateString(undefined,{month:"long",year:"numeric"});
+  var done=S.tasks.filter(function(t){
+    return t.status==="done"&&t.completedAt&&t.completedAt.slice(0,10)>=mk&&t.completedAt.slice(0,10)<mke; });
+  var secs=S.tasks.reduce(function(a,t){
+    var d=t.lastSession&&t.lastSession.slice(0,10);
+    return a+((d&&d>=mk&&d<mke)?(t.seconds||0):0); },0);
   var topics={}; done.forEach(function(t){ topics[t.topic||"Untagged"]=1; });
-  var projects=done.filter(function(t){return (t.topic||"")==="Projects"||/^Project:/.test(t.title);}).length;
-  var dm=doneByDay(), days=0;
-  for(var d=new Date(mStart); d<=now; d=addD(d,1)){ var k=iso(d); if((dm[k]||0)>0||(k in S.notes)) days++; }
-  [["Questions solved",done.length,now.toLocaleDateString(undefined,{month:"long"}),"✅"],
+  var projects=done.filter(function(t){ return (t.topic||"")==="Projects"||/^Project:/.test(t.title); }).length;
+  var dm=doneByDay(), days=0, upto=(off===0?now:new Date(mEnd-864e5));
+  for(var d=new Date(mStart); d<=upto&&d<mEnd; d=addD(d,1)){
+    var k=iso(d); if((dm[k]||0)>0||(k in S.notes)) days++;
+  }
+  [["Questions solved",done.length,mStart.toLocaleDateString(undefined,{month:"long"}),"✅"],
    ["Topics touched",Object.keys(topics).length,"distinct topics","🧩"],
-   ["Projects shipped",projects,"this month","🚀"],
+   ["Projects shipped",projects,"in this month","🚀"],
    ["Learning hours",(secs/3600).toFixed(1)+"h","from timed sessions","⏱"],
    ["Active days",days,"days with progress","📅"]
   ].forEach(function(p){
@@ -6226,6 +7944,40 @@ function renderMonthly(){
     var c=document.createElement("div"); c.className="sub"; c.textContent=p[2];
     d2.appendChild(ic); d2.appendChild(a); d2.appendChild(b); d2.appendChild(c); host.appendChild(d2);
   });
+  /* 12-month history so nothing ever looks empty */
+  var mb=document.getElementById("monthBars"); if(!mb) return; clr(mb);
+  var months=[],max=1;
+  for(var i=11;i>=0;i--){
+    var ms=new Date(now.getFullYear(),now.getMonth()-i,1);
+    var me=new Date(now.getFullYear(),now.getMonth()-i+1,1);
+    var a2=iso(ms), b2=iso(me);
+    var n=S.tasks.filter(function(t){
+      return t.status==="done"&&t.completedAt&&t.completedAt.slice(0,10)>=a2&&t.completedAt.slice(0,10)<b2; }).length;
+    months.push({label:ms.toLocaleDateString(undefined,{month:"short"}),n:n,off:-i,
+      full:ms.toLocaleDateString(undefined,{month:"long",year:"numeric"})});
+    if(n>max) max=n;
+  }
+  if(!months.some(function(m){return m.n>0;})){
+    var e=document.createElement("div"); e.className="hint"; e.style.margin="0";
+    e.textContent="Your month-by-month history will build up here as you go.";
+    mb.appendChild(e); return;
+  }
+  var lbl=document.createElement("div"); lbl.className="exph"; lbl.textContent="Last 12 months";
+  mb.appendChild(lbl);
+  var row=document.createElement("div"); row.className="mrow";
+  months.forEach(function(m){
+    var col=document.createElement("button"); col.type="button";
+    col.className="mcol"+(m.off===off?" mcur":"");
+    col.setAttribute("data-act","mjump"); col.setAttribute("data-off",m.off);
+    col.title=m.full+" — "+m.n+" solved";
+    var v=document.createElement("span"); v.className="mval"; v.textContent=m.n||"";
+    var bar2=document.createElement("span"); bar2.className="mbar";
+    bar2.style.blockSize=Math.max(3,Math.round(m.n/max*56))+"px";
+    var lb=document.createElement("span"); lb.className="mlab"; lb.textContent=m.label;
+    col.appendChild(v); col.appendChild(bar2); col.appendChild(lb);
+    row.appendChild(col);
+  });
+  mb.appendChild(row);
 }
 
 /* ============ roadmap logic ============ */
@@ -6303,6 +8055,7 @@ function renderRoad(){
   if(rdTrack==="assess"){ host.hidden=true; asx.hidden=false; renderAssess(); renderOverall(); return; }
   host.hidden=false; asx.hidden=true;
   clr(host);
+  if(rdTrack==="lang"){ renderLangTrack(host); renderOverall(); return; }
   if(rdTrack==="mypath"){ renderMyPath(host); renderOverall(); return; }
   if(rdTrack==="slow"){ renderSlow(host); renderOverall(); return; }
   var track=rdTrack, R=ROAD[track];
@@ -6562,7 +8315,9 @@ javascript:{
 },
 other:{ "Blank":"" }
 };
-function ext(l){ return l==="python"?"py":l==="javascript"?"js":"txt"; }
+function ext(l){
+  return {python:"py",javascript:"js",c:"c",cpp:"cpp",java:"java",sql:"sql"}[l]||"txt";
+}
 function con(){ return document.getElementById("console"); }
 function cwrite(txt,cls){
   var c=con(), s=document.createElement("span");
@@ -6576,6 +8331,75 @@ function pyStatus(state,msg){
   var d=document.getElementById("pyDot");
   d.className="dot-live"+(state==="ready"?" on":state==="loading"?" load":"");
   document.getElementById("pyStat").textContent=msg;
+}
+/* ---- C / C++ engine: JSCPP, a C++ interpreter written in JavaScript.
+   Runs entirely in the browser, no server. Pinned to an exact version.
+   Known limits: no classes/OOP, no namespaces, no STL, no goto.       ---- */
+var CPP={state:"idle",loading:null};
+var JSCPP_URLS=[
+  "https://cdn.jsdelivr.net/npm/jscpp@2.0.9/dist/JSCPP.es5.min.js",
+  "https://unpkg.com/jscpp@2.0.9/dist/JSCPP.es5.min.js",
+  "https://cdn.jsdelivr.net/npm/JSCPP@2.0.9/dist/JSCPP.es5.min.js"
+];
+function loadScriptAny(urls,check){
+  return new Promise(function(res,rej){
+    var i=0;
+    function attempt(){
+      if(i>=urls.length){ rej(new Error("all sources failed")); return; }
+      var sc=document.createElement("script");
+      sc.src=urls[i++];
+      sc.onload=function(){ if(check()) res(); else attempt(); };
+      sc.onerror=attempt;
+      document.head.appendChild(sc);
+    }
+    attempt();
+  });
+}
+function loadCpp(){
+  if(window.JSCPP) return Promise.resolve(window.JSCPP);
+  if(CPP.loading) return CPP.loading;
+  cppStatus("loading","Downloading the C/C++ engine…");
+  cwrite("Loading the C/C++ interpreter. First time only — about 1 MB.\n","dim");
+  CPP.loading=loadScriptAny(JSCPP_URLS,function(){ return !!window.JSCPP; })
+    .then(function(){
+      cppStatus("ready","C/C++ ready");
+      cwrite("C/C++ engine ready.\n\n","ok");
+      return window.JSCPP;
+    })
+    .catch(function(e){ cppStatus("idle","Engine failed to load"); throw e; });
+  return CPP.loading;
+}
+function cppStatus(state,msg){
+  CPP.state=state;
+  var d=document.getElementById("pyDot");
+  if(d) d.className="dot-live"+(state==="ready"?" on":state==="loading"?" load":"");
+  var t=document.getElementById("pyStat");
+  if(t) t.textContent=msg;
+}
+/* run C or C++ source with a given stdin; returns {out, err, code} */
+function runCppOnce(JS,code,stdin){
+  var out="";
+  var cfg={ stdio:{ write:function(x){ out+=x; } }, unsigned_overflow:"warn" };
+  try{
+    var exit=JS.run(code,stdin||"",cfg);
+    var c=(exit&&typeof exit==="object"&&"v" in exit)?exit.v:exit;
+    return {out:out,err:null,code:c};
+  }catch(e){
+    return {out:out,err:cppError(e),code:null};
+  }
+}
+/* turn a JSCPP error into something a learner can act on */
+function cppError(e){
+  var m=String((e&&e.message)||e);
+  if(/is not implemented|not supported|unimplemented/i.test(m))
+    return m+"\n\nNote: this browser interpreter does not support classes, namespaces, templates or the STL. "+
+      "Rewrite using plain functions and arrays, or run this one locally.";
+  if(/parse|syntax|Expected/i.test(m))
+    return "Syntax error — "+m.replace(/\s+/g," ").slice(0,300)+
+      "\n\nCheck your semicolons, braces and that every #include is on its own line.";
+  if(/cin|stdin|input/i.test(m))
+    return m+"\n\nYour program asked for more input than this test case provides.";
+  return m;
 }
 function loadPyodide_(){
   if(PY.mod) return Promise.resolve(PY.mod);
@@ -6616,7 +8440,13 @@ function runCode(verify){
   var code=document.getElementById("editor").value;
   var stdin=document.getElementById("stdinBox").value;
   cclear();
-  if(lang==="other"){ cwrite("This language can only be saved here, not executed.\nUse the editor to keep your solution with the question.\n","dim"); return; }
+  if(lang==="c"||lang==="cpp"){ runCppCode(code,stdin,verify); return; }
+  if(lang!=="python"&&lang!=="javascript"){
+    cwrite("Your "+({java:"Java",sql:"SQL"}[lang]||"code")+" is saved with the question, but it cannot run here.\n"+
+      (lang==="java"?"Java needs a JVM. See the Java tab in Learn from Basics for the local setup and for trace-the-output practice that IS checked here.\n":"")+
+      "\nPython, JavaScript, C and C++ all run in this browser.\n","dim");
+    return;
+  }
   if(!code.trim()){ cwrite("Nothing to run — the editor is empty.\n","dim"); return; }
   if(verify) beginRun("Checking your solution"); else document.getElementById("verdictBox").hidden=true;
   if(lang==="javascript"){ runJS(code,verify); endRun(); return; }
@@ -6651,9 +8481,16 @@ function runCode(verify){
     cwrite("Could not load the Python engine.\nCheck your internet connection — the engine is fetched from a CDN the first time.\n","err");
   });
 }
-function solvableQueue(){
+function solvableQueue(allLangs){
+  var L=curLang();
   return S.tasks.filter(function(t){
     if(t.type==="learn"||t.type==="revision") return false;
+    if(!allLangs){
+      var tk=t.track||"mypath";
+      if(L==="python"){ if(tk!=="mypath") return false; }
+      else if(tk!==L) return false;
+    }
+    if(t.track&&t.track!=="mypath") return true;   /* language tracks: save-and-review */
     return !!(ioFor(t)||testsFor(t)||expectFor(t)||(t.code&&t.code.trim()));
   }).sort(function(a,b){
     return a.due.localeCompare(b.due) || (a.createdAt||"").localeCompare(b.createdAt||"");
@@ -6664,17 +8501,71 @@ function queueIndex(id){
   for(var i=0;i<q.length;i++) if(q[i].id===id) return i;
   return -1;
 }
+function jumpTo(id){
+  loadIntoEditor(id);
+  var qp=document.getElementById("qPanel");
+  if(qp&&qp.scrollIntoView) qp.scrollIntoView({behavior:"smooth",block:"start"});
+}
+/* open the next week that has not been started yet; returns how many opened */
+function openNextWeek(){
+  var found=0;
+  for(var mi=0;mi<MYPATH.length&&!found;mi++){
+    var M=MYPATH[mi];
+    for(var wi=0;wi<M.weeks.length&&!found;wi++){
+      var W=M.weeks[wi];
+      var items=mpItems(W);
+      var missing=items.some(function(it){ return !rdFind(it.key); });
+      if(missing){
+        found=mpLoad(W.w,true);
+        if(found){
+          ev("road","Auto-started Week "+W.w+": "+W.title);
+          toast("▶ Week "+W.w+" started — "+W.title);
+        }
+      }
+    }
+  }
+  if(found) save();
+  return found;
+}
 function goRelative(step,unsolvedOnly){
   var q=solvableQueue(), i=queueIndex(ui.cur);
-  if(!q.length) return;
-  if(i<0){ loadIntoEditor(q[0].id); return; }
+  if(!q.length){
+    if(step>0&&openNextWeek()){ render(); var q0=solvableQueue(); if(q0.length) jumpTo(q0[0].id); }
+    return;
+  }
+  if(i<0){ jumpTo(q[0].id); return; }
   var j=i;
   for(var n=0;n<q.length;n++){
     j+=step;
-    if(j<0||j>=q.length){ toast(step>0?"That was the last question":"You are at the first question"); return; }
-    if(!unsolvedOnly||q[j].status!=="done"){ loadIntoEditor(q[j].id); document.getElementById("qPanel").scrollIntoView({behavior:"smooth",block:"start"}); return; }
+    if(j<0||j>=q.length) break;
+    if(!unsolvedOnly||q[j].status!=="done"){ jumpTo(q[j].id); return; }
   }
-  toast("Nothing else unsolved in that direction");
+  /* ran off the end — try wrapping to anything still unsolved before it */
+  if(step>0&&unsolvedOnly){
+    for(var k=0;k<q.length;k++){
+      if(q[k].status!=="done"&&q[k].id!==ui.cur){ jumpTo(q[k].id); toast("Jumped back to an earlier unsolved question"); return; }
+    }
+    /* everything open is solved — pull in the next week automatically */
+    if(openNextWeek()){
+      render();
+      var q2=solvableQueue();
+      for(var m2=0;m2<q2.length;m2++){
+        if(q2[m2].status!=="done"){ jumpTo(q2[m2].id); return; }
+      }
+    }
+    toast("🎉 Everything you have opened is solved — nothing left in the path");
+    return;
+  }
+  if(step>0&&!unsolvedOnly){
+    if(openNextWeek()){
+      render();
+      var q3=solvableQueue();
+      if(q3.length>i+1){ jumpTo(q3[i+1].id); return; }
+    }
+    toast("That was the last question");
+    return;
+  }
+  toast("You are at the first question");
 }
 function ioFor(t){
   if(!t) return null;
@@ -6685,8 +8576,10 @@ function runIOTests(){
   var t=byId(ui.cur), spec=ioFor(t);
   var code=document.getElementById("editor").value;
   if(!code.trim()){ cclear(); cwrite("Nothing to run — the editor is empty.\n","dim"); return; }
-  if(document.getElementById("cbLang").value!=="python"){
-    cclear(); cwrite("Test cases run against Python only.\n","dim"); return;
+  var lgX=document.getElementById("cbLang").value;
+  if(lgX!=="python"){
+    if(lgX==="c"||lgX==="cpp"){ runCppTests(t,spec); return; }
+    cclear(); cwrite("Test cases run against Python, C and C++.\n","dim"); return;
   }
   cclear(); beginRun("Running "+spec.cases.length+" test case"+(spec.cases.length===1?"":"s"));
   cwrite("▶ running "+spec.cases.length+" test case"+(spec.cases.length===1?"":"s")+"\n","in");
@@ -6836,6 +8729,12 @@ function showIOTests(t,spec,rows){
 }
 function runTests(){
   var t=ui.cur?byId(ui.cur):null;
+  var lg2=document.getElementById("cbLang").value;
+  if(t&&(lg2==="c"||lg2==="cpp")){
+    var sp2=ioFor(t);
+    if(sp2){ runCppTests(t,sp2); return; }
+    runCode(true); return;
+  }
   if(t&&ioFor(t)){ runIOTests(); return; }
   var suite=t&&testsFor(t);
   if(!t||!suite){ runCode(true); return; }
@@ -6979,6 +8878,21 @@ function showTests(t,suite,rows,fail){
     box.appendChild(okn);
   }
 }
+/* if a solved item belongs to a My Path week, make sure that week is fully open */
+function ensureWeekOpen(t){
+  if(!t||!t.road||t.road.indexOf("mp:")!==0) return 0;
+  var w=+t.road.split(":")[1];
+  if(!w) return 0;
+  var W=null;
+  MYPATH.forEach(function(M){ M.weeks.forEach(function(x){ if(x.w===w) W=x; }); });
+  if(!W) return 0;
+  var items=mpItems(W);
+  var missing=items.filter(function(it){ return !rdFind(it.key); }).length;
+  if(!missing) return 0;
+  var n=mpLoad(w,true);
+  if(n){ ev("road","Week "+w+" opened automatically: "+W.title); save(); }
+  return n;
+}
 function acceptSolution(t,output,why){
   var already=t.status==="done";
   t.code=document.getElementById("editor").value;
@@ -6990,11 +8904,49 @@ function acceptSolution(t,output,why){
     t.status="done"; t.completedAt=new Date().toISOString();
     ev("done","Solved & verified: "+t.title+" ("+why+")");
     autoRevision(t);
+    var opened=ensureWeekOpen(t);
+    if(opened) setTimeout(function(){ toast("▶ Rest of that week opened — "+opened+" more items"); },1600);
+    var topped=autoTopUp();
+    if(topped) setTimeout(function(){ toast("📚 "+topped+" more week"+(topped===1?"":"s")+" unlocked — your queue stays full"); },2400);
   } else ev("code","Solution updated: "+t.title);
   save();
   cwrite("\n✓ Saved and marked complete.\n","ok");
   render();
   toast(already?"Solution saved":"Accepted! Saved and ticked off 🎉");
+}
+function runCppCode(code,stdin,verify){
+  var t0=performance.now();
+  loadCpp().then(function(JS){
+    cwrite("▶ running\n","in");
+    var r=runCppOnce(JS,code,stdin);
+    if(r.out.trim()) cwrite(r.out.replace(/\n+$/,"")+"\n");
+    else if(!r.err) cwrite("(no output — did you use cout or printf?)\n","dim");
+    if(r.err){ cwrite("\n"+r.err+"\n","err"); }
+    else cwrite("\n✓ finished in "+((performance.now()-t0)/1000).toFixed(2)+"s · exit code "+r.code+"\n","ok");
+    afterRun(r.out,verify,!!r.err);
+    endRun();
+  }).catch(function(){
+    endRun();
+    cwrite("Could not load the C/C++ engine.\nIt is fetched from a CDN the first time — check your connection.\n","err");
+  });
+}
+/* run every test case for a C/C++ question, each with its own stdin */
+function runCppTests(t,spec){
+  cclear(); beginRun("Running "+spec.cases.length+" test case"+(spec.cases.length===1?"":"s"));
+  cwrite("▶ running "+spec.cases.length+" test case"+(spec.cases.length===1?"":"s")+"\n","in");
+  var code=document.getElementById("editor").value;
+  loadCpp().then(function(JS){
+    var rows=spec.cases.map(function(c){
+      var r=runCppOnce(JS,code,c["in"]||"");
+      var got=normOut(r.out), want=normOut(c.out);
+      return {c:c,got:got,want:want,err:r.err,ok:!r.err&&got===want};
+    });
+    var passed=rows.filter(function(r){return r.ok;}).length;
+    cwrite("\n"+passed+" / "+rows.length+" test cases passed\n",passed===rows.length?"ok":"err");
+    showIOTests(t,spec,rows);
+    if(passed===rows.length) acceptSolution(t,rows[0].got,"All "+passed+" test cases passed");
+    endRun();
+  }).catch(function(){ endRun(); cwrite("Could not load the C/C++ engine.\n","err"); });
 }
 function afterRun(output,verify,erred){
   if(!ui.cur) return;
@@ -7603,14 +9555,20 @@ function ghPull(){
 /* ============ boot ============ */
 load();
 document.documentElement.setAttribute("data-theme",S.settings.theme||"dark");
-document.getElementById("qDue").value=today();
 document.getElementById("rdStart").value=iso(sow());
 if(S.logins.indexOf(today())<0){ S.logins.push(today()); if(S.logins.length>500) S.logins.shift(); }
+var __swept=watchSweep();
+autoTopUp();
 save();
 render();
+if(__swept) setTimeout(function(){ toast("📌 "+__swept+" item"+(__swept===1?"":"s")+" surfaced from your scratch board"); },1500);
 loadIntoEditor("");
 ghUI();
 setInterval(tickTimer,1000);
+window.addEventListener("resize",function(){
+  clearTimeout(window.__ltRz);
+  window.__ltRz=setTimeout(function(){ if(ui.tab==="dash"){ drawHeat(); draw14(); } },160);
+});
 if(S.gh.auto && S.gh.token){
   var lastDay=(S.gh.last||"").slice(0,10);
   if(lastDay!==today()) setTimeout(function(){ ghPush(true).then(function(ok){ if(ok) ev("backup","Daily backup to GitHub"); }); },4000);
