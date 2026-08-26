@@ -419,6 +419,42 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
 .tipn{font-weight:720}
 .tipg .lpts{padding-block-end:9px}
 .strug{border:1px solid var(--warn); border-radius:12px; background:var(--warn-soft); padding:11px 12px; margin-block-end:9px}
+.board{position:relative; border-radius:14px; padding:20px 18px; margin-block-start:14px;
+  display:flex; flex-wrap:wrap; gap:16px; align-content:flex-start; min-block-size:190px;
+  border:10px solid #6b4423; box-shadow:inset 0 0 60px rgba(0,0,0,.55), 0 6px 22px rgba(0,0,0,.28)}
+.board.bblack{background:#1c1c1e; background-image:radial-gradient(circle at 30% 20%,rgba(255,255,255,.045),transparent 55%)}
+.board.bgreen{background:#2f5d45; background-image:radial-gradient(circle at 65% 30%,rgba(255,255,255,.05),transparent 55%)}
+.bempty{color:rgba(255,255,255,.62); font-size:13.5px; text-align:center; inline-size:100%;
+  padding-block:38px; font-family:var(--mono)}
+.sticky{position:relative; inline-size:158px; min-block-size:158px; padding:24px 13px 26px;
+  border:0; cursor:pointer; text-align:start; font:inherit;
+  box-shadow:2px 4px 10px rgba(0,0,0,.4); transition:transform .18s, box-shadow .18s;
+  display:flex; flex-direction:column}
+.sticky:hover{transform:rotate(0deg) scale(1.06)!important; z-index:4; box-shadow:4px 8px 20px rgba(0,0,0,.5)}
+.sticky .spin{position:absolute; inset-block-start:4px; inset-inline-start:50%; transform:translateX(-50%);
+  font-size:15px; filter:drop-shadow(0 2px 2px rgba(0,0,0,.4))}
+.stext{font-size:13px; line-height:1.5; color:#1a1a1a; overflow:hidden; flex:1;
+  display:-webkit-box; -webkit-line-clamp:6; -webkit-box-orient:vertical; word-break:break-word;
+  font-family:"Segoe Print","Bradley Hand",Chalkboard,cursive,var(--mono)}
+.sdate{position:absolute; inset-block-end:7px; inset-inline-start:13px; inset-inline-end:13px;
+  font-size:10px; color:rgba(0,0,0,.55); font-family:var(--mono)}
+.sdate.big{position:static; margin-block-start:10px; font-size:11.5px}
+.sticky.big{inline-size:100%; min-block-size:0; cursor:default; transform:none!important; padding:26px 16px 16px}
+.sticky.big:hover{transform:none!important}
+.sedit{inline-size:100%; background:transparent; border:0; resize:vertical; color:#1a1a1a;
+  font-size:14.5px; line-height:1.6; padding:0; outline:none;
+  font-family:"Segoe Print","Bradley Hand",Chalkboard,cursive,var(--mono)}
+.sedit:focus{box-shadow:none}
+.s-yellow{background:linear-gradient(160deg,#fff9a8,#ffe94d)}
+.s-pink{background:linear-gradient(160deg,#ffd0e0,#ffa8c9)}
+.s-blue{background:linear-gradient(160deg,#cfe9ff,#95cdfa)}
+.s-green{background:linear-gradient(160deg,#d4f7c5,#a8e88f)}
+.s-orange{background:linear-gradient(160deg,#ffddb0,#ffbe6b)}
+.s-purple{background:linear-gradient(160deg,#e6d4ff,#c9a8f5)}
+.swatch{inline-size:26px; block-size:26px; border-radius:50%; border:2px solid var(--line); cursor:pointer; padding:0}
+.swatch.on{border-color:var(--brand); box-shadow:0 0 0 3px var(--ring)}
+#noteDlg{max-inline-size:560px}
+@media (max-width:560px){ .sticky{inline-size:calc(50% - 8px); min-block-size:140px} }
 .wrow{border:1px solid var(--line); border-radius:12px; padding:11px 12px; background:var(--panel2);
   margin-block-end:8px; border-inline-start:3px solid var(--line); transition:.18s}
 .wrow:hover{border-color:var(--brand)}
@@ -649,7 +685,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   <div class="top-in">
     <button class="brand" data-act="home" type="button">
       <span class="mark">LT</span>
-      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v30</span></span></span>
+      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v31</span></span></span>
     </button>
     <span class="langbar" id="langBar"></span>
     <span class="sp"></span>
@@ -737,11 +773,28 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
     </form>
     <datalist id="topicList"></datalist>
     <div id="watchList" style="margin-block-start:12px"></div>
-    <details style="margin-block-start:12px">
-      <summary style="cursor:pointer;font-size:13px;font-weight:650;color:var(--brand)">✎ Free notes</summary>
-      <textarea id="scratchBox" rows="4" style="margin-block-start:8px"
-        placeholder="Anything at all — half-remembered syntax, a question to look up, an idea to try…"></textarea>
-    </details>
+  </div>
+
+  <div class="panel">
+    <div class="rowb" style="margin-block-end:4px">
+      <h2 style="margin:0">📋 Notice board</h2>
+      <span class="sp"></span>
+      <span style="font-size:12.5px;color:var(--muted)" id="noteCount"></span>
+      <button class="btn xs" data-act="boardstyle" type="button" title="Switch between blackboard and greenboard">◐ Board</button>
+    </div>
+    <p class="hint">Pin anything worth keeping — half-remembered syntax, a question to look up, an idea to try. Click a note to open it.</p>
+    <form class="quick" id="noteForm2" autocomplete="off">
+      <div class="field grow"><label for="nText">Note</label>
+        <textarea id="nText" rows="2" placeholder="Type your note, then pin it to the board…" required></textarea></div>
+      <div class="field"><label for="nColor">Colour</label>
+        <select id="nColor">
+          <option value="yellow">Yellow</option><option value="pink">Pink</option>
+          <option value="blue">Blue</option><option value="green">Green</option>
+          <option value="orange">Orange</option><option value="purple">Purple</option>
+        </select></div>
+      <button class="btn pri" type="submit">📌 Pin to board</button>
+    </form>
+    <div class="board" id="stickyBoard"></div>
   </div>
 
   <div class="grid2">
@@ -1332,6 +1385,22 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   </form>
 </dialog>
 
+<dialog id="noteDlg">
+  <form method="dialog" class="db" id="noteDlgForm">
+    <div class="rowb" style="margin-block-end:12px">
+      <h2 style="margin:0">📌 Note</h2>
+      <span class="sp"></span>
+      <button class="btn xs dgr" value="del" type="submit" data-do="notedel">🗑 Take down</button>
+      <button class="btn xs" value="close" type="submit">✕</button>
+    </div>
+    <div id="ndNote"></div>
+    <div class="df">
+      <button class="btn" value="close" type="submit">Close</button>
+      <button class="btn pri" value="save" type="submit">💾 Save note</button>
+    </div>
+  </form>
+</dialog>
+
 <dialog id="nodeDlg">
   <form method="dialog" class="db">
     <div class="rowb" style="margin-block-end:12px">
@@ -1355,7 +1424,7 @@ var KEY="learntrack.v2", NS="http://www.w3.org/2000/svg";
 var S={tasks:[],notes:{},logins:[],events:[],goals:{topics:{},hours:8,minDaily:1,stretchDaily:2,dailyMinutes:20},
        timer:null,settings:{theme:"dark",autoRev:true},
        scratch:"",gh:{token:"",gist:"",auto:false,last:""},projRepos:{},resources:[],resDone:{},resNotes:{},
-       watch:[],scratchNotes:"",javaTrace:{},javaTraceAns:{},achSeen:{}};
+       watch:[],scratchNotes:"",stickies:[],javaTrace:{},javaTraceAns:{},achSeen:{}};
 var ui={week:0,tab:"dash",cur:""};
 var PY={state:"idle",mod:null,loading:null};
 
@@ -1369,6 +1438,7 @@ function load(){
       S.projRepos=r.projRepos||{}; S.resources=r.resources||[]; S.resDone=r.resDone||{}; S.resNotes=r.resNotes||{};
       S.watch=r.watch||[]; S.scratchNotes=r.scratchNotes||"";
       S.javaTrace=r.javaTrace||{}; S.javaTraceAns=r.javaTraceAns||{}; S.achSeen=r.achSeen||{};
+      S.stickies=r.stickies||[];
       if(!S.goals.topics) S.goals.topics={};
       if(S.goals.minDaily==null) S.goals.minDaily=1;
       if(S.goals.stretchDaily==null) S.goals.stretchDaily=2;
@@ -1763,7 +1833,7 @@ function renderDash(){
     ["Study time",dur(secs)||"0m","across "+S.tasks.filter(function(t){return t.seconds;}).length+" timed sessions","⏱"],
     ["This week",wd+"/"+w.length,"questions completed","📈"]
   ]);
-  drawRing(); draw14(); drawHeat(); renderXP(); renderMap(); renderWatch(); renderToday(); renderMicro(); renderCatchup(); renderBadges(); renderWeak(); renderMonthly();
+  drawRing(); draw14(); drawHeat(); renderXP(); renderMap(); renderWatch(); renderStickies(); renderToday(); renderMicro(); renderCatchup(); renderBadges(); renderWeak(); renderMonthly();
   var at=document.getElementById("attention"); clr(at);
   var l=S.tasks.filter(function(t){return bucket(t)==="ready";}).sort(function(a,b){return a.due.localeCompare(b.due);}).slice(0,5);
   if(!l.length){
@@ -2199,6 +2269,12 @@ document.addEventListener("click",function(e){
         w2.appendChild(bb); w2.appendChild(document.createTextNode(" · "+q2[2])); }
       return; }
     if(doAct==="watchtopic"){ watchAdd(id,"Flagged from weak areas"); save(); renderWatch(); toast("📌 Added to your scratch board"); return; }
+    if(doAct==="noteopen"){ noteOpen(id); return; }
+    if(doAct==="notecolor"){
+      var cp=id.split("|"), cn=notesList().filter(function(x){return x.id===cp[0];})[0];
+      if(cn){ cn.color=cp[1]; save(); noteOpen(cp[0]); renderStickies(); }
+      return;
+    }
     if(doAct==="wtouch"){ watchTouch(id); return; }
     if(doAct==="wpull"){
       var ww=watchList().filter(function(x){return x.id===id;})[0];
@@ -2473,6 +2549,11 @@ document.addEventListener("click",function(e){
         if(nx4){ setTab("code"); loadIntoEditor(nx4.id); } }
       else toast("Nothing left to open — you have finished the path");
       break;
+    case "boardstyle":
+      S.settings.board=(S.settings.board==="green")?"black":"green";
+      save(); renderStickies();
+      toast(S.settings.board==="green"?"Greenboard":"Blackboard");
+      break;
     case "scrollwatch":
       setTab("dash");
       setTimeout(function(){
@@ -2530,8 +2611,6 @@ document.addEventListener("input",function(e){
   if(["fSearch","fBucket","fTopic","fDiff"].indexOf(e.target.id)>=0) renderPlanner();
   if(["resSearch","resType"].indexOf(e.target.id)>=0) renderResources();
   if(e.target.id==="bSearch") renderBasics();
-  if(e.target.id==="scratchBox"){ S.scratchNotes=e.target.value; clearTimeout(window.__ltSc);
-    window.__ltSc=setTimeout(save,700); }
   if(e.target.id==="editor"){
     gutter();
     clearTimeout(window.__ltDraft);
@@ -5866,6 +5945,41 @@ function achTierName(i){
   var t=["Bronze","Silver","Gold","Platinum","Diamond","Master","Grandmaster","Legend","Mythic","Eternal"];
   return t[Math.min(t.length-1,Math.floor(i/6))];
 }
+/* Every achievement gets its own name rather than "Bronze <family>".
+   Each family has its own vocabulary; beyond the named list, tiers take
+   an evocative suffix so nothing ever repeats.                        */
+var ACH_NAMES={
+ done:["First Blood","Getting Started","Three of a Kind","On the Board","High Five","Half a Dozen","Lucky Seven","Warmed Up","Finding a Rhythm","Double Digits","Steady Hand","Building Momentum","Quiet Confidence","Problem Solver","Fluent","In the Groove","Serial Solver","Question Slayer","Relentless","Century Approach","Centurion","Machine","Unstoppable","Prolific","Question Devourer","Grind Master","Iron Will","Solver Supreme","Marathoner","Legend of Logic"],
+ streak:["Two Day Spark","Three in a Row","Four Day Focus","Working Week","Six Straight","Seven Day Run","Eight Days Strong","Habit Forming","Ten Day Titan","Fortnight Fighter","Two Week Wonder","Consistency King","Twenty Day Streak","Unbreakable","Monthly Marathon","Never Miss","Chain Keeper","Daily Devotee","Streak Sovereign","Eternal Flame"],
+ xp:["First Steps","Spark","Kindling","Small Fire","Warming Up","Glowing","Bright","Burning","Blazing","Radiant","Brilliant","Luminous","Incandescent","Stellar","Solar","Supernova","Quasar","Nebula","Galactic","Cosmic"],
+ hours:["First Hour","Two Hours In","Triple Session","Half a Shift","Full Morning","Six Hour Grind","Deep Diver","Full Day","Dedicated","Double Shift","Time Investor","Hour Hoarder","Chronomancer","Century of Hours","Time Lord","Ageless","Timeless","Eternal Student","Hour Legend","Master of Time"],
+ tests:["First Pass","Green Light","All Clear","Test Taker","Passing Grade","Verified","Validated","Certified","Quality Assured","Bug Free","Edge Case Hunter","Case Closed","Test Titan","Assertion Ace","Coverage King","Regression Ranger","Suite Sovereign","Verification Virtuoso","Proof Positive","Flawless"],
+ topics:["First Topic","Branching Out","Broadening","Curious Mind","Explorer","Wide Reader","Generalist","Renaissance","Polymath","Omnivore","Knowledge Web","Connected","Cross Trained","Multi Disciplined","Boundless","Encyclopaedic","All Rounder","Universalist","Grand Curriculum","Complete"],
+ code:["First Save","Two Solutions","Building a Library","Code Keeper","Archivist","Collector","Solution Vault","Reference Builder","Curator","Codex","Repository","Anthology","Compendium","Grand Archive","Living Library","Master Collection","Code Museum","Eternal Archive","Solution Sage","Keeper of Code"],
+ notes:["First Entry","Two Lines","Reflective","Journalist","Note Taker","Chronicler","Diarist","Scribe","Memoirist","Historian","Documentarian","Record Keeper","Annalist","Biographer","Lorekeeper","Wordsmith","Chronicle Master","Story Weaver","Living Record","Sage of Notes"],
+ rev:["First Review","Second Look","Refresher","Reviewer","Retainer","Memory Keeper","Recall Master","Spaced Learner","Forgetting Fighter","Curve Breaker","Retention Rex","Deep Memory","Mind Palace","Total Recall","Never Forgets","Memory Sage","Recall Champion","Eternal Memory","Mnemonist","Master of Recall"],
+ days:["Day One","Two Days","Three Days In","Regular","Habitual","Committed","Weekly Warrior","Fortnight Faithful","Monthly Member","Steady Presence","Reliable","Ever Present","Long Hauler","Season Veteran","Year Rounder","Perennial","Institution","Constant","Immovable","Timeless Learner"],
+ proj:["First Build","Two Projects","Hat Trick","Builder","Craftsman","Maker","Shipper","Serial Builder","Portfolio Ready","Prolific Maker","Project Machine","Architect","Master Builder","Studio","Workshop","Factory","Foundry","Grand Constructor","Creator Supreme","Master Craftsman"],
+ weeks:["Week One","Two Weeks","Three Weeks","Month Made","Five Weeks","Six Weeks","Seventh Week","Two Months","Quarter Way","Ten Weeks","Steady Course","Season Complete","Halfway There","Long Distance","Home Stretch","Course Complete","Beyond the Path","Repeat Scholar","Curriculum Master","Grand Graduate"],
+ perf:["Clean First Try","Twice Perfect","Three Straight","Sharpshooter","One Shot Wonder","Precision","Deadeye","Marksman","First Try Fiend","Flawless Five","No Second Chances","Surgeon","Sniper","Perfectionist","Immaculate","Untouchable","Bullseye Baron","Zero Retry","Perfect Record","One Take Legend"],
+ conf:["First Mastery","Two Mastered","Confident","Sure Footed","Assured","Wholly Fluent","Second Nature","Instinctive","Effortless","Commanding","Authority","Expert","Specialist","Virtuoso","Maestro","Grandmaster","Sensei","Oracle","Living Reference","Complete Mastery"],
+ lang:["Bilingual","Trilingual","Polyglot","Quadrilingual","Language Collector","Syntax Shifter","Universal Coder","Tongue of Machines"],
+ early:["Early Bird","Dawn Patrol","Sunrise Coder","Morning Person","Cock Crow","First Light","Daybreak Dev","Aurora","Sunrise Streak","Morning Master","Early Riser Elite","Dawn Devotee","Rooster","Break of Day","Morning Sovereign","Sunrise Sage","First Light Legend","Dawn Chaser","Daybreak Deity","Master of Mornings"],
+ night:["Night Owl","Midnight Oil","After Hours","Moonlighter","Nocturnal","Late Shift","Witching Hour","Star Gazer","Night Shift","Moon Coder","Darkness Dweller","Insomniac","Night Watchman","Twilight Coder","Midnight Master","Nocturne","Owl Supreme","Lord of Night","Eternal Night","Master of Midnight"],
+ wknd:["Weekend Warrior","Saturday Scholar","Sunday Student","Two Day Grind","Weekend Regular","No Days Off","Saturday Sage","Sunday Sovereign","Weekend Devotee","Rest Day Rebel","Perpetual Weekend","Seven Day Week","Weekend Master","Always On","Sabbath Scholar","Weekend Legend","No Rest","Ceaseless","Weekend Deity","Eternal Weekend"],
+ watch:["First Revisit","Second Pass","Board Keeper","Revisiter","Loop Closer","Gap Filler","Weak Spot Slayer","Blind Spot Hunter","Self Aware","Honest Learner","Gap Destroyer","Board Master","Revisit Royalty","Weakness Eliminator","Full Circle","Closure","Perfect Coverage","Board Sovereign","Gapless","Master Reviser"],
+ perfw:["Perfect Week","Two Perfect Weeks","Triple Perfect","Flawless Fortnight","Five Perfect","Six Flawless","Perfection Streak","Immaculate Month","Nine Perfect","Ten Flawless","Unblemished","Spotless","Pristine","Untarnished","Faultless","Perfection Incarnate","Flawless Legend","Absolute","Beyond Perfect","Eternal Perfection"]
+};
+var ACH_SUFFIX=["Ascendant","Paragon","Zenith","Apex","Pinnacle","Summit","Vanguard","Colossus","Titan","Sovereign",
+ "Immortal","Transcendent","Infinite","Absolute","Ultimate","Supreme","Boundless","Peerless","Unrivalled","Singular"];
+function achName(key,i,fam){
+  var list=ACH_NAMES[key];
+  if(list&&i<list.length) return list[i];
+  var over=i-((list&&list.length)||0);
+  var suffix=ACH_SUFFIX[over%ACH_SUFFIX.length];
+  var round=Math.floor(over/ACH_SUFFIX.length)+1;
+  return fam.replace(/s$/,"")+" "+suffix+(round>1?" "+["I","II","III","IV","V","VI","VII","VIII","IX","X"][Math.min(9,round-1)]:"");
+}
 function achTotal(){
   var n=0; ACH_FAMILIES.forEach(function(f){ n+=f.steps.length; }); return n;
 }
@@ -5878,12 +5992,12 @@ function achEarned(st){
       if(v>=f.steps[i]){
         hit=i+1;
         earned.push({id:f.key+":"+i,icon:f.icon,tier:achTierName(i),
-          name:achTierName(i)+" "+f.name,
+          name:achName(f.key,i,f.name),
           desc:f.steps[i].toLocaleString()+" "+f.unit,
           val:f.steps[i],fam:f.name});
       } else {
         next.push({id:f.key+":"+i,icon:f.icon,tier:achTierName(i),
-          name:achTierName(i)+" "+f.name,
+          name:achName(f.key,i,f.name),
           desc:f.steps[i].toLocaleString()+" "+f.unit,
           have:v,need:f.steps[i],
           pct:Math.min(99,Math.round(v/f.steps[i]*100))});
@@ -6889,6 +7003,83 @@ function renderLangBar(){
   });
 }
 
+/* ============ sticky notes on a board ============ */
+function notesList(){ return (S.stickies=S.stickies||[]); }
+function noteAdd(text,color){
+  text=(text||"").trim(); if(!text) return null;
+  var n={id:uid(),text:text,color:color||"yellow",at:new Date().toISOString(),
+         rot:(Math.random()*5-2.5).toFixed(2)};
+  notesList().unshift(n);
+  ev("note","Pinned a note to the board");
+  save();
+  return n;
+}
+function noteFmt(iso2){
+  var d=new Date(iso2);
+  return d.toLocaleDateString(undefined,{day:"numeric",month:"short"})+
+    " · "+d.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"});
+}
+function renderStickies(){
+  var host=document.getElementById("stickyBoard"); if(!host) return; clr(host);
+  host.className="board "+(S.settings.board==="green"?"bgreen":"bblack");
+  var list=notesList();
+  var c=document.getElementById("noteCount");
+  if(c) c.textContent=list.length?(list.length+" note"+(list.length===1?"":"s")+" pinned"):"";
+  if(!list.length){
+    var e=document.createElement("div"); e.className="bempty";
+    e.textContent="The board is empty. Pin your first note above — it stays here until you take it down.";
+    host.appendChild(e); return;
+  }
+  list.forEach(function(n){
+    var d=document.createElement("button"); d.type="button";
+    d.className="sticky s-"+n.color;
+    d.style.transform="rotate("+n.rot+"deg)";
+    d.setAttribute("data-do","noteopen"); d.setAttribute("data-id",n.id);
+    var pin=document.createElement("span"); pin.className="spin"; pin.textContent="📌";
+    var tx=document.createElement("div"); tx.className="stext"; tx.textContent=n.text;
+    var dt=document.createElement("div"); dt.className="sdate"; dt.textContent=noteFmt(n.at);
+    d.appendChild(pin); d.appendChild(tx); d.appendChild(dt);
+    host.appendChild(d);
+  });
+}
+function noteOpen(id){
+  var n=notesList().filter(function(x){return x.id===id;})[0];
+  if(!n) return;
+  ui.noteId=id;
+  var dlg=document.getElementById("noteDlg");
+  var body=document.getElementById("ndNote"); clr(body);
+  var card=document.createElement("div"); card.className="sticky big s-"+n.color;
+  var pin=document.createElement("span"); pin.className="spin"; pin.textContent="📌";
+  var ta=document.createElement("textarea"); ta.id="ndText"; ta.className="sedit";
+  ta.value=n.text; ta.rows=Math.max(6,Math.min(16,n.text.split("\n").length+3));
+  var dt=document.createElement("div"); dt.className="sdate big";
+  dt.textContent="Pinned "+new Date(n.at).toLocaleDateString(undefined,
+    {weekday:"long",day:"numeric",month:"long",year:"numeric"})+
+    " at "+new Date(n.at).toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit"});
+  card.appendChild(pin); card.appendChild(ta); card.appendChild(dt);
+  body.appendChild(card);
+  var row=document.createElement("div"); row.className="rowb"; row.style.marginBlockStart="12px";
+  ["yellow","pink","blue","green","orange","purple"].forEach(function(col){
+    var b=document.createElement("button"); b.type="button";
+    b.className="swatch s-"+col+(n.color===col?" on":"");
+    b.setAttribute("data-do","notecolor"); b.setAttribute("data-id",id+"|"+col);
+    b.title=col; row.appendChild(b);
+  });
+  body.appendChild(row);
+  dlg.showModal();
+  setTimeout(function(){ ta.focus(); ta.setSelectionRange(ta.value.length,ta.value.length); },40);
+}
+function noteSave(){
+  var n=notesList().filter(function(x){return x.id===ui.noteId;})[0];
+  var ta=document.getElementById("ndText");
+  if(n&&ta){
+    var v=ta.value.trim();
+    if(!v){ S.stickies=notesList().filter(function(x){return x.id!==n.id;}); toast("Note removed"); }
+    else { n.text=v; n.edited=new Date().toISOString(); toast("Note saved"); }
+    save(); renderStickies();
+  }
+}
+
 /* ============ scratch board / watchlist ============ */
 /* Topics you flag get resurfaced on a widening schedule. Nothing is ever
    "late" — an item simply becomes due, and stays due until you touch it.  */
@@ -7034,8 +7225,6 @@ function renderWatch(){
   var due=list.filter(function(w){return watchState(w).due;}).length;
   var c=document.getElementById("watchCount");
   if(c) c.textContent=list.length?(due?due+" ready to revise · "+list.length+" on the board":list.length+" resting"):"";
-  var sc=document.getElementById("scratchBox");
-  if(sc&&document.activeElement!==sc) sc.value=S.scratchNotes||"";
 }
 
 /* ============ revision (spaced repetition) ============ */
@@ -9557,6 +9746,9 @@ load();
 document.documentElement.setAttribute("data-theme",S.settings.theme||"dark");
 document.getElementById("rdStart").value=iso(sow());
 if(S.logins.indexOf(today())<0){ S.logins.push(today()); if(S.logins.length>500) S.logins.shift(); }
+if(S.scratchNotes&&S.scratchNotes.trim()&&!(S.stickies&&S.stickies.length)){
+  noteAdd(S.scratchNotes.trim(),"yellow"); S.scratchNotes=""; save();
+}
 var __swept=watchSweep();
 autoTopUp();
 save();
