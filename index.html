@@ -685,7 +685,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   <div class="top-in">
     <button class="brand" data-act="home" type="button">
       <span class="mark">LT</span>
-      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v33</span></span></span>
+      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v34</span></span></span>
     </button>
     <span class="langbar" id="langBar"></span>
     <span class="sp"></span>
@@ -745,9 +745,9 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
     <div class="rowb" style="margin-block-end:4px">
       <h2 style="margin:0">Your skill map</h2>
       <span class="sp"></span>
-      <span style="font-size:12.5px;color:var(--muted)">Click any skill to see its questions</span>
+      <button type="button" class="btn xs pri" id="nextWkBtn" data-do="nextwk">▶ Next week</button>
     </div>
-    <p class="hint">Lines light up as you unlock what comes next.</p>
+    <p class="hint">Click any skill to see its questions. Lines light up as you unlock what comes next.</p>
     <div class="mapwrap" id="skillmap"></div>
     <div class="legend">
       <span><i style="background:#16a34a"></i>Complete</span>
@@ -1390,7 +1390,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
     <div class="rowb" style="margin-block-end:12px">
       <h2 style="margin:0">📌 Note</h2>
       <span class="sp"></span>
-      <button class="btn xs dgr" value="del" type="submit" data-do="notedel">🗑 Take down</button>
+      <button class="btn xs dgr" value="del" type="submit">🗑 Take down</button>
       <button class="btn xs" value="close" type="submit">✕</button>
     </div>
     <div id="ndNote"></div>
@@ -2253,6 +2253,20 @@ document.addEventListener("click",function(e){
         toast("▶ Week "+wk+" opened — "+added+" items ready"); }
       else toast("Already open");
       showNode(nodeId);
+      return;
+    }
+    if(doAct==="nextwk"){
+      var nw=nextWeekInfo();
+      if(!nw){ toast("Every week is open and finished — nice work"); return; }
+      if(nw.open<nw.total){
+        var got=mpLoad(nw.w,true);
+        if(got){ ev("road","Started Week "+nw.w+": "+nw.title); save();
+                 toast("▶ Week "+nw.w+" opened — "+nw.title); }
+      }
+      render();
+      var tgt=firstUnsolvedIn(nw.w);
+      if(tgt){ setTab("code"); jumpTo(tgt.id); }
+      else toast("Week "+nw.w+" is open — pick a question below");
       return;
     }
     if(doAct==="jtcheck"){ javaCheck(); return; }
@@ -7672,20 +7686,20 @@ function renderBasics(){
 
 /* ============ visual skill map ============ */
 var SKILLMAP=[
- {id:"basics",name:"Python Basics",icon:"🐍",x:50,y:8,topics:["print()","Variables","Data Types","Type conversion","Input"],deps:[]},
- {id:"flow", name:"Control Flow", icon:"🔀",x:22,y:24,topics:["Operators","if","elif","else","Nested conditions"],deps:["basics"]},
- {id:"loops",name:"Loops",        icon:"🔁",x:78,y:24,topics:["For Loops","While Loops","range()","break","continue"],deps:["basics"]},
- {id:"coll", name:"Collections",  icon:"📦",x:50,y:40,topics:["Lists","Tuples","Dictionaries","Sets"],deps:["loops"]},
- {id:"func", name:"Functions",    icon:"🧩",x:20,y:40,topics:["Functions","Scope","Modules","math module","random module"],deps:["flow"]},
- {id:"str",  name:"Strings",      icon:"🔤",x:80,y:40,topics:["Strings"],deps:["loops"]},
- {id:"err",  name:"Errors & Files",icon:"🛡️",x:22,y:57,topics:["Error Handling","File Handling","try","except"],deps:["func"]},
- {id:"oop",  name:"OOP",          icon:"🏗️",x:50,y:57,topics:["Classes","Objects","Constructor","Methods","Inheritance","Encapsulation"],deps:["coll","func"]},
- {id:"data", name:"CSV & JSON",   icon:"🗂️",x:78,y:57,topics:["csv module","json module","DictReader"],deps:["err"]},
- {id:"pandas",name:"Pandas & NumPy",icon:"📊",x:30,y:74,topics:["Series","DataFrame","groupby()","Missing values","Arrays","Data cleaning"],deps:["data"]},
- {id:"sql",  name:"SQL",          icon:"🗄️",x:70,y:74,topics:["SELECT","JOIN","GROUP BY","sqlite3"],deps:["data"]},
- {id:"api",  name:"APIs",         icon:"🌐",x:50,y:88,topics:["requests","REST","JSON responses","Authentication concepts"],deps:["data"]},
- {id:"proj", name:"Projects",     icon:"🚀",x:15,y:88,topics:["Projects"],deps:["oop"]},
- {id:"git",  name:"Git & Quality",icon:"🔧",x:85,y:88,topics:["Repository creation","Commits","pytest","Type hints","Logging"],deps:["proj"]}
+ {id:"basics",name:"Python Basics",icon:"🐍",x:50,y:8,topics:["print()","Variables","Data Types","Type conversion","Input"],weeks:[1,2],deps:[]},
+ {id:"flow", name:"Control Flow", icon:"🔀",x:22,y:24,topics:["Operators","if","elif","else","Nested conditions"],weeks:[3,4],deps:["basics"]},
+ {id:"loops",name:"Loops",        icon:"🔁",x:78,y:24,topics:["For Loops","While Loops","range()","break","continue"],weeks:[5,6],deps:["basics"]},
+ {id:"coll", name:"Collections",  icon:"📦",x:50,y:40,topics:["Lists","Tuples","Dictionaries","Sets"],weeks:[7,8],deps:["loops"]},
+ {id:"func", name:"Functions",    icon:"🧩",x:20,y:40,topics:["Functions","Scope","Modules","math module","random module"],weeks:[9],deps:["flow"]},
+ {id:"str",  name:"Strings",      icon:"🔤",x:80,y:40,topics:["Strings"],weeks:[11],deps:["loops"]},
+ {id:"err",  name:"Errors & Files",icon:"🛡️",x:22,y:57,topics:["Error Handling","File Handling","try","except"],weeks:[10,11],deps:["func"]},
+ {id:"oop",  name:"OOP",          icon:"🏗️",x:50,y:57,topics:["Classes","Objects","Constructor","Methods","Inheritance","Encapsulation"],weeks:[21],deps:["coll","func"]},
+ {id:"data", name:"CSV & JSON",   icon:"🗂️",x:78,y:57,topics:["csv module","json module","DictReader"],weeks:[12],deps:["err"]},
+ {id:"pandas",name:"Pandas & NumPy",icon:"📊",x:30,y:74,topics:["Series","DataFrame","groupby()","Missing values","Arrays","Data cleaning"],weeks:[13,14,15,16],deps:["data"]},
+ {id:"sql",  name:"SQL",          icon:"🗄️",x:70,y:74,topics:["SELECT","JOIN","GROUP BY","sqlite3"],weeks:[17,18],deps:["data"]},
+ {id:"api",  name:"APIs",         icon:"🌐",x:50,y:88,topics:["requests","REST","JSON responses","Authentication concepts"],weeks:[19,20],deps:["data"]},
+ {id:"proj", name:"Projects",     icon:"🚀",x:15,y:88,topics:["Projects"],weeks:[4,24],deps:["oop"]},
+ {id:"git",  name:"Git & Quality",icon:"🔧",x:85,y:88,topics:["Repository creation","Commits","pytest","Type hints","Logging"],weeks:[22,23],deps:["proj"]}
 ];
 function nodeStats(n){
   var rel=S.tasks.filter(function(t){
@@ -7695,7 +7709,46 @@ function nodeStats(n){
   var done=rel.filter(function(t){return t.status==="done";}).length;
   return {total:rel.length,done:done,pct:rel.length?Math.round(done/rel.length*100):0};
 }
+/* the first week that is either not fully opened, or opened but not finished */
+function nextWeekInfo(){
+  if(typeof MYPATH==="undefined") return null;
+  for(var mi=0;mi<MYPATH.length;mi++){
+    var M=MYPATH[mi];
+    for(var wi=0;wi<M.weeks.length;wi++){
+      var W=M.weeks[wi], items=mpItems(W);
+      if(!items.length) continue;
+      var open=items.filter(function(it){ return !!rdFind(it.key); });
+      if(open.length<items.length)
+        return {w:W.w,title:W.title,total:items.length,open:open.length,fresh:open.length===0};
+      var left=open.filter(function(it){ var t=rdFind(it.key); return t&&t.status!=="done"; });
+      if(left.length)
+        return {w:W.w,title:W.title,total:items.length,open:open.length,fresh:false,left:left.length};
+    }
+  }
+  return null;
+}
+function firstUnsolvedIn(wNum){
+  var target=null;
+  MYPATH.forEach(function(M){ M.weeks.forEach(function(W){
+    if(W.w!==wNum) return;
+    mpItems(W).forEach(function(it){
+      if(target) return;
+      var t=rdFind(it.key); if(t&&t.status!=="done") target=t;
+    });
+  }); });
+  return target;
+}
+function renderNextBtn(){
+  var b=document.getElementById("nextWkBtn"); if(!b) return;
+  var nw=nextWeekInfo();
+  if(!nw){ b.textContent="✓ All weeks done"; b.disabled=true; b.title=""; return; }
+  b.disabled=false;
+  b.textContent=(nw.fresh?"▶ Start ":"▶ Continue ")+"Week "+nw.w+" · "+nw.title;
+  b.title=nw.fresh?("Opens Week "+nw.w+" and takes you to its first question")
+                  :("You have "+(nw.left||(nw.total-nw.open))+" left in Week "+nw.w);
+}
 function renderMap(){
+  renderNextBtn();
   var host=document.getElementById("skillmap"); if(!host) return; clr(host);
   var svg=sv("svg",{viewBox:"0 0 100 100",preserveAspectRatio:"none",class:"maplines"},host);
   SKILLMAP.forEach(function(n){
@@ -7750,12 +7803,8 @@ function showNode(id){
   /* which My Path weeks cover this skill, and are any not yet opened? */
   var cover=[];
   if(typeof MYPATH!=="undefined") MYPATH.forEach(function(M){ M.weeks.forEach(function(W){
-    var hits=mpItems(W).filter(function(it){
-      var tp=(W.title||"");
-      return n.topics.some(function(x){
-        return tp===x||tp.indexOf(x)>=0||x.indexOf(tp)>=0||it.label.indexOf(x)>=0;
-      });
-    });
+    if((n.weeks||[]).indexOf(W.w)<0) return;
+    var hits=mpItems(W);
     if(hits.length){
       var open=hits.filter(function(it){ return !!rdFind(it.key); }).length;
       cover.push({w:W.w,title:W.title,total:hits.length,open:open});
@@ -8840,7 +8889,20 @@ function goRelative(step,unsolvedOnly){
     if(step>0&&openNextWeek()){ render(); var q0=solvableQueue(); if(q0.length) jumpTo(q0[0].id); }
     return;
   }
-  if(i<0){ jumpTo(q[0].id); return; }
+  if(i<0){
+    /* the open item is not itself solvable (theory, or no tests yet).
+       Carry on from where it sits in the order — never snap back to question 1. */
+    var cur=byId(ui.cur), k=-1;
+    if(cur){
+      var ck=(cur.due||"")+"|"+(cur.createdAt||"");
+      for(var z=0;z<q.length;z++){
+        if(((q[z].due||"")+"|"+(q[z].createdAt||""))>ck){ k=z; break; }
+      }
+      if(step>0){ if(k<0) k=q.length-1; }
+      else k=(k<0)?q.length-1:Math.max(0,k-1);
+    }
+    jumpTo(q[k<0?0:k].id); return;
+  }
   var j=i;
   for(var n=0;n<q.length;n++){
     j+=step;
