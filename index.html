@@ -156,6 +156,45 @@ svg.heatsvg{block-size:auto; min-inline-size:340px}
 .stv{font-size:19px; font-weight:800; letter-spacing:-.4px; line-height:1.15}
 .stl{font-size:10.5px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-block-start:2px}
 @media (max-width:560px){ .statrow{grid-template-columns:repeat(2,minmax(0,1fr))} .stv{font-size:17px} }
+.wkhead{display:flex;align-items:center;gap:10px;inline-size:100%;padding:11px 13px;
+  background:var(--panel2);border:0;border-radius:10px;cursor:pointer;text-align:start;font:inherit;color:inherit}
+.wkhead:hover{background:var(--brand-soft)}
+.wkcar{color:var(--muted);font-size:12px;inline-size:12px;flex:0 0 auto}
+.wkt{display:flex;align-items:baseline;gap:9px;flex:1 1 auto;min-inline-size:0}
+.wkt b{font-size:13.5px;white-space:nowrap}
+.wkname{font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wkbar{flex:0 0 90px;block-size:6px;background:var(--line);border-radius:99px;overflow:hidden}
+.wkbar i{display:block;block-size:100%;background:#f59e0b;border-radius:99px}
+.wkbody{padding:4px 13px 12px}
+.wkrow{display:flex;align-items:center;gap:9px;padding:6px 4px;border-block-start:1px solid var(--line)}
+.wkrow:first-child{border-block-start:0}
+.wkmark{inline-size:17px;block-size:17px;flex:0 0 auto;border-radius:50%;display:grid;place-items:center;
+  font-size:11px;background:var(--line);color:var(--muted)}
+.wkmark.on{background:#16a34a;color:#fff}
+.wkkind{flex:0 0 auto;font-size:12px}
+.wklab{flex:1 1 auto;font-size:12.5px;min-inline-size:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wkrow.wdone .wklab{color:var(--muted)}
+.wkmeta{flex:0 0 auto;font-size:11px;color:var(--muted)}
+.wkstrip{margin:10px 0 4px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);overflow:hidden}
+.wshead{display:flex;align-items:center;gap:10px;padding:9px 12px;border-block-end:1px solid var(--line);flex-wrap:wrap}
+.wshead b{font-size:12.5px}
+.wscount{font-size:11.5px;color:var(--muted)}
+.wsbar{flex:0 0 70px;block-size:5px;background:var(--line);border-radius:99px;overflow:hidden}
+.wsbar i{display:block;block-size:100%;background:#f59e0b;border-radius:99px}
+.wslist{display:flex;flex-wrap:wrap;gap:5px;padding:9px 12px}
+.wsi{display:inline-flex;align-items:center;gap:5px;max-inline-size:230px;padding:4px 9px;
+  border:1px solid var(--line);border-radius:99px;background:var(--panel);cursor:pointer;
+  font:inherit;font-size:11.5px;color:var(--ink2)}
+.wsi:hover{border-color:var(--brand);background:var(--brand-soft)}
+.wsm{font-size:10px;color:var(--muted)}
+.wsi.wsdone{opacity:.62}
+.wsi.wsdone .wsl{text-decoration:line-through}
+.wsi.wsdone .wsm{color:#16a34a;font-weight:700}
+.wsi.wscur{border-color:var(--brand);background:var(--brand-soft);font-weight:600;color:var(--ink)}
+.wsi.wslock{border-style:dashed;opacity:.7}
+.wsl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wsfoot{display:flex;align-items:center;gap:8px;padding:8px 12px;border-block-start:1px solid var(--line);
+  font-size:11.5px;color:var(--muted);flex-wrap:wrap}
 .legend{display:flex; flex-wrap:wrap; gap:12px; margin-block-start:8px; font-size:12.5px; color:var(--muted)}
 .legend i{display:inline-block; inline-size:10px; block-size:10px; border-radius:3px; margin-inline-end:6px}
 .scale{display:flex; align-items:center; gap:5px; font-size:11.5px; color:var(--muted); margin-block-start:9px}
@@ -685,7 +724,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   <div class="top-in">
     <button class="brand" data-act="home" type="button">
       <span class="mark">LT</span>
-      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v34</span></span></span>
+      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v36</span></span></span>
     </button>
     <span class="langbar" id="langBar"></span>
     <span class="sp"></span>
@@ -707,6 +746,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   <button role="tab" data-tab="basics" aria-selected="false" type="button">🎓 Learn from Basics</button>
   <button role="tab" data-tab="goals" aria-selected="false" type="button">◎ Goals</button>
   <button role="tab" data-tab="rep" aria-selected="false" type="button">▲ Reports</button>
+  <button role="tab" data-tab="wks" aria-selected="false" type="button">📋 My weeks</button>
   <button role="tab" data-tab="road" aria-selected="false" type="button">📘 Roadmap</button>
   <button role="tab" data-tab="res" aria-selected="false" type="button">📚 Resources</button>
   <button role="tab" data-tab="rev" aria-selected="false" type="button">🧠 Revision</button>
@@ -1007,6 +1047,28 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
 </section>
 
 <!-- ================= ROADMAP ================= -->
+<section class="tab" id="tab-wks" hidden>
+  <div class="panel">
+    <div class="rowb">
+      <div style="flex:1 1 320px">
+        <h2 style="margin:0">My weeks — everything, week by week</h2>
+        <p class="hint" style="margin-block-end:0">Every week of your path with each item marked done or still to do. Click a week to open it up.</p>
+      </div>
+      <button class="btn pri" data-do="nextwk" type="button">▶ Jump to what is next</button>
+    </div>
+    <div id="wkSummary" style="margin-block-start:14px"></div>
+    <div class="rowb" style="margin-block-start:10px">
+      <button class="btn xs" data-do="wkfilter" data-id="all" type="button">All weeks</button>
+      <button class="btn xs" data-do="wkfilter" data-id="open" type="button">Still to do</button>
+      <button class="btn xs" data-do="wkfilter" data-id="done" type="button">Finished</button>
+      <button class="btn xs" data-do="wkfilter" data-id="notstarted" type="button">Not started</button>
+      <span class="sp"></span>
+      <button class="btn xs" data-do="wkexpand" data-id="1" type="button">Expand all</button>
+      <button class="btn xs" data-do="wkexpand" data-id="0" type="button">Collapse all</button>
+    </div>
+    <div id="wkList" style="margin-block-start:12px"></div>
+  </div>
+</section>
 <section class="tab" id="tab-road" hidden>
   <div class="panel">
     <div class="rowb">
@@ -1209,6 +1271,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
           <span style="font-size:12px; color:var(--muted)" id="pyStat">Python engine idle</span>
         </div>
         <div class="qnav" id="qNav" hidden></div>
+        <div class="wkstrip" id="wkStrip" hidden></div>
         <div class="qpanel" id="qPanel" hidden></div>
         <div class="vbox" id="verdictBox" hidden></div>
         <div class="edwrap">
@@ -1439,6 +1502,7 @@ function load(){
       S.watch=r.watch||[]; S.scratchNotes=r.scratchNotes||"";
       S.javaTrace=r.javaTrace||{}; S.javaTraceAns=r.javaTraceAns||{}; S.achSeen=r.achSeen||{};
       S.stickies=r.stickies||[];
+      S.rev=r.rev||0; SREV=S.rev;
       if(!S.goals.topics) S.goals.topics={};
       if(S.goals.minDaily==null) S.goals.minDaily=1;
       if(S.goals.stretchDaily==null) S.goals.stretchDaily=2;
@@ -1447,9 +1511,79 @@ function load(){
     }
   }catch(e){}
 }
+var SREV=0;
+function readStore(){ try{ return JSON.parse(localStorage.getItem(KEY)); }catch(e){ return null; } }
+/* keep the better of two copies of the same question, never the emptier one */
+function pickTask(a,b){
+  if(b.status==="done"&&a.status!=="done"){
+    a.status="done"; a.completedAt=b.completedAt||a.completedAt||b.codeAt||a.codeAt;
+  }
+  if(b.verified&&!a.verified) a.verified=true;
+  if(b.status==="done"||a.status==="done"){
+    var ca=a.completedAt||"", cb=b.completedAt||"";
+    a.completedAt=(ca&&cb)?(ca<cb?ca:cb):(ca||cb);
+  }
+  var ta=a.codeAt||"", tb=b.codeAt||"";
+  if(tb>ta&&b.code){ a.code=b.code; a.codeLang=b.codeLang||a.codeLang; a.codeAt=b.codeAt; a.output=b.output||a.output; }
+  if((b.seconds||0)>(a.seconds||0)) a.seconds=b.seconds;
+  if(b.notes&&!a.notes) a.notes=b.notes;
+  if(b.learned&&!a.learned) a.learned=b.learned;
+  return a;
+}
+function mergeTasks(mine,theirs){
+  var byIdM={}, byRoad={}, out=[];
+  function put(t){
+    var hit=byIdM[t.id]||(t.road?byRoad[t.road]:null);
+    if(hit){ pickTask(hit,t); return; }
+    byIdM[t.id]=t; if(t.road) byRoad[t.road]=t; out.push(t);
+  }
+  (mine||[]).forEach(put); (theirs||[]).forEach(put);
+  return out;
+}
+function mergeList(mine,theirs){
+  var seen={}, out=[];
+  (mine||[]).concat(theirs||[]).forEach(function(x){
+    if(!x||!x.id||seen[x.id]) return; seen[x.id]=1; out.push(x);
+  });
+  return out;
+}
 function save(){
-  try{ localStorage.setItem(KEY,JSON.stringify(S)); }
-  catch(e){ toast("Could not save — browser storage may be full"); }
+  try{
+    var cur=readStore();
+    /* somebody else wrote since we last read — fold their work in first */
+    if(cur&&Array.isArray(cur.tasks)&&(cur.rev||0)>SREV){
+      S.tasks=mergeTasks(S.tasks,cur.tasks);
+      S.stickies=mergeList(S.stickies,cur.stickies);
+      S.watch=mergeList(S.watch,cur.watch);
+      S.events=(S.events||[]).concat(cur.events||[]).slice(-800);
+      Object.keys(cur.notes||{}).forEach(function(k){ if(!S.notes[k]) S.notes[k]=cur.notes[k]; });
+      Object.keys(cur.resDone||{}).forEach(function(k){ S.resDone[k]=S.resDone[k]||cur.resDone[k]; });
+      Object.keys(cur.javaTrace||{}).forEach(function(k){ S.javaTrace[k]=S.javaTrace[k]||cur.javaTrace[k]; });
+    }
+    S.rev=Math.max(SREV,(cur&&cur.rev)||0)+1; SREV=S.rev;
+    S.savedAt=new Date().toISOString();
+    localStorage.setItem(KEY,JSON.stringify(S));
+  }catch(e){ toast("Could not save — browser storage may be full"); }
+}
+/* a question that passed its tests but was never ticked off, and any duplicate
+   copies of the same question, get repaired the moment the page opens */
+function repairProgress(){
+  var fixed=0, before=S.tasks.length;
+  S.tasks.forEach(function(t){
+    if(t.verified&&t.status!=="done"){
+      t.status="done";
+      t.completedAt=t.completedAt||t.codeAt||new Date().toISOString();
+      fixed++;
+    }
+  });
+  S.tasks=mergeTasks(S.tasks,[]);
+  var dropped=before-S.tasks.length;
+  if(fixed||dropped){
+    ev("fix","Progress repaired: "+fixed+" question"+(fixed===1?"":"s")+" re-ticked"+
+       (dropped?", "+dropped+" duplicate"+(dropped===1?"":"s")+" merged":""));
+    save();
+  }
+  return {fixed:fixed,dropped:dropped};
 }
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
 
@@ -2163,7 +2297,8 @@ function setTab(name){
   ui.tab=name;
   var els=document.querySelectorAll("nav.tabs button");
   for(var i=0;i<els.length;i++) els[i].setAttribute("aria-selected", els[i].getAttribute("data-tab")===name?"true":"false");
-  ["dash","plan","basics","goals","rep","road","res","rev","proj","code","jrnl","data"].forEach(function(n){ document.getElementById("tab-"+n).hidden=(n!==name); });
+  ["dash","plan","basics","goals","rep","wks","road","res","rev","proj","code","jrnl","data"].forEach(function(n){ document.getElementById("tab-"+n).hidden=(n!==name); });
+  if(name==="wks") renderWeeks();
   if(name==="basics"){ renderBasics(); renderJavaHub(); }
   if(name==="rep") renderReports();
   if(name==="road") renderRoad();
@@ -2269,6 +2404,27 @@ document.addEventListener("click",function(e){
       else toast("Week "+nw.w+" is open — pick a question below");
       return;
     }
+    if(doAct==="wstoggle"){ ui.wsOpen=(ui.wsOpen===false); renderWkStrip(byId(ui.cur)); return; }
+    if(doAct==="gowks"){ setTab("wks"); return; }
+    if(doAct==="wktoggle"){
+      ui.wkOpen=ui.wkOpen||{}; var wk1=+id;
+      ui.wkOpen[wk1]=!ui.wkOpen[wk1]; renderWeeks(); return;
+    }
+    if(doAct==="wkfilter"){ ui.wkFilter=id; renderWeeks(); return; }
+    if(doAct==="wkexpand"){
+      ui.wkOpen={};
+      if(id==="1") allWeekStats().forEach(function(x){ ui.wkOpen[x.w]=true; });
+      renderWeeks(); return;
+    }
+    if(doAct==="wkstart"){
+      var got=mpLoad(+id,true);
+      if(got){ ev("road","Started Week "+id+" from My weeks"); save();
+               toast("▶ Week "+id+" opened — "+got+" items ready"); }
+      else toast("Already open");
+      ui.wkOpen=ui.wkOpen||{}; ui.wkOpen[+id]=true;
+      render(); renderWeeks(); return;
+    }
+    if(doAct==="wkgo"){ setTab("code"); jumpTo(id); return; }
     if(doAct==="jtcheck"){ javaCheck(); return; }
     if(doAct==="jtnext"){ ui.jtIdx=Math.min(JAVA_TRACE.length-1,(ui.jtIdx||0)+1); renderJavaHub(); return; }
     if(doAct==="jtprev"){ ui.jtIdx=Math.max(0,(ui.jtIdx||0)-1); renderJavaHub(); return; }
@@ -7728,15 +7884,9 @@ function nextWeekInfo(){
   return null;
 }
 function firstUnsolvedIn(wNum){
-  var target=null;
-  MYPATH.forEach(function(M){ M.weeks.forEach(function(W){
-    if(W.w!==wNum) return;
-    mpItems(W).forEach(function(it){
-      if(target) return;
-      var t=rdFind(it.key); if(t&&t.status!=="done") target=t;
-    });
-  }); });
-  return target;
+  var rows=weekRows(wNum);
+  for(var i=0;i<rows.length;i++) if(rows[i].t&&!rows[i].done) return rows[i].t;
+  return null;
 }
 function renderNextBtn(){
   var b=document.getElementById("nextWkBtn"); if(!b) return;
@@ -7826,8 +7976,24 @@ function showNode(id){
       var tg2=document.createElement("span"); tg2.className="tag n";
       tg2.textContent=c.open?(c.open+"/"+c.total+" open"):(c.total+" items");
       var bb2=document.createElement("div"); bb2.className="qb";
+      if(c.open){
+        var lr=weekLeft(c.w);
+        if(lr.length){
+          var nL2=lr.filter(function(r){return r.it.kind==="learn";}).length;
+          var nQ2=lr.filter(function(r){return r.it.kind==="practice";}).length;
+          var bits2=[];
+          if(nL2) bits2.push(nL2+" lesson"+(nL2===1?"":"s"));
+          if(nQ2) bits2.push(nQ2+" question"+(nQ2===1?"":"s"));
+          if(bits2.length){
+            var lf=document.createElement("div"); lf.className="hint";
+            lf.style.cssText="margin:2px 0 0;flex:1 1 100%";
+            lf.textContent="Left: "+bits2.join(" · ");
+            r2.appendChild(lf);
+          }
+        }
+      }
       var ob=document.createElement("button"); ob.type="button"; ob.className="btn xs pri";
-      ob.textContent=c.open?"▶ Open the rest":"▶ Start now";
+      ob.textContent=c.open?"▶ Continue":"▶ Start now";
       ob.setAttribute("data-do","skillopen"); ob.setAttribute("data-id",c.w+"|"+n.id);
       bb2.appendChild(ob);
       r2.appendChild(tx2); r2.appendChild(tg2); r2.appendChild(bb2);
@@ -8402,6 +8568,143 @@ function bar(pct){
   var i=document.createElement("i"); i.style.inlineSize=pct+"%"; if(pct>=100) i.className="full";
   b.appendChild(i); return b;
 }
+/* ================= my weeks: full week-by-week status ================= */
+function wkStat(W){
+  var items=mpItems(W), done=0, open=0;
+  var rows=items.map(function(it){
+    var t=rdFind(it.key);
+    if(t){ open++; if(t.status==="done") done++; }
+    return {it:it,t:t,done:!!(t&&t.status==="done")};
+  });
+  return {w:W.w,title:W.title,rows:rows,total:items.length,open:open,done:done,
+          pct:items.length?Math.round(done/items.length*100):0,
+          state:(!open?"notstarted":(done===items.length?"done":"open"))};
+}
+function allWeekStats(){
+  var out=[];
+  if(typeof MYPATH==="undefined") return out;
+  MYPATH.forEach(function(M){ M.weeks.forEach(function(W){ out.push(wkStat(W)); }); });
+  return out;
+}
+function renderWeeks(){
+  var host=document.getElementById("wkList"); if(!host) return; clr(host);
+  var sum=document.getElementById("wkSummary"); clr(sum);
+  var st=allWeekStats();
+  if(!st.length){
+    var e0=document.createElement("div"); e0.className="empty";
+    e0.textContent="Your path has not loaded yet.";
+    host.appendChild(e0); return;
+  }
+  ui.wkFilter=ui.wkFilter||"all";
+  var tot=st.reduce(function(a,b){return a+b.total;},0);
+  var dn=st.reduce(function(a,b){return a+b.done;},0);
+  var opened=st.reduce(function(a,b){return a+b.open;},0);
+  var wDone=st.filter(function(x){return x.state==="done";}).length;
+  var wOpen=st.filter(function(x){return x.state==="open";}).length;
+  var wNot=st.filter(function(x){return x.state==="notstarted";}).length;
+
+  var grid=document.createElement("div"); grid.className="kpis";
+  [["Weeks finished",wDone+" of "+st.length,"of your whole path"],
+   ["Weeks in progress",String(wOpen),wOpen?"partly done":"none right now"],
+   ["Weeks not started",String(wNot),"waiting for you"],
+   ["Questions solved",dn+" of "+tot,opened?(opened-dn)+" open and still to do":"nothing opened yet"]
+  ].forEach(function(k){
+    var c=document.createElement("div"); c.className="kpi";
+    var a=document.createElement("div"); a.className="kl"; a.textContent=k[0];
+    var b2=document.createElement("div"); b2.className="kv"; b2.textContent=k[1];
+    var c3=document.createElement("div"); c3.className="ks"; c3.textContent=k[2];
+    c.appendChild(a); c.appendChild(b2); c.appendChild(c3); grid.appendChild(c);
+  });
+  sum.appendChild(grid);
+  var ov=document.createElement("div"); ov.className="goal"; ov.style.marginBlockStart="12px";
+  var ol=document.createElement("div"); ol.className="gl";
+  var oa=document.createElement("span"); oa.textContent="Everything, all 24 weeks";
+  var ob=document.createElement("span");
+  ob.textContent=dn+" / "+tot+" · "+(tot?Math.round(dn/tot*100):0)+"%";
+  ol.appendChild(oa); ol.appendChild(ob); ov.appendChild(ol);
+  ov.appendChild(bar(tot?Math.round(dn/tot*100):0));
+  sum.appendChild(ov);
+
+  var shown=st.filter(function(x){
+    return ui.wkFilter==="all"||ui.wkFilter===x.state||
+           (ui.wkFilter==="open"&&x.state==="open");
+  });
+  var fbtns=document.querySelectorAll('[data-do="wkfilter"]');
+  for(var fi=0;fi<fbtns.length;fi++)
+    fbtns[fi].classList.toggle("pri",fbtns[fi].getAttribute("data-id")===ui.wkFilter);
+  if(!shown.length){
+    var e1=document.createElement("div"); e1.className="empty";
+    e1.textContent="No weeks match that filter.";
+    host.appendChild(e1); return;
+  }
+  ui.wkOpen=ui.wkOpen||{};
+  shown.forEach(function(x){
+    var card=document.createElement("div"); card.className="exp"; card.style.marginBlockEnd="8px";
+    var head=document.createElement("button"); head.type="button"; head.className="wkhead";
+    head.setAttribute("data-do","wktoggle"); head.setAttribute("data-id",String(x.w));
+    var tw=document.createElement("span"); tw.className="wkt";
+    var wn=document.createElement("b"); wn.textContent="Week "+x.w;
+    var wt=document.createElement("span"); wt.className="wkname"; wt.textContent=x.title;
+    tw.appendChild(wn); tw.appendChild(wt);
+    var badge=document.createElement("span");
+    badge.className="tag "+(x.state==="done"?"g":x.state==="open"?"y":"n");
+    badge.textContent=x.state==="done"?"✓ Finished":
+                      x.state==="open"?(x.done+" of "+x.total+" done"):"Not started";
+    var mini=document.createElement("span"); mini.className="wkbar";
+    var mi=document.createElement("i"); mi.style.inlineSize=x.pct+"%";
+    if(x.state==="done") mi.style.background="#16a34a";
+    mini.appendChild(mi);
+    var car=document.createElement("span"); car.className="wkcar";
+    car.textContent=ui.wkOpen[x.w]?"▾":"▸";
+    head.appendChild(car); head.appendChild(tw); head.appendChild(mini); head.appendChild(badge);
+    card.appendChild(head);
+
+    if(ui.wkOpen[x.w]){
+      var body=document.createElement("div"); body.className="wkbody";
+      if(x.open<x.total){
+        var note=document.createElement("div"); note.className="rowb";
+        note.style.marginBlockEnd="8px";
+        var nh=document.createElement("span"); nh.className="hint"; nh.style.margin="0";
+        nh.textContent=x.open?("Only "+x.open+" of "+x.total+" items are open so far."):
+                              "This week has not been opened yet.";
+        var nbn=document.createElement("button"); nbn.type="button"; nbn.className="btn xs pri";
+        nbn.textContent=x.open?"Open the rest":"Start this week";
+        nbn.setAttribute("data-do","wkstart"); nbn.setAttribute("data-id",String(x.w));
+        note.appendChild(nh); note.appendChild(document.createElement("span")).className="sp";
+        note.appendChild(nbn); body.appendChild(note);
+      }
+      x.rows.forEach(function(r){
+        var row=document.createElement("div"); row.className="wkrow"+(r.done?" wdone":"");
+        var mk=document.createElement("span"); mk.className="wkmark"+(r.done?" on":"");
+        mk.textContent=r.done?"✓":(r.t?"○":"·");
+        mk.title=r.done?"Completed":(r.t?"Open — not done yet":"Not opened yet");
+        var kd=document.createElement("span"); kd.className="wkkind";
+        kd.textContent=r.it.kind==="learn"?"📖":r.it.kind==="project"?"🚀":
+                       r.it.kind==="revision"?"🧠":"✍️";
+        kd.title=r.it.kind;
+        var lb=document.createElement("span"); lb.className="wklab";
+        lb.textContent=displayTitle(r.it.label);
+        var rt=document.createElement("span"); rt.className="wkmeta";
+        if(r.done&&r.t&&r.t.completedAt){
+          rt.textContent="done "+new Date(r.t.completedAt).toLocaleDateString(undefined,
+            {day:"numeric",month:"short"});
+        } else if(r.t){ rt.textContent="open"; }
+        else { rt.textContent="not opened"; }
+        row.appendChild(mk); row.appendChild(kd); row.appendChild(lb); row.appendChild(rt);
+        if(r.t){
+          var go=document.createElement("button"); go.type="button";
+          go.className="btn xs"+(r.done?"":" pri");
+          go.textContent=r.done?"Review":"Open";
+          go.setAttribute("data-do","wkgo"); go.setAttribute("data-id",r.t.id);
+          row.appendChild(go);
+        }
+        body.appendChild(row);
+      });
+      card.appendChild(body);
+    }
+    host.appendChild(card);
+  });
+}
 function renderRoad(){
   var host=document.getElementById("roadmap"), asx=document.getElementById("assess");
   document.querySelectorAll("[data-track]").forEach(function(b){
@@ -8883,7 +9186,86 @@ function openNextWeek(){
   if(found) save();
   return found;
 }
+/* ---- week awareness: which week an item belongs to, and what is left in it ---- */
+function weekNumOf(t){
+  if(!t||!t.road||t.road.indexOf("mp:")!==0) return 0;
+  return +t.road.split(":")[1]||0;
+}
+function weekDef(w){
+  var W=null;
+  if(typeof MYPATH!=="undefined")
+    MYPATH.forEach(function(M){ M.weeks.forEach(function(x){ if(x.w===w) W=x; }); });
+  return W;
+}
+/* every item of a week, in study order, paired with its task (if opened) */
+function weekRows(w){
+  var W=weekDef(w); if(!W) return [];
+  return mpItems(W).map(function(it){
+    var t=rdFind(it.key);
+    return {it:it,t:t,done:!!(t&&t.status==="done"),opened:!!t};
+  });
+}
+function weekLeft(w){ return weekRows(w).filter(function(r){ return !r.done; }); }
+/* the week the learner is currently working through */
+function activeWeek(){
+  var t=byId(ui.cur), w=weekNumOf(t);
+  if(w) return w;
+  var st=(typeof allWeekStats==="function")?allWeekStats():[];
+  for(var i=0;i<st.length;i++) if(st[i].state==="open") return st[i].w;
+  for(var j=0;j<st.length;j++) if(st[j].state!=="done") return st[j].w;
+  return 0;
+}
+/* open the following week and land on its first item; returns true if it moved */
+function advanceToNextWeek(fromW){
+  var st=allWeekStats(), nxt=null;
+  for(var i=0;i<st.length;i++){
+    if(st[i].w>fromW&&st[i].state!=="done"){ nxt=st[i]; break; }
+  }
+  if(!nxt){ toast("🎉 That was the last week — your whole path is complete"); return false; }
+  if(nxt.open<nxt.total){
+    var got=mpLoad(nxt.w,true);
+    if(got){ ev("road","Week "+nxt.w+" started automatically after finishing Week "+fromW); save(); }
+  }
+  render();
+  var rows=weekLeft(nxt.w);
+  if(rows.length&&rows[0].t){
+    jumpTo(rows[0].t.id);
+    toast("▶ Week "+nxt.w+" started — "+nxt.title);
+    return true;
+  }
+  toast("▶ Week "+nxt.w+" opened — "+nxt.title);
+  return true;
+}
 function goRelative(step,unsolvedOnly){
+  /* moving forward inside My Path: walk the week in order — lessons, questions,
+     project and review alike — then roll straight into the next week. */
+  if(step>0){
+    var cw=weekNumOf(byId(ui.cur));
+    if(cw){
+      var rows=weekRows(cw), at=-1;
+      for(var r0=0;r0<rows.length;r0++) if(rows[r0].t&&rows[r0].t.id===ui.cur){ at=r0; break; }
+      for(var r1=at+1;r1<rows.length;r1++){
+        if(rows[r1].t&&!rows[r1].done){ jumpTo(rows[r1].t.id); return; }
+      }
+      var back=rows.filter(function(r){ return r.t&&!r.done&&r.t.id!==ui.cur; });
+      if(back.length){
+        jumpTo(back[0].t.id);
+        toast("Back to what is still open in Week "+cw);
+        return;
+      }
+      var unopened=rows.filter(function(r){ return !r.opened; }).length;
+      if(unopened){
+        var got0=mpLoad(cw,true);
+        if(got0){ save(); render();
+          var l2=weekLeft(cw).filter(function(r){ return r.t; });
+          if(l2.length){ jumpTo(l2[0].t.id); toast("Opened the rest of Week "+cw); return; }
+        }
+      }
+      toast("✓ Week "+cw+" finished");
+      setTimeout(function(){ advanceToNextWeek(cw); },700);
+      return;
+    }
+  }
   var q=solvableQueue(), i=queueIndex(ui.cur);
   if(!q.length){
     if(step>0&&openNextWeek()){ render(); var q0=solvableQueue(); if(q0.length) jumpTo(q0[0].id); }
@@ -9375,7 +9757,7 @@ function afterRun(output,verify,erred){
     t.codeAt=new Date().toISOString();
     t.output=normOut(output);
     if(!already){
-      t.status="done"; t.completedAt=new Date().toISOString();
+      t.status="done"; t.completedAt=new Date().toISOString(); t.verified=true;
       ev("done","Solved & verified: "+t.title);
       autoRevision(t);
     } else ev("code","Solution updated: "+t.title);
@@ -9450,18 +9832,22 @@ function renderQNav(t){
   var n=document.getElementById("qNav");
   if(!t){ n.hidden=true; return; }
   var q=solvableQueue(), i=queueIndex(t.id);
-  if(i<0){ n.hidden=true; return; }
+  if(!q.length&&!weekNumOf(t)){ n.hidden=true; return; }
   n.hidden=false; clr(n);
+  var off=(i<0);   /* current item is theory / has no tests — still let them move on */
   var prev=document.createElement("button"); prev.type="button"; prev.className="btn xs";
-  prev.textContent="← Previous"; prev.setAttribute("data-do","qprev"); prev.disabled=(i<=0);
-  if(i>0) prev.title=displayTitle(q[i-1]);
+  prev.textContent="← Previous"; prev.setAttribute("data-do","qprev");
+  prev.disabled=(!off&&i<=0);
+  if(!off&&i>0) prev.title=displayTitle(q[i-1]);
   n.appendChild(prev);
   var pos=document.createElement("span"); pos.className="qpos";
   var doneN=q.filter(function(x){return x.status==="done";}).length;
-  pos.textContent="Question "+(i+1)+" of "+q.length+"  ·  "+doneN+" solved";
+  pos.textContent=off ? ("Reading · "+doneN+" of "+q.length+" questions solved")
+                      : ("Question "+(i+1)+" of "+q.length+"  ·  "+doneN+" solved");
   n.appendChild(pos);
   var bar2=document.createElement("span"); bar2.className="qdots";
-  var from=Math.max(0,Math.min(i-5,q.length-11)), to=Math.min(q.length,from+11);
+  var anchor=off?doneN:i;
+  var from=Math.max(0,Math.min(anchor-5,q.length-11)), to=Math.min(q.length,from+11);
   for(var k=from;k<to;k++){
     var d=document.createElement("button"); d.type="button";
     d.className="qdot"+(q[k].status==="done"?" qd":"")+(k===i?" qcur":"");
@@ -9474,12 +9860,102 @@ function renderQNav(t){
   skip.textContent="Next unsolved"; skip.setAttribute("data-do","qnextopen");
   n.appendChild(skip);
   var next=document.createElement("button"); next.type="button"; next.className="btn xs pri";
-  next.textContent="Next →"; next.setAttribute("data-do","qnext"); next.disabled=(i>=q.length-1);
-  if(i<q.length-1) next.title=displayTitle(q[i+1]);
+  next.setAttribute("data-do","qnext");
+  var cw2=weekNumOf(t), leftW=cw2?weekLeft(cw2):[];
+  if(cw2&&!leftW.length){
+    next.textContent="Next week →";
+    next.disabled=false;
+    next.title="Week "+cw2+" is done — open the next week and start it";
+  } else if(cw2){
+    next.textContent="Next →";
+    next.disabled=false;
+    var nxt2=leftW.filter(function(r){ return r.t&&r.t.id!==t.id; })[0];
+    next.title=nxt2?displayTitle(nxt2.it.label):("Continue Week "+cw2);
+  } else {
+    next.textContent="Next →";
+    next.disabled=(!off&&i>=q.length-1);
+    if(!off&&i<q.length-1) next.title=displayTitle(q[i+1]);
+    if(off) next.title="Continue to the next question after this one";
+  }
   n.appendChild(next);
+}
+function renderWkStrip(t){
+  var el=document.getElementById("wkStrip"); if(!el) return;
+  var w=weekNumOf(t);
+  if(!w){ el.hidden=true; return; }
+  var W=weekDef(w); if(!W){ el.hidden=true; return; }
+  var rows=weekRows(w);
+  if(!rows.length){ el.hidden=true; return; }
+  el.hidden=false; clr(el);
+  var done=rows.filter(function(r){return r.done;}).length;
+
+  var head=document.createElement("div"); head.className="wshead";
+  var ttl=document.createElement("b"); ttl.textContent="Week "+w+" · "+W.title;
+  var cnt=document.createElement("span"); cnt.className="wscount";
+  cnt.textContent=done+" of "+rows.length+" done";
+  var mb=document.createElement("span"); mb.className="wsbar";
+  var mi=document.createElement("i");
+  mi.style.inlineSize=Math.round(done/rows.length*100)+"%";
+  if(done===rows.length) mi.style.background="#16a34a";
+  mb.appendChild(mi);
+  var sp=document.createElement("span"); sp.className="sp";
+  var tg=document.createElement("button"); tg.type="button"; tg.className="btn xs";
+  tg.textContent=ui.wsOpen===false?"Show all":"Hide list";
+  tg.setAttribute("data-do","wstoggle");
+  head.appendChild(ttl); head.appendChild(cnt); head.appendChild(mb);
+  head.appendChild(sp); head.appendChild(tg);
+  el.appendChild(head);
+
+  if(ui.wsOpen===false) return;
+  var list=document.createElement("div"); list.className="wslist";
+  rows.forEach(function(r){
+    var b=document.createElement("button"); b.type="button";
+    b.className="wsi"+(r.done?" wsdone":"")+(r.t&&r.t.id===ui.cur?" wscur":"")+(r.opened?"":" wslock");
+    var mk=document.createElement("span"); mk.className="wsm";
+    mk.textContent=r.done?"✓":(r.opened?"○":"·");
+    var kd=document.createElement("span"); kd.className="wsk";
+    kd.textContent=r.it.kind==="learn"?"📖":r.it.kind==="project"?"🚀":
+                   r.it.kind==="revision"?"🧠":"✍️";
+    var lb=document.createElement("span"); lb.className="wsl";
+    lb.textContent=displayTitle(r.it.label);
+    b.appendChild(mk); b.appendChild(kd); b.appendChild(lb);
+    b.title=(r.it.kind==="learn"?"Lesson":r.it.kind==="project"?"Project":
+             r.it.kind==="revision"?"Review":"Question")+" — "+
+            (r.done?"completed":(r.opened?"still to do":"not opened yet"))+
+            "\n"+displayTitle(r.it.label);
+    if(r.opened){ b.setAttribute("data-do","wkgo"); b.setAttribute("data-id",r.t.id); }
+    else { b.setAttribute("data-do","wkstart"); b.setAttribute("data-id",String(w)); }
+    list.appendChild(b);
+  });
+  el.appendChild(list);
+  var left=rows.filter(function(r){ return !r.done; });
+  var foot=document.createElement("div"); foot.className="wsfoot";
+  if(left.length){
+    var lt=document.createElement("span");
+    var nL=left.filter(function(r){return r.it.kind==="learn";}).length;
+    var nQ=left.filter(function(r){return r.it.kind==="practice";}).length;
+    var nP=left.filter(function(r){return r.it.kind==="project";}).length;
+    var nR=left.filter(function(r){return r.it.kind==="revision";}).length;
+    var bits=[];
+    if(nL) bits.push(nL+" lesson"+(nL===1?"":"s"));
+    if(nQ) bits.push(nQ+" question"+(nQ===1?"":"s"));
+    if(nP) bits.push(nP+" project"+(nP===1?"":"s"));
+    if(nR) bits.push(nR+" review"+(nR===1?"":"s"));
+    lt.textContent="Left this week: "+bits.join(" · ");
+    foot.appendChild(lt);
+  } else {
+    var ok=document.createElement("span"); ok.textContent="✓ Week "+w+" is complete — Next takes you to Week "+(w+1);
+    foot.appendChild(ok);
+  }
+  var sp2=document.createElement("span"); sp2.className="sp"; foot.appendChild(sp2);
+  var all=document.createElement("button"); all.type="button"; all.className="btn xs";
+  all.textContent="See all weeks"; all.setAttribute("data-do","gowks");
+  foot.appendChild(all);
+  el.appendChild(foot);
 }
 function renderQPanel(t){
   renderQNav(t);
+  renderWkStrip(t);
   var p=document.getElementById("qPanel");
   document.getElementById("verdictBox").hidden=true;
   if(!t){ p.hidden=true; return; }
@@ -9929,10 +10405,15 @@ if(S.logins.indexOf(today())<0){ S.logins.push(today()); if(S.logins.length>500)
 if(S.scratchNotes&&S.scratchNotes.trim()&&!(S.stickies&&S.stickies.length)){
   noteAdd(S.scratchNotes.trim(),"yellow"); S.scratchNotes=""; save();
 }
+var __rep=repairProgress();
 var __swept=watchSweep();
 autoTopUp();
 save();
 render();
+if(__rep.fixed||__rep.dropped) setTimeout(function(){
+  toast("✓ Progress repaired — "+__rep.fixed+" solved question"+(__rep.fixed===1?"":"s")+" re-ticked"+
+        (__rep.dropped?" and "+__rep.dropped+" duplicate"+(__rep.dropped===1?"":"s")+" merged":""));
+},900);
 if(__swept) setTimeout(function(){ toast("📌 "+__swept+" item"+(__swept===1?"":"s")+" surfaced from your scratch board"); },1500);
 loadIntoEditor("");
 ghUI();
@@ -9945,6 +10426,18 @@ if(S.gh.auto && S.gh.token){
   var lastDay=(S.gh.last||"").slice(0,10);
   if(lastDay!==today()) setTimeout(function(){ ghPush(true).then(function(ok){ if(ok) ev("backup","Daily backup to GitHub"); }); },4000);
 }
+window.addEventListener("storage",function(e){
+  if(e.key!==KEY||!e.newValue) return;
+  var other;
+  try{ other=JSON.parse(e.newValue); }catch(err){ return; }
+  if(!other||!Array.isArray(other.tasks)||(other.rev||0)<=SREV) return;
+  S.tasks=mergeTasks(S.tasks,other.tasks);
+  S.stickies=mergeList(S.stickies,other.stickies);
+  S.watch=mergeList(S.watch,other.watch);
+  SREV=other.rev||SREV;
+  render();
+  toast("↻ Synced with your other open tab");
+});
 window.addEventListener("beforeunload",function(){
   if(!ui.cur){ S.scratch=document.getElementById("editor").value; save(); }
 });
