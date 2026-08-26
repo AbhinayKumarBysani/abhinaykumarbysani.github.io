@@ -195,6 +195,11 @@ svg.heatsvg{block-size:auto; min-inline-size:340px}
 .wsl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .wsfoot{display:flex;align-items:center;gap:8px;padding:8px 12px;border-block-start:1px solid var(--line);
   font-size:11.5px;color:var(--muted);flex-wrap:wrap}
+.edbar .btn.xs{padding:3px 9px}
+.kb{display:inline-block;margin-inline-start:5px;padding:1px 5px;border:1px solid var(--line);
+  border-block-end-width:2px;border-radius:5px;background:var(--panel2);
+  font:inherit;font-size:9.5px;color:var(--muted);vertical-align:middle}
+.btn.pri .kb{border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.15);color:rgba(255,255,255,.9)}
 .legend{display:flex; flex-wrap:wrap; gap:12px; margin-block-start:8px; font-size:12.5px; color:var(--muted)}
 .legend i{display:inline-block; inline-size:10px; block-size:10px; border-radius:3px; margin-inline-end:6px}
 .scale{display:flex; align-items:center; gap:5px; font-size:11.5px; color:var(--muted); margin-block-start:9px}
@@ -682,7 +687,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
 .lab{display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:var(--gap); align-items:start}
 @media (max-width:900px){ .lab{grid-template-columns:1fr} }
 .edwrap{border:1px solid var(--line); border-radius:12px; overflow:hidden; background:var(--panel2)}
-.edbar{display:flex; align-items:center; gap:8px; padding:7px 10px; background:var(--panel); border-block-end:1px solid var(--line); flex-wrap:wrap}
+.edbar{display:flex; align-items:center; gap:8px; padding:7px 10px; background:var(--panel); border-block-end:1px solid var(--line); flex-wrap:wrap; position:sticky; inset-block-start:0; z-index:5}
 .edbar .fn{font-family:var(--mono); font-size:12.5px; color:var(--muted); min-inline-size:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 .edrow{display:flex; block-size:clamp(300px,46vh,560px); align-items:stretch; min-inline-size:0}
 .gutter{font-family:var(--mono); font-size:13px; line-height:21px; padding-block:12px; padding-inline:10px 8px;
@@ -724,7 +729,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   <div class="top-in">
     <button class="brand" data-act="home" type="button">
       <span class="mark">LT</span>
-      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v36</span></span></span>
+      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v38</span></span></span>
     </button>
     <span class="langbar" id="langBar"></span>
     <span class="sp"></span>
@@ -1261,8 +1266,8 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
             <option value="sql">SQL — save only</option>
             <option value="other">Other — save only</option>
           </select>
-          <button class="btn" id="btnRun" type="button">▶ Run</button>
-          <button class="btn pri" id="btnSubmit" type="button">✓ Run tests &amp; submit</button>
+          <button class="btn" id="btnRun" type="button" title="Run your code — Ctrl+Enter">▶ Run <kbd class="kb">Ctrl↵</kbd></button>
+          <button class="btn pri" id="btnSubmit" type="button" title="Run every test case and submit — Ctrl+Shift+Enter">✓ Run tests &amp; submit <kbd class="kb">Ctrl⇧↵</kbd></button>
           <button class="btn" data-act="csave" type="button">💾 Save</button>
           <button class="btn" data-act="cfmt" type="button">⇥ Reindent</button>
           <button class="btn" data-act="cdl" type="button">⬇ Download</button>
@@ -1277,8 +1282,10 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
         <div class="edwrap">
           <div class="edbar">
             <span class="fn mono" id="edName">scratch.py</span>
-            <span class="sp"></span>
             <span style="font-size:11.5px;color:var(--faint)" id="edMeta">not saved yet</span>
+            <span class="sp"></span>
+            <button class="btn xs" id="edRun" type="button" title="Run your code — Ctrl+Enter">▶ Run <kbd class="kb">Ctrl↵</kbd></button>
+            <button class="btn xs pri" id="edSubmit" type="button" title="Run every test case and submit — Ctrl+Shift+Enter">✓ Run tests <kbd class="kb">Ctrl⇧↵</kbd></button>
           </div>
           <div class="edrow">
             <div class="gutter" id="gutter">1</div>
@@ -1292,7 +1299,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
           <span class="sp"></span>
           <button class="btn xs" data-act="cclear" type="button">clear</button>
         </div>
-        <div class="console" id="console"><span class="dim">Output appears here. Press Run to just execute, or Run tests &amp; submit to check your solution against every test case. The Python engine downloads once (about 10 MB) the first time, then stays cached.</span></div>
+        <div class="console" id="console"><span class="dim">Output appears here. Press <b>Ctrl+Enter</b> to run, or <b>Ctrl+Shift+Enter</b> to check your solution against every test case — the Run buttons also sit at the top of the editor, so you never need to scroll. The Python engine downloads once (about 10 MB) the first time, then stays cached.</span></div>
       </div>
       <div class="panel">
         <h2>Custom input (stdin)</h2>
@@ -1422,7 +1429,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   </div>
 </section>
 
-<footer class="f">LearnTrack · local-first learning tracker · single file, zero dependencies · export your backup regularly</footer>
+<footer class="f">LearnTrack <b>v38</b> · built 26 Aug 2026 · local-first learning tracker · single file, zero dependencies · export your backup regularly</footer>
 </div>
 
 <dialog id="dlg">
@@ -2926,6 +2933,8 @@ document.addEventListener("submit",function(e){
     return;
   }
 });
+document.getElementById("edRun").addEventListener("click",function(){ runCode(false); });
+document.getElementById("edSubmit").addEventListener("click",function(){ runTests(); });
 document.getElementById("btnRun").addEventListener("click",function(){ runCode(false); });
 document.getElementById("btnSubmit").addEventListener("click",function(){ runTests(); });
 /* ---- editor edits as pure logic, so they can be reasoned about and tested ---- */
@@ -3031,7 +3040,7 @@ document.getElementById("editor").addEventListener("keydown",function(e){
   /* shortcuts first, so Ctrl+Enter never falls through to the Enter handler */
   if(e.ctrlKey||e.metaKey){
     var k=(e.key||"").toLowerCase();
-    if(e.key==="Enter"){ e.preventDefault(); runCode(e.shiftKey); return; }
+    if(e.key==="Enter"){ e.preventDefault(); if(e.shiftKey) runTests(); else runCode(false); return; }
     if(k==="s"){ e.preventDefault(); saveCode(); return; }
     if(e.key==="ArrowRight"){ e.preventDefault(); goRelative(1,false); return; }
     if(e.key==="ArrowLeft"){ e.preventDefault(); goRelative(-1,false); return; }
@@ -3067,6 +3076,16 @@ function applyEdit(ta,p){
   if(ta.oninput) ta.oninput();
   ta.dispatchEvent(new Event("input",{bubbles:true}));
 }
+/* Ctrl/Cmd+Enter runs, Ctrl/Cmd+Shift+Enter runs the tests — from anywhere on the tab,
+   including the stdin box, so you never have to scroll up to reach a button. */
+document.addEventListener("keydown",function(e){
+  if(e.key!=="Enter"||!(e.ctrlKey||e.metaKey)) return;
+  if(ui.tab!=="code") return;
+  e.preventDefault();
+  var b=document.getElementById(e.shiftKey?"edSubmit":"edRun");
+  if(b&&b.disabled){ toast("Still busy running — hold on"); return; }
+  if(e.shiftKey) runTests(); else runCode(false);
+},true);
 document.addEventListener("keydown",function(e){
   if(e.target.matches&&e.target.matches("input,textarea,select")) return;
   var tabs=["dash","plan","basics","goals","rep","road","res","rev","proj","code","jrnl","data"];
@@ -4179,6 +4198,237 @@ var TESTS4={
 for(var __k in TESTS2) TESTS[__k]=TESTS2[__k];
 for(var __k3 in TESTS3) TESTS[__k3]=TESTS3[__k3];
 for(var __k4 in TESTS4) TESTS[__k4]=TESTS4[__k4];
+/* week 4-24 projects, git and portfolio work — every one auto-checked */
+var TESTS5={
+ "Project: Support Shift Time Calculator":{fn:"shift_hours",sig:"shift_hours(start, end)",
+  note:"Both times are \"HH:MM\" on a 24-hour clock. Return the hours worked as a float rounded to 2 decimals. If end is earlier than or equal to start, the shift ran overnight, so add 24 hours. Equal times mean a full 24-hour shift.",
+  cases:[{args:["09:00","17:00"],out:8.0},{args:["22:00","06:00"],out:8.0},{args:["13:30","17:00"],out:3.5},{args:["23:15","07:45"],out:8.5},{args:["00:00","00:00"],out:24.0},{args:["08:20","16:50"],out:8.5}]},
+ "Project: Case Status Summary Generator":{fn:"summarize",sig:"summarize(cases)",
+  note:"cases is a list of dictionaries, each with a \"status\" key. Return a dictionary mapping every status found to how many times it appears. An empty list returns an empty dictionary. Statuses are case-sensitive.",
+  cases:[{args:[[{"status":"Open"},{"status":"Closed"},{"status":"Open"}]],out:{"Open":2,"Closed":1}},{args:[[]],out:{}},{args:[[{"status":"Open"}]],out:{"Open":1}},{args:[[{"status":"Closed"},{"status":"Closed"},{"status":"Closed"}]],out:{"Closed":3}},{args:[[{"status":"Open"},{"status":"Pending"},{"status":"Closed"},{"status":"Open"}]],out:{"Open":2,"Pending":1,"Closed":1}}]},
+ "Project: Support Log Analyzer":{fn:"analyze",sig:"analyze(text)",
+  note:"text is the whole contents of a log file. Every line starts with a level word: INFO, WARNING or ERROR. Return a dictionary with keys \"total\", \"errors\" and \"warnings\" \u2014 the number of non-empty lines, the number of ERROR lines and the number of WARNING lines. Ignore blank lines.",
+  cases:[{args:["INFO ok\nERROR bad\nINFO fine\nERROR worse"],out:{"total":4,"errors":2,"warnings":0}},{args:["INFO only"],out:{"total":1,"errors":0,"warnings":0}},{args:[""],out:{"total":0,"errors":0,"warnings":0}},{args:["WARNING slow\nWARNING slower\nERROR down\n\nINFO up"],out:{"total":4,"errors":1,"warnings":2}}]},
+ "Project: Weekly Case Report Generator":{fn:"weekly_report",sig:"weekly_report(cases)",
+  note:"cases is a list of dictionaries with keys \"status\" and \"product\". Return a dictionary with three keys: \"total\" (how many cases), \"open\" (how many have status \"Open\") and \"top_product\" (the product appearing most often; if two tie, the alphabetically first). For an empty list return total 0, open 0 and top_product None.",
+  cases:[{args:[[{"status":"Open","product":"Teams"},{"status":"Closed","product":"Teams"},{"status":"Open","product":"Excel"}]],out:{"total":3,"open":2,"top_product":"Teams"}},{args:[[]],out:{"total":0,"open":0,"top_product":null}},{args:[[{"status":"Closed","product":"Word"}]],out:{"total":1,"open":0,"top_product":"Word"}},{args:[[{"status":"Open","product":"B"},{"status":"Open","product":"A"}]],out:{"total":2,"open":2,"top_product":"A"}}]},
+ "Project: Personal Learning Database":{fn:"db_summary",sig:"db_summary(topics, items)",
+  note:"topics is a list of dictionaries with \"id\" and \"name\". items has \"topic_id\" and \"done\" (True or False). Return a dictionary mapping each topic name to a [done, total] pair for that topic. Every topic appears even with no items. Items pointing at an unknown topic id are ignored.",
+  cases:[{args:[[{"id":1,"name":"Loops"}],[{"topic_id":1,"done":true},{"topic_id":1,"done":false}]],out:{"Loops":[1,2]}},{args:[[{"id":1,"name":"A"},{"id":2,"name":"B"}],[{"topic_id":1,"done":true}]],out:{"A":[1,1],"B":[0,0]}},{args:[[],[]],out:{}},{args:[[{"id":1,"name":"A"}],[{"topic_id":5,"done":true}]],out:{"A":[0,0]}}]},
+ "Initialise a repo and commit.":{fn:"init_steps",sig:"init_steps(message)",
+  note:"Return the three git commands, in the order you actually run them, that turn a plain folder into a repository with one commit. Use exactly: \"git init\", \"git add .\", and 'git commit -m \"<message>\"' with the message in double quotes.",
+  cases:[{args:["first commit"],out:["git init","git add .","git commit -m \"first commit\""]},{args:["add tracker"],out:["git init","git add .","git commit -m \"add tracker\""]},{args:["initial"],out:["git init","git add .","git commit -m \"initial\""]}]},
+ "Push it to GitHub.":{fn:"push_steps",sig:"push_steps(url)",
+  note:"Return the three git commands, in order, that connect a local repo to an empty GitHub repo and push it: \"git remote add origin <url>\", \"git branch -M main\", and \"git push -u origin main\".",
+  cases:[{args:["https://github.com/me/learntrack.git"],out:["git remote add origin https://github.com/me/learntrack.git","git branch -M main","git push -u origin main"]},{args:["https://github.com/me/notes.git"],out:["git remote add origin https://github.com/me/notes.git","git branch -M main","git push -u origin main"]}]},
+ "Create and merge a branch.":{fn:"branch_steps",sig:"branch_steps(name)",
+  note:"Return the four git commands, in order, to start a branch, come back and merge it: \"git checkout -b <name>\", \"git add .\", \"git checkout main\", and \"git merge <name>\".",
+  cases:[{args:["feature-notes"],out:["git checkout -b feature-notes","git add .","git checkout main","git merge feature-notes"]},{args:["fix-bug"],out:["git checkout -b fix-bug","git add .","git checkout main","git merge fix-bug"]}]},
+ "Write a .gitignore and a README.":{fn:"should_ignore",sig:"should_ignore(path)",
+  note:"Decide whether git should ignore a path. Return True if it ends with \".pyc\", or if any part of it is \"__pycache__\", \"venv\" or \".venv\", or if the file name is \".env\". Everything else returns False.",
+  cases:[{args:["main.pyc"],out:true},{args:["src/__pycache__/a.py"],out:true},{args:[".env"],out:true},{args:["venv/lib/thing.py"],out:true},{args:["main.py"],out:false},{args:["docs/readme.md"],out:false}]},
+ "Polish the Support Log Analyzer with a full README.":{fn:"readme_sections",sig:"readme_sections(title)",
+  note:"Return the standard README outline as a list of heading lines, in order: \"# <title>\", then \"## What it does\", \"## How to run\", \"## Example output\", \"## What I learned\".",
+  cases:[{args:["Support Log Analyzer"],out:["# Support Log Analyzer","## What it does","## How to run","## Example output","## What I learned"]},{args:["Weekly Case Report"],out:["# Weekly Case Report","## What it does","## How to run","## Example output","## What I learned"]}]},
+ "Polish the Weekly Case Report Generator.":{fn:"missing_sections",sig:"missing_sections(text)",
+  note:"text is a README. Check it contains all four required headings: \"## What it does\", \"## How to run\", \"## Example output\", \"## What I learned\". Return the ones missing, in that order. Return an empty list when all are present.",
+  cases:[{args:["## What it does\n## How to run"],out:["## Example output","## What I learned"]},{args:["## What it does\n## How to run\n## Example output\n## What I learned"],out:[]},{args:[""],out:["## What it does","## How to run","## Example output","## What I learned"]},{args:["# Title only"],out:["## What it does","## How to run","## Example output","## What I learned"]}]},
+ "Polish the File / Handoff Automation Tool.":{fn:"usage_line",sig:"usage_line(script, args)",
+  note:"Build the usage line for a README. script is the file name without \".py\"; args is a list of argument names. Return \"python <script>.py\" followed by each argument wrapped in angle brackets, separated by single spaces. With no arguments return just \"python <script>.py\".",
+  cases:[{args:["handoff",["input_csv","output_html"]],out:"python handoff.py <input_csv> <output_html>"},{args:["analyze",[]],out:"python analyze.py"},{args:["report",["date"]],out:"python report.py <date>"}]},
+ "Link all three from your portfolio page.":{fn:"portfolio_html",sig:"portfolio_html(projects)",
+  note:"projects is a list of [name, url] pairs. Return one HTML string: \"<ul>\" then one '<li><a href=\"url\">name</a></li>' per project in order, then \"</ul>\", with no spaces or newlines between tags. An empty list returns \"<ul></ul>\".",
+  cases:[{args:[[["Log Analyzer","https://github.com/me/log"]]],out:"<ul><li><a href=\"https://github.com/me/log\">Log Analyzer</a></li></ul>"},{args:[[]],out:"<ul></ul>"},{args:[[["A","u1"],["B","u2"]]],out:"<ul><li><a href=\"u1\">A</a></li><li><a href=\"u2\">B</a></li></ul>"}]},
+ "Project: Publish three polished projects":{fn:"not_ready",sig:"not_ready(projects)",
+  note:"projects is a list of dictionaries with \"name\", \"has_readme\" and \"is_public\" (both True or False). A project is ready only when both are True. Return the names that are not ready, sorted alphabetically. Return an empty list when all are ready.",
+  cases:[{args:[[{"name":"B","has_readme":true,"is_public":false},{"name":"A","has_readme":false,"is_public":true}]],out:["A","B"]},{args:[[{"name":"A","has_readme":true,"is_public":true}]],out:[]},{args:[[]],out:[]},{args:[[{"name":"C","has_readme":false,"is_public":false},{"name":"A","has_readme":true,"is_public":true}]],out:["C"]}]}
+};
+for(var __k5 in TESTS5) TESTS[__k5]=TESTS5[__k5];
+/* every Projects-tab step — a real function with public test cases */
+var TESTS6={
+ "Calculator \u2014 Add and subtract two numbers":{fn:"calc",sig:"calc(a, b, op)",
+  note:"op is \"+\" or \"-\". Return a + b or a - b. For any other op return None. Results that are whole numbers stay ints.",
+  cases:[{args:[2,3,"+"],out:5},{args:[10,4,"-"],out:6},{args:[-5,5,"+"],out:0},{args:[3,9,"-"],out:-6},{args:[1,1,"*"],out:null}]},
+ "Calculator \u2014 Multiply and divide":{fn:"calc2",sig:"calc2(a, b, op)",
+  note:"op is \"*\" or \"/\". Return the product, or the quotient rounded to 2 decimals. Dividing by zero returns None, and so does any other op.",
+  cases:[{args:[4,5,"*"],out:20},{args:[7,2,"/"],out:3.5},{args:[5,0,"/"],out:null},{args:[10,3,"/"],out:3.33},{args:[2,3,"+"],out:null}]},
+ "Calculator \u2014 Handle divide-by-zero":{fn:"safe_divide",sig:"safe_divide(a, b)",
+  note:"Return a divided by b, rounded to 2 decimals. If b is 0, return the exact string \"Cannot divide by zero\" instead of letting the program crash.",
+  cases:[{args:[8,2],out:4.0},{args:[1,0],out:"Cannot divide by zero"},{args:[7,3],out:2.33},{args:[-9,3],out:-3.0},{args:[0,5],out:0.0}]},
+ "Calculator \u2014 Loop until the user quits":{fn:"run_calc",sig:"run_calc(commands)",
+  note:"commands is a list of strings like \"2 + 3\". Work through them in order and collect each answer. Stop as soon as you meet the command \"quit\" \u2014 anything after it is ignored. Supported ops are + - * /; a command with an unknown op, or a division by zero, adds None to the results. Return the list of results.",
+  cases:[{args:[["2 + 3","10 - 4"]],out:[5.0,6.0]},{args:[["6 * 7","quit","1 + 1"]],out:[42.0]},{args:[["5 / 0"]],out:[null]},{args:[["quit"]],out:[]},{args:[["9 % 2"]],out:[null]}]},
+ "Calculator \u2014 Write a README":{fn:"readme_lines",sig:"readme_lines(name)",
+  note:"Return the README outline as a list of lines, in order: \"# <name>\", \"## What it does\", \"## How to run\", \"## Example\", \"## What I learned\".",
+  cases:[{args:["Calculator"],out:["# Calculator","## What it does","## How to run","## Example","## What I learned"]},{args:["My Tool"],out:["# My Tool","## What it does","## How to run","## Example","## What I learned"]}]},
+ "To-Do List \u2014 Add a task":{fn:"add_task",sig:"add_task(tasks, title)",
+  note:"tasks is a list of dictionaries, each with \"title\" and \"done\". Add a new task with the given title and done set to False, at the end. Return the whole updated list. A blank or whitespace-only title is ignored \u2014 return the list unchanged.",
+  cases:[{args:[[],"buy milk"],out:[{"title":"buy milk","done":false}]},{args:[[{"title":"a","done":true}],"b"],out:[{"title":"a","done":true},{"title":"b","done":false}]},{args:[[],"   "],out:[]},{args:[[{"title":"a","done":false}],"  spaced  "],out:[{"title":"a","done":false},{"title":"spaced","done":false}]}]},
+ "To-Do List \u2014 List all tasks":{fn:"format_tasks",sig:"format_tasks(tasks)",
+  note:"Return one display line per task, numbered from 1: \"1. [ ] title\" for an open task and \"1. [x] title\" for a done one. An empty list returns an empty list.",
+  cases:[{args:[[{"title":"a","done":false},{"title":"b","done":true}]],out:["1. [ ] a","2. [x] b"]},{args:[[]],out:[]},{args:[[{"title":"solo","done":true}]],out:["1. [x] solo"]}]},
+ "To-Do List \u2014 Mark a task done":{fn:"mark_done",sig:"mark_done(tasks, number)",
+  note:"number is what the user typed \u2014 1 means the first task. Set that task's \"done\" to True and return the whole list. If the number is out of range, change nothing and return the list as it was.",
+  cases:[{args:[[{"title":"a","done":false}],1],out:[{"title":"a","done":true}]},{args:[[{"title":"a","done":false}],5],out:[{"title":"a","done":false}]},{args:[[{"title":"a","done":false},{"title":"b","done":false}],2],out:[{"title":"a","done":false},{"title":"b","done":true}]},{args:[[],1],out:[]}]},
+ "To-Do List \u2014 Save tasks to a file":{fn:"to_lines",sig:"to_lines(tasks)",
+  note:"Turn the tasks into the lines you would write to a file. Each line is the done flag as 1 or 0, then a pipe, then the title: \"0|buy milk\". Return the list of lines.",
+  cases:[{args:[[{"title":"buy milk","done":false},{"title":"call","done":true}]],out:["0|buy milk","1|call"]},{args:[[]],out:[]},{args:[[{"title":"x","done":true}]],out:["1|x"]}]},
+ "To-Do List \u2014 Load them back on start":{fn:"from_lines",sig:"from_lines(lines)",
+  note:"Read back what to_lines wrote. Each line is \"1|title\" or \"0|title\". Return a list of dictionaries with \"title\" and \"done\". Skip blank lines and any line with no pipe. A title may itself contain a pipe \u2014 only split on the first one.",
+  cases:[{args:[["0|buy milk","1|call"]],out:[{"title":"buy milk","done":false},{"title":"call","done":true}]},{args:[[]],out:[]},{args:[["","broken","1|ok"]],out:[{"title":"ok","done":true}]},{args:[["0|a|b"]],out:[{"title":"a|b","done":false}]}]},
+ "To-Do List \u2014 Push to GitHub":{fn:"git_push_steps",sig:"git_push_steps(url)",
+  note:"Return the three commands, in order, that push a finished local repo to an empty GitHub repo: \"git remote add origin <url>\", \"git branch -M main\", \"git push -u origin main\".",
+  cases:[{args:["https://github.com/me/todo.git"],out:["git remote add origin https://github.com/me/todo.git","git branch -M main","git push -u origin main"]},{args:["https://github.com/me/x.git"],out:["git remote add origin https://github.com/me/x.git","git branch -M main","git push -u origin main"]}]},
+ "Guess the Number \u2014 Pick a random number":{fn:"pick",sig:"pick(low, high, seed)",
+  note:"Use random.Random(seed).randint(low, high) so the same seed always gives the same number \u2014 that is what makes this testable. Return the number.",
+  cases:[{args:[1,100,7],out:42},{args:[1,10,1],out:3},{args:[50,60,3],out:53},{args:[1,6,42],out:6}]},
+ "Guess the Number \u2014 Loop until correct":{fn:"attempts_needed",sig:"attempts_needed(secret, guesses)",
+  note:"guesses is what the player tried, in order. Return how many attempts it took to hit the secret, counting from 1. If the secret is never guessed, return None.",
+  cases:[{args:[7,[3,9,7]],out:3},{args:[5,[5]],out:1},{args:[4,[1,2,3]],out:null},{args:[1,[]],out:null}]},
+ "Guess the Number \u2014 Give higher/lower hints":{fn:"hint",sig:"hint(secret, guess)",
+  note:"Return exactly \"correct\" when the guess matches, \"higher\" when the guess is too low, and \"lower\" when the guess is too high.",
+  cases:[{args:[50,50],out:"correct"},{args:[50,20],out:"higher"},{args:[50,80],out:"lower"},{args:[1,0],out:"higher"}]},
+ "Guess the Number \u2014 Limit the attempts":{fn:"play",sig:"play(secret, guesses, limit)",
+  note:"Only the first `limit` guesses count. If the secret appears among them, return \"won in N\" where N is the attempt number. Otherwise return \"out of attempts\".",
+  cases:[{args:[7,[1,7,3],3],out:"won in 2"},{args:[7,[1,2,3,7],3],out:"out of attempts"},{args:[5,[5],1],out:"won in 1"},{args:[5,[],3],out:"out of attempts"}]},
+ "Guess the Number \u2014 Track a high score":{fn:"best_score",sig:"best_score(scores)",
+  note:"A better score means fewer attempts, so the best score is the smallest number. Return it, or None when there are no scores yet.",
+  cases:[{args:[[5,3,9]],out:3},{args:[[]],out:null},{args:[[7]],out:7},{args:[[2,2,8]],out:2}]},
+ "Password Generator \u2014 Generate a random string":{fn:"gen",sig:"gen(length, seed)",
+  note:"Build a password of exactly `length` lowercase letters using random.Random(seed).choices(string.ascii_lowercase, k=length), joined into one string. The same seed must always give the same password. A length of 0 returns \"\".",
+  cases:[{args:[8,3],out:"gojpqbav"},{args:[4,1],out:"dwtg"},{args:[0,5],out:""},{args:[12,99],out:"kfegtgjroymk"}]},
+ "Password Generator \u2014 Let the user set the length":{fn:"valid_length",sig:"valid_length(n)",
+  note:"A password must be between 8 and 64 characters. Return n unchanged when it is in range, 8 when it is below 8, and 64 when it is above 64.",
+  cases:[{args:[12],out:12},{args:[3],out:8},{args:[100],out:64},{args:[8],out:8},{args:[64],out:64}]},
+ "Password Generator \u2014 Include symbols and digits optionally":{fn:"charset",sig:"charset(use_digits, use_symbols)",
+  note:"Build the pool of characters to pick from. Always start with the 26 lowercase letters in alphabetical order. If use_digits is True, add \"0123456789\" after them. If use_symbols is True, add \"!@#$%\" after that. Return the whole pool as one string.",
+  cases:[{args:[false,false],out:"abcdefghijklmnopqrstuvwxyz"},{args:[true,false],out:"abcdefghijklmnopqrstuvwxyz0123456789"},{args:[false,true],out:"abcdefghijklmnopqrstuvwxyz!@#$%"},{args:[true,true],out:"abcdefghijklmnopqrstuvwxyz0123456789!@#$%"}]},
+ "Password Generator \u2014 Generate several at once":{fn:"gen_many",sig:"gen_many(count, length, seed)",
+  note:"Return a list of `count` passwords, each of `length` lowercase letters. Build them from one random.Random(seed) created once, calling choices for each password in turn \u2014 so the whole batch is reproducible from the seed. A count of 0 returns an empty list.",
+  cases:[{args:[3,8,1],out:["dwtgmlqu","cavltals","fyxaaoyj"]},{args:[1,4,2],out:["yybc"]},{args:[0,8,1],out:[]},{args:[2,6,7],out:["idqbnj","bnalbc"]}]},
+ "Expense Tracker \u2014 Record an expense with amount and category":{fn:"add_expense",sig:"add_expense(rows, amount, category)",
+  note:"Append a dictionary with \"amount\" (a float) and \"category\" (trimmed) to rows, and return the whole list. Ignore the entry when the amount is negative or the category is blank \u2014 return rows unchanged in that case.",
+  cases:[{args:[[],12.5,"food"],out:[{"amount":12.5,"category":"food"}]},{args:[[],-3,"food"],out:[]},{args:[[],5,"  "],out:[]},{args:[[{"amount":1.0,"category":"a"}],2," travel "],out:[{"amount":1.0,"category":"a"},{"amount":2.0,"category":"travel"}]}]},
+ "Expense Tracker \u2014 List all expenses":{fn:"format_expenses",sig:"format_expenses(rows)",
+  note:"Return one line per expense in the form \"category: amount\", with the amount always shown to 2 decimals \u2014 \"food: 12.50\". Keep the original order.",
+  cases:[{args:[[{"amount":12.5,"category":"food"}]],out:["food: 12.50"]},{args:[[]],out:[]},{args:[[{"amount":3,"category":"bus"},{"amount":100,"category":"rent"}]],out:["bus: 3.00","rent: 100.00"]}]},
+ "Expense Tracker \u2014 Total per category":{fn:"totals",sig:"totals(rows)",
+  note:"Add up the amounts for each category. Return a dictionary mapping category to its total, rounded to 2 decimals. An empty list returns an empty dictionary.",
+  cases:[{args:[[{"amount":10,"category":"food"},{"amount":5.5,"category":"food"}]],out:{"food":15.5}},{args:[[]],out:{}},{args:[[{"amount":2,"category":"a"},{"amount":3,"category":"b"}]],out:{"a":2,"b":3}}]},
+ "Expense Tracker \u2014 Save to CSV":{fn:"to_csv",sig:"to_csv(rows)",
+  note:"Build the exact text of the CSV file. The first line is the header \"amount,category\". Then one line per expense, amount first with 2 decimals. Join the lines with newlines and do not add a trailing newline. With no rows, return just the header.",
+  cases:[{args:[[{"amount":12.5,"category":"food"}]],out:"amount,category\n12.50,food"},{args:[[]],out:"amount,category"},{args:[[{"amount":1,"category":"a"},{"amount":2,"category":"b"}]],out:"amount,category\n1.00,a\n2.00,b"}]},
+ "Expense Tracker \u2014 Show a monthly summary":{fn:"monthly",sig:"monthly(rows)",
+  note:"Each row also has a \"date\" like \"2026-03-09\". Group the spending by month and return a dictionary mapping \"YYYY-MM\" to the total for that month, rounded to 2 decimals.",
+  cases:[{args:[[{"amount":10,"category":"a","date":"2026-03-01"},{"amount":5,"category":"b","date":"2026-03-20"}]],out:{"2026-03":15}},{args:[[]],out:{}},{args:[[{"amount":7,"category":"a","date":"2026-01-31"},{"amount":3,"category":"a","date":"2026-02-01"}]],out:{"2026-01":7,"2026-02":3}}]},
+ "File Organizer \u2014 List files in a folder":{fn:"only_files",sig:"only_files(entries)",
+  note:"entries is a list of dictionaries with \"name\" and \"is_dir\". Return the names of the entries that are files, not folders, sorted alphabetically.",
+  cases:[{args:[[{"name":"b.txt","is_dir":false},{"name":"sub","is_dir":true},{"name":"a.txt","is_dir":false}]],out:["a.txt","b.txt"]},{args:[[]],out:[]},{args:[[{"name":"only","is_dir":true}]],out:[]}]},
+ "File Organizer \u2014 Group them by extension":{fn:"group_ext",sig:"group_ext(files)",
+  note:"Return a dictionary mapping each lowercase extension (no dot) to the sorted list of files with it. A file with no dot goes under \"none\". The filenames themselves keep their original spelling.",
+  cases:[{args:[["b.txt","a.txt","c.csv"]],out:{"txt":["a.txt","b.txt"],"csv":["c.csv"]}},{args:[["readme"]],out:{"none":["readme"]}},{args:[[]],out:{}},{args:[["A.TXT","b.txt"]],out:{"txt":["A.TXT","b.txt"]}}]},
+ "File Organizer \u2014 Create destination folders":{fn:"folder_names",sig:"folder_names(files)",
+  note:"One folder per extension. Return the sorted list of folder names you would need \u2014 the lowercase extensions without the dot, each appearing once. Files with no extension need a folder called \"none\".",
+  cases:[{args:[["a.txt","b.csv","c.txt"]],out:["csv","txt"]},{args:[["readme"]],out:["none"]},{args:[[]],out:[]},{args:[["A.TXT","b.txt"]],out:["txt"]}]},
+ "File Organizer \u2014 Move the files":{fn:"moves",sig:"moves(files)",
+  note:"Work out where each file goes. Return a list of [source, destination] pairs in the same order as the input, where the destination is the folder name, a slash, then the original filename \u2014 \"a.txt\" becomes [\"a.txt\", \"txt/a.txt\"].",
+  cases:[{args:[["a.txt","b.csv"]],out:[["a.txt","txt/a.txt"],["b.csv","csv/b.csv"]]},{args:[["readme"]],out:[["readme","none/readme"]]},{args:[[]],out:[]}]},
+ "File Organizer \u2014 Print a summary of what moved":{fn:"move_summary",sig:"move_summary(pairs)",
+  note:"pairs is the list of [source, destination] pairs. Return a dictionary mapping each destination folder to how many files landed in it.",
+  cases:[{args:[[["a.txt","txt/a.txt"],["b.txt","txt/b.txt"],["c.csv","csv/c.csv"]]],out:{"txt":2,"csv":1}},{args:[[]],out:{}},{args:[[["r","none/r"]]],out:{"none":1}}]},
+ "Weather API App \u2014 Call a weather API":{fn:"build_url",sig:"build_url(city, key)",
+  note:"Build the request URL: \"https://api.example.com/weather?city=<city>&key=<key>\". Spaces in the city name must become %20 so the URL stays valid.",
+  cases:[{args:["Hyderabad","abc"],out:"https://api.example.com/weather?city=Hyderabad&key=abc"},{args:["New Delhi","k1"],out:"https://api.example.com/weather?city=New%20Delhi&key=k1"},{args:["Pune","x"],out:"https://api.example.com/weather?city=Pune&key=x"}]},
+ "Weather API App \u2014 Parse the JSON response":{fn:"parse",sig:"parse(text)",
+  note:"Turn the response body into a Python dictionary with json.loads. If the text is not valid JSON, return None instead of raising.",
+  cases:[{args:["{\"city\": \"Pune\", \"temp\": 31}"],out:{"city":"Pune","temp":31}},{args:["oops"],out:null},{args:["{}"],out:{}}]},
+ "Weather API App \u2014 Print a formatted forecast":{fn:"forecast_line",sig:"forecast_line(data)",
+  note:"data has \"city\", \"temp\" and \"desc\". Return one line: \"<city>: <temp>C, <desc>\" \u2014 for example \"Pune: 31C, clear\". If any of the three keys is missing, return \"forecast unavailable\".",
+  cases:[{args:[{"city":"Pune","temp":31,"desc":"clear"}],out:"Pune: 31C, clear"},{args:[{"city":"Pune","temp":31}],out:"forecast unavailable"},{args:[{}],out:"forecast unavailable"}]},
+ "Weather API App \u2014 Accept a city as input":{fn:"clean_city",sig:"clean_city(raw)",
+  note:"Tidy what the user typed: trim the spaces at both ends and capitalise the first letter of each word \u2014 \" new delhi \" becomes \"New Delhi\". If nothing is left after trimming, return None.",
+  cases:[{args:["  new delhi "],out:"New Delhi"},{args:["pune"],out:"Pune"},{args:["   "],out:null},{args:["HYDERABAD"],out:"Hyderabad"}]},
+ "Weather API App \u2014 Handle API errors":{fn:"api_message",sig:"api_message(status)",
+  note:"status is the HTTP code, or None if the request timed out. Return exactly: \"ok\" for 200, \"city not found\" for 404, \"bad api key\" for 401, \"service down\" for anything 500 to 599, \"timed out\" for None, and \"unexpected error\" otherwise.",
+  cases:[{args:[200],out:"ok"},{args:[404],out:"city not found"},{args:[401],out:"bad api key"},{args:[503],out:"service down"},{args:[null],out:"timed out"},{args:[302],out:"unexpected error"}]},
+ "Excel Report Generator \u2014 Read a source workbook":{fn:"read_rows",sig:"read_rows(text)",
+  note:"text is the sheet exported as CSV. The first line is the header. Return a list of dictionaries, one per data row, mapping each header name to that row's value. Ignore blank lines. If there is no data, return an empty list.",
+  cases:[{args:["id,status\\n1,Open\\n2,Closed"],out:[]},{args:["id,status"],out:[]},{args:[""],out:[]}]},
+ "Excel Report Generator \u2014 Clean and filter the data":{fn:"clean",sig:"clean(rows)",
+  note:"Each row is a dictionary with \"status\". Trim the spaces from every status, then drop any row whose status is empty once trimmed. Return the rows that survive, in order, with their statuses tidied.",
+  cases:[{args:[[{"status":" Open "},{"status":"  "},{"status":"Closed"}]],out:[{"status":"Open"},{"status":"Closed"}]},{args:[[]],out:[]},{args:[[{"status":""}]],out:[]}]},
+ "Excel Report Generator \u2014 Group and summarise it":{fn:"group_count",sig:"group_count(rows, key)",
+  note:"Count how many rows share each value of the given key. Return a dictionary mapping value to count. Rows missing that key are skipped.",
+  cases:[{args:[[{"status":"Open"},{"status":"Open"},{"status":"Closed"}],"status"],out:{"Open":2,"Closed":1}},{args:[[],"status"],out:{}},{args:[[{"a":1},{"b":2}],"a"],out:{"1":1}}]},
+ "Excel Report Generator \u2014 Write a formatted output sheet":{fn:"output_rows",sig:"output_rows(counts)",
+  note:"counts maps a label to a number. Return the rows for the output sheet as a list of [label, count] pairs, ordered by count from highest to lowest, and alphabetically by label when counts tie.",
+  cases:[{args:[{"Open":3,"Closed":5}],out:[["Closed",5],["Open",3]]},{args:[{}],out:[]},{args:[{"B":2,"A":2}],out:[["A",2],["B",2]]}]},
+ "Excel Report Generator \u2014 Schedule or document the run":{fn:"run_note",sig:"run_note(script, when)",
+  note:"Return the one-line note for your README that says how the report is produced: \"Run python <script>.py <when>.\" \u2014 for example \"Run python report.py every Monday.\". Note the full stop at the end.",
+  cases:[{args:["report","every Monday"],out:"Run python report.py every Monday."},{args:["weekly","on the 1st"],out:"Run python weekly.py on the 1st."}]},
+ "SQL CRUD Application \u2014 Create the database and table":{fn:"create_sql",sig:"create_sql(table, columns)",
+  note:"columns is a list like [\"id INTEGER\", \"name TEXT\"]. Return the statement \"CREATE TABLE <table> (<columns joined by a comma and a space>);\" \u2014 for example \"CREATE TABLE cases (id INTEGER, name TEXT);\".",
+  cases:[{args:["cases",["id INTEGER","name TEXT"]],out:"CREATE TABLE cases (id INTEGER, name TEXT);"},{args:["topics",["id INTEGER"]],out:"CREATE TABLE topics (id INTEGER);"}]},
+ "SQL CRUD Application \u2014 Insert records":{fn:"insert_sql",sig:"insert_sql(table, columns)",
+  note:"Build a parameterised insert \u2014 the safe kind, with placeholders instead of pasted values. For [\"id\", \"name\"] return \"INSERT INTO cases (id, name) VALUES (?, ?);\" with one ? per column.",
+  cases:[{args:["cases",["id","name"]],out:"INSERT INTO cases (id, name) VALUES (?, ?);"},{args:["topics",["name"]],out:"INSERT INTO topics (name) VALUES (?);"}]},
+ "SQL CRUD Application \u2014 Read and display them":{fn:"select_sql",sig:"select_sql(table, where)",
+  note:"where is a column name, or None. With None return \"SELECT * FROM <table>;\". Otherwise return \"SELECT * FROM <table> WHERE <where> = ?;\" \u2014 again using a placeholder rather than a value.",
+  cases:[{args:["cases",null],out:"SELECT * FROM cases;"},{args:["cases","status"],out:"SELECT * FROM cases WHERE status = ?;"}]},
+ "SQL CRUD Application \u2014 Update a record":{fn:"update_sql",sig:"update_sql(table, column)",
+  note:"Return \"UPDATE <table> SET <column> = ? WHERE id = ?;\" \u2014 the new value and the id both come through as parameters.",
+  cases:[{args:["cases","status"],out:"UPDATE cases SET status = ? WHERE id = ?;"},{args:["topics","name"],out:"UPDATE topics SET name = ? WHERE id = ?;"}]},
+ "SQL CRUD Application \u2014 Delete a record":{fn:"delete_sql",sig:"delete_sql(table)",
+  note:"Return \"DELETE FROM <table> WHERE id = ?;\". Always narrow a delete with a WHERE \u2014 without one you would erase the whole table.",
+  cases:[{args:["cases"],out:"DELETE FROM cases WHERE id = ?;"},{args:["topics"],out:"DELETE FROM topics WHERE id = ?;"}]},
+ "SQL CRUD Application \u2014 Add a simple menu":{fn:"menu_choice",sig:"menu_choice(choice)",
+  note:"Turn what the user typed into an action. \"1\" is \"create\", \"2\" is \"read\", \"3\" is \"update\", \"4\" is \"delete\", \"5\" is \"quit\". Anything else is \"unknown\". Ignore spaces around the input.",
+  cases:[{args:["1"],out:"create"},{args:[" 3 "],out:"update"},{args:["5"],out:"quit"},{args:["9"],out:"unknown"},{args:[""],out:"unknown"}]},
+ "Log Analyzer \u2014 Read a log file":{fn:"read_lines",sig:"read_lines(text)",
+  note:"text is the whole file. Return the list of lines with blank ones removed and the spaces trimmed from both ends of each remaining line.",
+  cases:[{args:["INFO ok\\n\\nERROR bad\\n"],out:["INFO ok\\n\\nERROR bad\\n"]},{args:[""],out:[]},{args:["  padded  "],out:["padded"]}]},
+ "Log Analyzer \u2014 Count lines by severity":{fn:"by_severity",sig:"by_severity(lines)",
+  note:"Every line starts with its level \u2014 INFO, WARNING or ERROR. Return a dictionary mapping each level that appears to how many lines have it. Lines starting with anything else are ignored.",
+  cases:[{args:[["INFO ok","ERROR bad","INFO fine"]],out:{"INFO":2,"ERROR":1}},{args:[[]],out:{}},{args:[["DEBUG hmm"]],out:{}}]},
+ "Log Analyzer \u2014 Extract timestamps":{fn:"timestamps",sig:"timestamps(lines)",
+  note:"Some lines begin with a time in \"HH:MM:SS\" form followed by a space. Return those times, in order, as a list of strings. Lines that do not start with a time are skipped.",
+  cases:[{args:[["09:15:00 INFO ok","no time here","10:00:30 ERROR bad"]],out:["09:15:00","10:00:30"]},{args:[[]],out:[]},{args:[["INFO ok"]],out:[]}]},
+ "Log Analyzer \u2014 Find the most common error":{fn:"top_error",sig:"top_error(lines)",
+  note:"Look only at lines starting with \"ERROR \". The rest of the line is the message. Return the message that appears most often; if two tie, return the alphabetically first. If there are no ERROR lines, return None.",
+  cases:[{args:[["ERROR disk full","ERROR disk full","ERROR timeout"]],out:"disk full"},{args:[["INFO ok"]],out:null},{args:[[]],out:null},{args:[["ERROR b","ERROR a"]],out:"a"}]},
+ "Log Analyzer \u2014 Output a summary report":{fn:"report",sig:"report(lines)",
+  note:"Pull the whole analysis together. Return a dictionary with \"total\" (how many lines), \"errors\" (how many start with \"ERROR \"), and \"top_error\" (the most common error message, or None when there are none).",
+  cases:[{args:[["INFO ok","ERROR disk full","ERROR disk full"]],out:{"total":3,"errors":2,"top_error":"disk full"}},{args:[[]],out:{"total":0,"errors":0,"top_error":null}},{args:[["INFO only"]],out:{"total":1,"errors":0,"top_error":null}}]}
+};
+for(var __k6 in TESTS6) TESTS[__k6]=TESTS6[__k6];
+/* exact replacements for the last loosely-checked questions — no open ends */
+var TESTS7={
+ "Store five case numbers in a list.":{fn:"case_numbers",sig:"case_numbers(start, count)",
+  note:"Build the case numbers in order and return them as a list of strings. Each one is \"C-\" followed by the number, counting up from start \u2014 case_numbers(1, 5) gives [\"C-1\", \"C-2\", \"C-3\", \"C-4\", \"C-5\"]. A count of 0 returns an empty list.",
+  cases:[{args:[1,5],out:["C-1","C-2","C-3","C-4","C-5"]},{args:[100,3],out:["C-100","C-101","C-102"]},{args:[1,0],out:[]},{args:[7,2],out:["C-7","C-8"]}]},
+ "Create a list of fruits.":{fn:"fruit_list",sig:"fruit_list(names)",
+  note:"names is a list of fruit names in any order and any capitalisation. Return them lowercased, with duplicates removed, sorted alphabetically.",
+  cases:[{args:[["Banana","apple","Cherry"]],out:["apple","banana","cherry"]},{args:[["apple","APPLE"]],out:["apple"]},{args:[[]],out:[]},{args:[["mango","banana","apple"]],out:["apple","banana","mango"]}]},
+ "Refactor an earlier program into functions.":{fn:"stats",sig:"stats(numbers)",
+  note:"Split the work into small pieces and let stats() call them. Write total(nums), average(nums) and largest(nums), then have stats() return a dictionary with \"total\", \"average\" (rounded to 2 decimals) and \"largest\". For an empty list return total 0, average 0 and largest None.",
+  cases:[{args:[[1,2,3]],out:{"total":6,"average":2.0,"largest":3}},{args:[[]],out:{"total":0,"average":0,"largest":null}},{args:[[10]],out:{"total":10,"average":10.0,"largest":10}},{args:[[4,4,7,9]],out:{"total":24,"average":6.0,"largest":9}}]},
+ "Use random to build a dice roller.":{fn:"roll",sig:"roll(seed)",
+  note:"Return one dice roll from 1 to 6 using random.Random(seed).randint(1, 6). Seeding it this way means the same seed always gives the same roll, which is what lets the tests check your work.",
+  cases:[{args:[1],out:2},{args:[2],out:1},{args:[7],out:3},{args:[42],out:6}]},
+ "Roll two dice and print the total.":{fn:"roll_two",sig:"roll_two(seed)",
+  note:"Create one generator with random.Random(seed), then call randint(1, 6) twice on it \u2014 first die, then second \u2014 and return the two rolls added together. Using a single generator in that order keeps the result reproducible.",
+  cases:[{args:[1],out:7},{args:[2],out:2},{args:[7],out:5},{args:[42],out:7}]},
+ "Create three different car objects.":{fn:"car_summaries",sig:"car_summaries(specs)",
+  note:"Define a class Car that stores make and model and has a summary() method returning \"<make> <model>\". specs is a list of [make, model] pairs \u2014 build one Car per pair and return the list of their summary() strings, in order.",
+  cases:[{args:[[["Tata","Nexon"],["Maruti","Swift"],["Honda","City"]]],out:["Tata Nexon","Maruti Swift","Honda City"]},{args:[[["Kia","Seltos"]]],out:["Kia Seltos"]},{args:[[]],out:[]}]},
+ "Store 5 case records as a list of dictionaries and print each one.":{fn:"case_records",sig:"case_records(rows)",
+  note:"rows is a list of [id, status] pairs. Turn each one into a dictionary with the keys \"id\" and \"status\", keeping the original order, and return the list of dictionaries.",
+  cases:[{args:[[["C-1","Open"],["C-2","Closed"]]],out:[{"id":"C-1","status":"Open"},{"id":"C-2","status":"Closed"}]},{args:[[]],out:[]},{args:[[["C-9","Pending"]]],out:[{"id":"C-9","status":"Pending"}]}]},
+ "Milestone: reach 100+ total solved problems across LeetCode / HackerRank / CodeWars.":{fn:"milestone",sig:"milestone(counts)",
+  note:"counts maps a platform name to how many problems you have solved there. Return a dictionary with \"total\" (all of them added up) and \"reached\" (True once the total is 100 or more, otherwise False).",
+  cases:[{args:[{"LeetCode":60,"HackerRank":45}],out:{"total":105,"reached":true}},{args:[{"LeetCode":10}],out:{"total":10,"reached":false}},{args:[{}],out:{"total":0,"reached":false}},{args:[{"LeetCode":50,"HackerRank":30,"CodeWars":20}],out:{"total":100,"reached":true}}]}
+};
+for(var __k7 in TESTS7) TESTS[__k7]=TESTS7[__k7];
 
 /* ---- SPEC: precise restatement of vague questions ----
    task     — exactly what to write, with the variable names and values to use
@@ -9089,10 +9339,10 @@ function beginRun(label){
   var p=document.createElement("div"); p.className="vp";
   p.textContent="Running your current code — the previous result has been cleared.";
   box.appendChild(h); box.appendChild(p);
-  ["btnRun","btnSubmit"].forEach(function(x){ var b=document.getElementById(x); if(b) b.disabled=true; });
+  ["btnRun","btnSubmit","edRun","edSubmit"].forEach(function(x){ var b=document.getElementById(x); if(b) b.disabled=true; });
 }
 function endRun(){
-  ["btnRun","btnSubmit"].forEach(function(x){ var b=document.getElementById(x); if(b) b.disabled=false; });
+  ["btnRun","btnSubmit","edRun","edSubmit"].forEach(function(x){ var b=document.getElementById(x); if(b) b.disabled=false; });
 }
 function runCode(verify){
   var lang=document.getElementById("cbLang").value;
