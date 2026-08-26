@@ -685,7 +685,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   <div class="top-in">
     <button class="brand" data-act="home" type="button">
       <span class="mark">LT</span>
-      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v31</span></span></span>
+      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v32</span></span></span>
     </button>
     <span class="langbar" id="langBar"></span>
     <span class="sp"></span>
@@ -2645,6 +2645,103 @@ document.getElementById("cbLang").addEventListener("change",function(){
   ed.addEventListener("paste",function(){ setTimeout(gutter,0); });
   ed.addEventListener("cut",function(){ setTimeout(gutter,0); });
 })();
+/* ---- one delegated submit handler: survives any re-render and cannot be
+   lost by an edit that misses a specific element id ---- */
+document.addEventListener("submit",function(e){
+  var f=e.target;
+  if(!f||!f.id) return;
+  var id=f.id;
+
+  if(id==="noteForm2"){
+    e.preventDefault();
+    var t=document.getElementById("nText").value.trim();
+    if(!t) return;
+    noteAdd(t,document.getElementById("nColor").value);
+    document.getElementById("nText").value="";
+    renderStickies(); toast("📌 Pinned to the board");
+    return;
+  }
+  if(id==="noteDlgForm"){
+    var btn=e.submitter, v=btn?btn.value:"close";
+    if(v==="save"){ noteSave(); }
+    else if(v==="del"){
+      if(confirm("Take this note down?")){
+        S.stickies=notesList().filter(function(x){return x.id!==ui.noteId;});
+        save(); renderStickies(); toast("Note taken down");
+      } else { e.preventDefault(); }
+    }
+    return;   /* method="dialog" closes it */
+  }
+  if(id==="watchForm"){
+    e.preventDefault();
+    var wt=document.getElementById("wTopic").value.trim();
+    if(!wt) return;
+    watchAdd(wt,document.getElementById("wNote").value.trim());
+    document.getElementById("wTopic").value="";
+    document.getElementById("wNote").value="";
+    save(); renderWatch(); fillPickers(); toast("Added to your board");
+    return;
+  }
+  if(id==="goalForm"){
+    e.preventDefault();
+    var gn=document.getElementById("gTopic").value.trim();
+    if(!gn) return;
+    S.goals.topics[gn]=Math.max(1,parseInt(document.getElementById("gTarget").value,10)||1);
+    document.getElementById("gTopic").value="";
+    save(); fillPickers(); renderGoals(); toast("Goal saved");
+    return;
+  }
+  if(id==="hourForm"){
+    e.preventDefault();
+    S.goals.hours=Math.max(1,parseFloat(document.getElementById("gHours").value)||8);
+    save(); renderGoals(); toast("Weekly hours updated");
+    return;
+  }
+  if(id==="microForm"){
+    e.preventDefault();
+    S.goals.minDaily=Math.max(1,parseInt(document.getElementById("gMin").value,10)||1);
+    S.goals.stretchDaily=Math.max(S.goals.minDaily,parseInt(document.getElementById("gStretch").value,10)||2);
+    S.goals.dailyMinutes=Math.max(5,parseInt(document.getElementById("gMins").value,10)||20);
+    save(); render(); toast("Daily goals updated");
+    return;
+  }
+  if(id==="resForm"){
+    e.preventDefault();
+    S.resources=S.resources||[];
+    S.resources.push({id:uid(),title:document.getElementById("rTitle").value.trim(),
+      url:document.getElementById("rUrl").value.trim(),type:document.getElementById("rType").value,
+      topic:document.getElementById("rTopic").value.trim(),dur:document.getElementById("rDur").value.trim(),
+      pri:document.getElementById("rPri").value,src:"Added by me",builtin:false,lang:curLang()});
+    ["rTitle","rUrl","rTopic","rDur"].forEach(function(x){ document.getElementById(x).value=""; });
+    save(); renderResources(); toast("Resource added");
+    return;
+  }
+  if(id==="noteForm"){
+    e.preventDefault();
+    var nv=document.getElementById("noteBox").value.trim();
+    if(nv) S.notes[today()]=nv; else delete S.notes[today()];
+    ev("note","Daily update saved"); save(); render(); toast("Update saved");
+    return;
+  }
+  if(id==="dlgForm"){
+    var db=e.submitter;
+    if(db&&db.value==="cancel") return;
+    var dt=document.getElementById("fTitle").value.trim();
+    if(!dt){ e.preventDefault(); return; }
+    var did=document.getElementById("fId").value;
+    var pl={title:dt,topic:document.getElementById("dTopic").value.trim(),
+      due:document.getElementById("fDue").value||today(),lang:document.getElementById("fLang").value,
+      diff:document.getElementById("dDiff").value,url:document.getElementById("fUrl").value.trim(),
+      notes:document.getElementById("fNotes").value.trim(),
+      learned:document.getElementById("fLearned").value.trim()};
+    if(did){ var et=byId(did);
+      if(et){ et.title=pl.title; et.topic=pl.topic; et.due=pl.due; et.lang=pl.lang; et.diff=pl.diff;
+        et.url=pl.url; et.notes=pl.notes; et.learned=pl.learned; ev("edit","Updated: "+et.title); } }
+    else addTask(pl);
+    save(); setTimeout(render,0); toast("Saved");
+    return;
+  }
+});
 document.getElementById("btnRun").addEventListener("click",function(){ runCode(false); });
 document.getElementById("btnSubmit").addEventListener("click",function(){ runTests(); });
 /* ---- editor edits as pure logic, so they can be reasoned about and tested ---- */
