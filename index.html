@@ -685,7 +685,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   <div class="top-in">
     <button class="brand" data-act="home" type="button">
       <span class="mark">LT</span>
-      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v32</span></span></span>
+      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v33</span></span></span>
     </button>
     <span class="langbar" id="langBar"></span>
     <span class="sp"></span>
@@ -2272,7 +2272,17 @@ document.addEventListener("click",function(e){
     if(doAct==="noteopen"){ noteOpen(id); return; }
     if(doAct==="notecolor"){
       var cp=id.split("|"), cn=notesList().filter(function(x){return x.id===cp[0];})[0];
-      if(cn){ cn.color=cp[1]; save(); noteOpen(cp[0]); renderStickies(); }
+      if(cn){
+        noteSyncText();
+        cn.color=cp[1]; save();
+        var cardEl=document.querySelector("#ndNote .sticky");
+        if(cardEl) cardEl.className="sticky big s-"+cn.color;
+        var sw=document.querySelectorAll("#ndNote .swatch");
+        for(var si=0;si<sw.length;si++){
+          sw[si].classList.toggle("on",(sw[si].getAttribute("data-id")||"").split("|")[1]===cn.color);
+        }
+        renderStickies();
+      }
       return;
     }
     if(doAct==="wtouch"){ watchTouch(id); return; }
@@ -2647,6 +2657,10 @@ document.getElementById("cbLang").addEventListener("change",function(){
 })();
 /* ---- one delegated submit handler: survives any re-render and cannot be
    lost by an edit that misses a specific element id ---- */
+(function(){
+  var nd=document.getElementById("noteDlg");
+  if(nd) nd.addEventListener("close",function(){ if(ui.noteId){ noteSyncText(); renderStickies(); } });
+})();
 document.addEventListener("submit",function(e){
   var f=e.target;
   if(!f||!f.id) return;
@@ -7163,8 +7177,15 @@ function noteOpen(id){
     b.title=col; row.appendChild(b);
   });
   body.appendChild(row);
-  dlg.showModal();
+  if(!dlg.open) dlg.showModal();
   setTimeout(function(){ ta.focus(); ta.setSelectionRange(ta.value.length,ta.value.length); },40);
+}
+function noteSyncText(){
+  var n=notesList().filter(function(x){return x.id===ui.noteId;})[0];
+  var ta=document.getElementById("ndText");
+  if(!n||!ta) return;
+  var v=ta.value.trim();
+  if(v&&v!==n.text){ n.text=v; n.edited=new Date().toISOString(); save(); }
 }
 function noteSave(){
   var n=notesList().filter(function(x){return x.id===ui.noteId;})[0];
