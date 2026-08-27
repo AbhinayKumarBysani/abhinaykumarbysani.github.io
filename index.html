@@ -13,7 +13,7 @@
   --brand:#5b5bf6; --brand2:#8b5cf6; --cyan:#0ea5b7; --ok:#0f9d63; --warn:#c2760a; --bad:#d13a4e; --amber:#c98a10;
   --brand-soft:#ecebff; --ok-soft:#e4f6ee; --warn-soft:#fbf1de; --bad-soft:#fdeaed; --cyan-soft:#e0f5f7;
   --shadow:0 1px 2px rgba(16,23,40,.05), 0 10px 30px rgba(16,23,40,.06);
-  --ring:rgba(91,91,246,.18);
+  --ring:rgba(91,91,246,.18); --guide:rgba(104,117,143,.16);
   --h0:#e9edf5; --h1:#c9d6fa; --h2:#96aef2; --h3:#6480e3; --h4:#3a51c4;
   --r:16px; --r2:11px; --r3:8px;
   --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
@@ -31,7 +31,7 @@
 }
 :root[data-theme="dark"]{
   --bg:#080b14; --bg2:#0c1120; --panel:#111726; --panel2:#161d30; --ink:#eef2fb; --ink2:#c6d0e4;
-  --muted:#8e9cb8; --faint:#66738e; --line:#212a40;
+  --muted:#8e9cb8; --faint:#66738e; --line:#212a40; --guide:rgba(142,156,184,.20);
   --brand:#7c7cff; --brand2:#a78bfa; --cyan:#2ad3e0; --ok:#34d399; --warn:#fbbf5f; --bad:#f87189; --amber:#fbbf24;
   --brand-soft:#1c1f3d; --ok-soft:#0e2b21; --warn-soft:#2e2412; --bad-soft:#31141c; --cyan-soft:#0d2b31;
   --shadow:0 1px 2px rgba(0,0,0,.5), 0 14px 40px rgba(0,0,0,.4);
@@ -275,6 +275,38 @@ svg.heatsvg{block-size:auto; min-inline-size:340px}
 .btn:focus-visible,.chkopt:focus-visible,.nxt:focus-visible,.planrow:focus-visible,
 .csuh:focus-visible,.skhead:focus-visible,.wkhead:focus-visible{outline:2px solid var(--brand); outline-offset:2px}
 nav.tabs button:focus-visible{outline:2px solid var(--brand); outline-offset:-2px}
+.solbox{border:1px solid var(--line);border-radius:11px;padding:12px 13px;margin-block-start:9px;background:var(--panel2)}
+.solcode{font-family:var(--mono);font-size:12.5px;line-height:1.55;margin:8px 0 0;padding:11px 13px;
+  background:var(--panel);border:1px solid var(--line);border-radius:9px;overflow-x:auto;white-space:pre;color:var(--ink)}
+.theory{border:1px solid var(--line);border-radius:12px;padding:13px 15px;margin-block-start:10px;background:var(--panel2)}
+.thh{font-size:13px;font-weight:700;color:var(--ink);margin-block-end:8px}
+.thl{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+  color:var(--muted);margin-block-start:11px;margin-block-end:4px}
+.tht{font-size:13px;line-height:1.6;color:var(--ink2)}
+.thcode{font-family:var(--mono);font-size:12.5px;line-height:1.55;margin:0;padding:11px 13px;
+  background:var(--panel);border:1px solid var(--line);border-radius:9px;overflow-x:auto;
+  white-space:pre;color:var(--ink)}
+.thout{font-family:var(--mono);font-size:12.5px;line-height:1.55;margin:0;padding:9px 13px;
+  background:var(--ok-soft);border-radius:9px;overflow-x:auto;white-space:pre;color:var(--ink2)}
+.thsmall{font-size:12.5px;line-height:1.6;color:var(--ink2);padding:8px 11px;
+  background:var(--brand-soft);border-radius:8px}
+.thgot{font-size:12.5px;line-height:1.6;color:var(--ink2);padding:8px 11px;
+  background:var(--warn-soft);border-radius:8px}
+#mapDlg{max-inline-size:820px;inline-size:92vw}
+#mapBig{max-block-size:70vh;overflow-y:auto}
+.bigsk{border:1px solid var(--line);border-radius:11px;padding:11px 13px;margin-block-end:8px;background:var(--panel2)}
+.bigskh{display:flex;align-items:center;gap:9px}
+.bigskh b{font-size:13px}
+.bigwks{display:flex;flex-wrap:wrap;gap:6px;margin-block-start:9px}
+.bigwk{display:inline-flex;align-items:baseline;gap:6px;padding:6px 10px;border-radius:9px;
+  border:1px solid var(--line);background:var(--panel);cursor:pointer;font:inherit;font-size:11.5px;
+  color:var(--ink2);text-align:start;max-inline-size:270px}
+.bigwk:hover{border-color:var(--brand);background:var(--brand-soft)}
+.bigwk.bwopen{border-color:var(--warn)}
+.bigwk.bwdone{border-color:var(--ok);background:var(--ok-soft)}
+.bwn{font-weight:700;white-space:nowrap}
+.bwt{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bwm{color:var(--muted);font-size:10.5px;white-space:nowrap}
 .legend{display:flex; flex-wrap:wrap; gap:12px; margin-block-start:8px; font-size:12.5px; color:var(--muted)}
 .legend i{display:inline-block; inline-size:10px; block-size:10px; border-radius:3px; margin-inline-end:6px}
 .scale{display:flex; align-items:center; gap:5px; font-size:11.5px; color:var(--muted); margin-block-start:9px}
@@ -770,12 +802,25 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   border-inline-end:1px solid var(--line); overflow:hidden; box-sizing:border-box; flex:none;
   inline-size:52px; transition:inline-size .12s}
 .gutter.g4{inline-size:60px} .gutter.g5{inline-size:68px}
-.gutter .ln{display:block; block-size:21px; line-height:21px; font-variant-numeric:tabular-nums}
+.gutter .ln{display:block; block-size:21px; line-height:21px; font-variant-numeric:tabular-nums; white-space:pre}
+.indbadge{font-size:11px;color:var(--muted);font-family:var(--mono);white-space:nowrap;
+  padding:1px 7px;border-radius:99px;background:var(--panel2)}
+.indbadge.opens{color:var(--ok);background:var(--ok-soft)}
+.indbadge.closes{color:var(--warn);background:var(--warn-soft)}
 .gutter .ln.cur{color:var(--brand); font-weight:700}
 #editor{flex:1 1 auto; inline-size:100%; min-inline-size:0; font-family:var(--mono); font-size:13px;
   line-height:21px; padding-block:12px; padding-inline:12px; border:0; border-radius:0;
-  background:transparent; resize:none; block-size:100%; tab-size:4; -moz-tab-size:4;
-  white-space:pre; overflow-wrap:normal; overflow:auto; box-sizing:border-box}
+  resize:none; block-size:100%; tab-size:4; -moz-tab-size:4;
+  white-space:pre; overflow-wrap:normal; overflow:auto; box-sizing:border-box;
+  /* one faint line every 4 characters — painted on the editor itself, so the
+     spacing is measured in the editor's own font and can never drift */
+  background-color:transparent;
+  background-image:repeating-linear-gradient(to right,
+    var(--guide) 0, var(--guide) 1px, transparent 1px, transparent 4ch);
+  background-position:12px 0;
+  background-attachment:local;
+  background-repeat:repeat}
+#editor.noguide{background-image:none}
 #editor:focus{box-shadow:none; outline:none}
 .console{background:#0a0e18; color:#d7e3ff; font-family:var(--mono); font-size:12.5px; line-height:1.6; border-radius:12px;
   padding:12px 14px; min-block-size:180px; max-block-size:340px; overflow:auto; white-space:pre-wrap; word-break:break-word;
@@ -804,7 +849,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   <div class="top-in">
     <button class="brand" data-act="home" type="button">
       <span class="mark">LT</span>
-      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v48</span></span></span>
+      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v51</span></span></span>
     </button>
     <span class="langbar" id="langBar"></span>
     <span class="sp"></span>
@@ -873,6 +918,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
     <div class="rowb" style="margin-block-end:4px">
       <h2 style="margin:0">Your skill map</h2>
       <span class="sp"></span>
+      <button type="button" class="btn xs" data-do="mapbig" title="Open the full map with every week listed">⛶ Enlarge</button>
       <button type="button" class="btn xs pri" id="nextWkBtn" data-do="nextwk">▶ Next week</button>
     </div>
     <p class="hint">Click any skill to see its questions. Lines light up as you unlock what comes next.</p>
@@ -1392,7 +1438,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
           <button class="btn" id="btnRun" type="button" title="Run your code — Ctrl+Enter">▶ Run <kbd class="kb">Ctrl↵</kbd></button>
           <button class="btn pri" id="btnSubmit" type="button" title="Run every test case and submit — Ctrl+Shift+Enter">✓ Run tests &amp; submit <kbd class="kb">Ctrl⇧↵</kbd></button>
           <button class="btn" data-act="csave" type="button">💾 Save</button>
-          <button class="btn" data-act="cfmt" type="button">⇥ Reindent</button>
+          <button class="btn" data-act="cfmt" type="button" title="Rebuild every indent level to 4 spaces — fixes copied or mismatched code">⇥ Fix indentation</button>
           <button class="btn" data-act="cdl" type="button">⬇ Download</button>
           <span class="sp"></span>
           <span class="dot-live" id="pyDot" title="Python engine status"></span>
@@ -1406,6 +1452,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
           <div class="edbar">
             <span class="fn mono" id="edName">scratch.py</span>
             <span style="font-size:11.5px;color:var(--faint)" id="edMeta">not saved yet</span>
+            <span class="indbadge" id="indNow" title="Where your cursor is, and what the next line needs"></span>
             <span class="sp"></span>
             <button class="btn xs" id="edRun" type="button" title="Run your code — Ctrl+Enter">▶ Run <kbd class="kb">Ctrl↵</kbd></button>
             <button class="btn xs pri" id="edSubmit" type="button" title="Run every test case and submit — Ctrl+Shift+Enter">✓ Run tests <kbd class="kb">Ctrl⇧↵</kbd></button>
@@ -1552,7 +1599,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   </div>
 </section>
 
-<footer class="f">LearnTrack <b>v48</b> · built 26 Aug 2026 · local-first learning tracker · single file, zero dependencies · export your backup regularly</footer>
+<footer class="f">LearnTrack <b>v51</b> · built 26 Aug 2026 · local-first learning tracker · single file, zero dependencies · export your backup regularly</footer>
 </div>
 
 <dialog id="dlg">
@@ -1578,6 +1625,16 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   </form>
 </dialog>
 
+<dialog id="mapDlg">
+  <form method="dialog" id="mapForm">
+    <div class="rowb" style="margin-block-end:10px">
+      <h3 style="margin:0">Your full skill map</h3>
+      <span class="sp"></span>
+      <button class="btn xs" value="close" type="submit">Close</button>
+    </div>
+    <div id="mapBig"></div>
+  </form>
+</dialog>
 <dialog id="chkDlg">
   <form method="dialog" id="chkForm">
     <h3 id="chkTitle" style="margin:0 0 10px">Concept check</h3>
@@ -2572,6 +2629,24 @@ document.addEventListener("click",function(e){
       renderLangProj(); renderSkills(); render();
       return;
     }
+    if(doAct==="mapbig"){
+      renderMapBig();
+      var md=document.getElementById("mapDlg");
+      if(md&&!md.open) md.showModal();
+      return;
+    }
+    if(doAct==="bigweek"){
+      var bw=+id;
+      var got3=mpLoad(bw,true);
+      if(got3){ ev("road","Week "+bw+" opened from the map"); save(); }
+      closeDialogs(); render();
+      var left=(typeof weekLeft==="function")?weekLeft(bw):[];
+      var first=left.filter(function(r){ return r.t; })[0];
+      if(first){ setTab("code"); jumpTo(first.t.id); }
+      else { setTab("wks"); ui.wkOpen=ui.wkOpen||{}; ui.wkOpen[bw]=true; renderWeeks(); }
+      toast(got3?("\u25b6 Week "+bw+" opened"):("Week "+bw));
+      return;
+    }
     if(doAct==="setgoal"){
       S.goal=id; save(); renderGoalPicker(); renderPrep(); renderSkills(); render();
       toast("🎯 Goal set — your readiness score is now weighted for "+goalName());
@@ -2850,6 +2925,28 @@ document.addEventListener("click",function(e){
         gutter(); ed2.focus();
         var pos=ed2.value.indexOf("return None");
         ed2.setSelectionRange(pos,pos+11);
+      }
+      return;
+    }
+    if(doAct==="showsol"){
+      var st2=byId(id);
+      if(ui.solFor===id){ ui.solFor=null; render(); return; }
+      if(st2&&!st2.sawSolution){
+        st2.sawSolution=true;
+        try{ markHint(st2); }catch(e5){}
+        try{ noteMistake(st2,"solution","Looked at the worked answer"); }catch(e6){}
+        save();
+      }
+      ui.solFor=id; render();
+      return;
+    }
+    if(doAct==="solcopy"){
+      var sc=byId(id), scode=solutionFor(sc);
+      if(scode){
+        document.getElementById("editor").value=scode;
+        gutter(); indentBadge();
+        if(sc){ sc.draft=scode; sc.draftAt=new Date().toISOString(); save(); }
+        toast("Copied — run it, then try writing it yourself");
       }
       return;
     }
@@ -3136,8 +3233,25 @@ document.getElementById("cbLang").addEventListener("change",function(){
 (function(){
   var ed=document.getElementById("editor");
   ed.addEventListener("scroll",function(){ document.getElementById("gutter").scrollTop=this.scrollTop; });
-  ["click","keyup","select","focus"].forEach(function(evt){ ed.addEventListener(evt,gutter); });
-  ed.addEventListener("paste",function(){ setTimeout(gutter,0); });
+  ["click","keyup","select","focus"].forEach(function(evt){
+    ed.addEventListener(evt,function(){ gutter(); indentBadge(); });
+  });
+  /* Pasted code often uses tabs or 2-space indents. Mixing those with the
+     editor's spaces makes Python raise TabError, so normalise on the way in. */
+  ed.addEventListener("paste",function(e){
+    var txt=(e.clipboardData||window.clipboardData);
+    if(!txt) { setTimeout(function(){gutter();indentBadge();},0); return; }
+    var raw=txt.getData("text");
+    if(!raw||raw.indexOf("\n")<0&&raw.indexOf("\t")<0){
+      setTimeout(function(){gutter();indentBadge();},0); return;
+    }
+    var fixed=normalizeIndent(raw);
+    if(fixed===raw){ setTimeout(function(){gutter();indentBadge();},0); return; }
+    e.preventDefault();
+    document.execCommand("insertText",false,fixed);
+    setTimeout(function(){ gutter(); indentBadge();
+      toast("Indentation tidied to "+EDIT_UNIT.length+" spaces per level"); },0);
+  });
   ed.addEventListener("cut",function(){ setTimeout(gutter,0); });
 })();
 /* ---- one delegated submit handler: survives any re-render and cannot be
@@ -3160,6 +3274,7 @@ document.addEventListener("submit",function(e){
     renderStickies(); toast("📌 Pinned to the board");
     return;
   }
+  if(id==="mapForm"){ return; }
   if(id==="chkForm"){
     /* closing the concept check resets it, so reopening starts clean */
     ui.chkPicked=null; ui.chkIdx=0; ui.chkRight=0;
@@ -7282,6 +7397,161 @@ var MANUAL={
 for(var __m in MANUAL2) if(!TESTS[__m]) MANUAL[__m]=MANUAL2[__m];
 
 /* fixture files created inside the Python sandbox before tests run */
+/* Worked solutions — each one verified against this app's own test cases.
+   Shown only when you ask, and using one marks the question as assisted. */
+var SOLUTIONS={
+ "Print \"Hello, Python!\"":"name = input().strip()\nprint(\"Hello, Python!\")\nif name:\n    print(\"Hello, \" + name + \"!\")",
+ "Print your name on a second line.":"name = input()\nprint(\"Hello, Python!\")\nprint(name)",
+ "Store your name, city and current learning goal in variables.":"name = input()\ncity = input()\ngoal = input()\nprint(name)\nprint(city)\nprint(goal)",
+ "Print all three values.":"name = input()\ncity = input()\ngoal = input()\nprint(name + \" \" + city + \" \" + goal)",
+ "Create one variable of each basic data type.":"a = int(input())\nb = float(input())\nc = input()\nd = input() == \"True\"\nprint(str(a) + \" int\")\nprint(str(b) + \" float\")\nprint(c + \" str\")\nprint(str(d) + \" bool\")",
+ "Print each value and its type.":"text = input()\nnumber = int(input())\ndecimal = float(input())\nflag = input() == \"True\"\nprint(type(text).__name__)\nprint(type(number).__name__)\nprint(type(decimal).__name__)\nprint(type(flag).__name__)",
+ "Convert \"25\" into an integer.":"text = input()\nnumber = int(text)\nprint(number)",
+ "Add 5 and print the result.":"text = input()\nnumber = int(text)\nprint(number + 5)",
+ "Ask for a name and print a greeting.":"name = input()\nprint(\"Hello, \" + name + \"!\")",
+ "Ask for two numbers and print their sum.":"a = int(input())\nb = int(input())\nprint(a + b)",
+ "Check whether one number is greater than another.":"a = int(input())\nb = int(input())\nprint(a > b)",
+ "Check whether a number is between 10 and 20.":"n = int(input())\nprint(10 < n < 20)",
+ "Positive, negative or zero":"n = int(input())\nif n > 0:\n    print(\"positive\")\nelif n < 0:\n    print(\"negative\")\nelse:\n    print(\"zero\")",
+ "Pass or fail":"mark = int(input())\nif mark >= 40:\n    print(\"Pass\")\nelse:\n    print(\"Fail\")",
+ "Odd or even":"n = int(input())\nif n % 2 == 0:\n    print(\"Even\")\nelse:\n    print(\"Odd\")",
+ "Basic age-category checker":"age = int(input())\nif age <= 12:\n    print(\"child\")\nelif age <= 19:\n    print(\"teen\")\nelse:\n    print(\"adult\")",
+ "Accept working minutes.":"mins = int(input())\nprint(mins)",
+ "Convert minutes into hours and minutes.":"total = int(input())\nprint(total // 60)\nprint(total % 60)",
+ "Display a clean summary.":"total = int(input())\nhours = total // 60\nmins = total % 60\nprint(str(hours) + \"h \" + str(mins) + \"m\")",
+ "Handle an invalid numeric input.":"value = input()\ntry:\n    print(int(value))\nexcept ValueError:\n    print(\"invalid\")",
+ "Project: Support Shift Time Calculator":"start = input()\nend = input()\nsh = int(start.split(\":\")[0])\nsm = int(start.split(\":\")[1])\neh = int(end.split(\":\")[0])\nem = int(end.split(\":\")[1])\nmins = (eh * 60 + em) - (sh * 60 + sm)\nif mins <= 0:\n    mins = mins + 24 * 60\nprint(round(mins / 60, 2))",
+ "Print 1 through 10.":"n = int(input())\nif n < 1:\n    print(\"Nothing to print\")\nelse:\n    for i in range(1, n + 1):\n        print(i)",
+ "Print even numbers up to 20.":"n = int(input())\nfound = 0\nfor i in range(2, n + 1):\n    if i % 2 == 0:\n        print(i)\n        found = found + 1\nif found == 0:\n    print(\"No even numbers\")",
+ "Calculate the sum of 1 through 10.":"n = int(input())\ntotal = 0\nfor i in range(1, n + 1):\n    total = total + i\nprint(total)",
+ "Print a multiplication table.":"n = int(input())\nfor i in range(1, 11):\n    print(n * i)",
+ "Countdown from 10.":"n = int(input())\nfor i in range(n, 0, -1):\n    print(i)\nprint(\"Liftoff\")",
+ "Keep asking until a valid number is entered.":"while True:\n    value = input()\n    try:\n        print(int(value))\n        break\n    except ValueError:\n        pass",
+ "Add values until the user enters zero.":"total = 0\nwhile True:\n    n = int(input())\n    if n == 0:\n        break\n    total = total + n\nprint(total)",
+ "Create a three-attempt login simulation.":"password = input()\nok = False\nfor i in range(3):\n    try:\n        guess = input()\n    except StopIteration:\n        break\n    if guess == password:\n        ok = True\n        break\nif ok:\n    print(\"granted\")\nelse:\n    print(\"denied\")",
+ "Store five case numbers in a list.":"cases = []\nfor i in range(5):\n    cases.append(input())\nprint(len(cases))\nprint(cases[0])",
+ "Add and remove an item.":"items = input().split()\nitems.append(input())\nremove = input()\nif remove in items:\n    items.remove(remove)\nprint(\" \".join(items))",
+ "Find the largest value.":"numbers = [int(x) for x in input().split()]\nbiggest = numbers[0]\nfor n in numbers:\n    if n > biggest:\n        biggest = n\nprint(biggest)",
+ "Remove duplicate values.":"values = input().split()\nseen = []\nfor v in values:\n    if v not in seen:\n        seen.append(v)\nprint(\" \".join(seen))",
+ "Store a case with ID, status and owner.":"case = {\"id\": input(), \"status\": input(), \"owner\": input()}\nprint(case[\"id\"])\nprint(case[\"status\"])\nprint(case[\"owner\"])",
+ "Count case statuses using a dictionary.":"statuses = input().split()\ncounts = {}\nfor s in statuses:\n    if s in counts:\n        counts[s] = counts[s] + 1\n    else:\n        counts[s] = 1\nfor s in sorted(counts):\n    print(s + \" \" + str(counts[s]))",
+ "Find unique product names using a set.":"products = set(input().split())\nprint(\" \".join(sorted(products)))",
+ "Compare two sets of workspace users.":"a = set(input().split())\nb = set(input().split())\nboth = sorted(a & b)\nif both:\n    print(\" \".join(both))\nelse:\n    print(\"none\")",
+ "Project: Case Status Summary Generator":"n = int(input())\ncounts = {}\nfor i in range(n):\n    status = input().strip()\n    if status in counts:\n        counts[status] = counts[status] + 1\n    else:\n        counts[status] = 1\nif n == 0:\n    print(\"No cases\")\nelse:\n    for status in sorted(counts, key=lambda s: (-counts[s], s)):\n        print(status + \": \" + str(counts[status]))"
+};
+/* Theory for every lesson: what it is, why it matters, a runnable example,
+   and the mistake that catches people. Every example verified by running it. */
+var THEORY={
+ "What Python is":{what:"A language designed to be read easily. You write instructions in near-English and Python carries them out one line at a time.",why:"You will spend far more time reading code than writing it \u2014 your own, months later. Python's readability is why it dominates teaching, data work and automation.",code:"print(\"Hello\")\nname = \"Abhinay\"\nprint(\"Hi\", name)",out:"Hello\nHi Abhinay",gotcha:"Python runs top to bottom. A line that uses something defined further down will fail \u2014 order matters."},
+ "Running a Python file":{what:"Save your code in a file ending .py, then run it with `python filename.py`. Every line runs in order, then the program ends.",why:"Understanding that a program is just a file that runs top-to-bottom removes most beginner confusion about why things happen in a certain order.",code:"# saved as greet.py\nprint(\"line one\")\nprint(\"line two\")",out:"line one\nline two",gotcha:"In this app you press Run instead \u2014 same thing, no file needed."},
+ "print()":{what:"Writes a value to the screen and then moves to a new line.",why:"It is how you see what your program is doing. Before debuggers, print() was the debugger \u2014 and it still is, most of the time.",code:"print(\"Hello\")\nprint(1 + 2)\nprint(\"a\", \"b\")\nprint(\"no newline\", end=\"\")",out:"Hello\n3\na b\nno newline",gotcha:"print() adds a space between arguments and a newline at the end. Both can be changed with sep= and end=.",small:"print(a, b) puts a space between them; print(a + b) joins with nothing \u2014 and fails if they are different types."},
+ "Variables":{what:"A name that points at a value. `x = 5` means: from now on, x refers to 5.",why:"Without names you would have to repeat values everywhere. Change the value once, and every use updates.",code:"age = 30\nname = \"Sam\"\nage = age + 1\nprint(name, age)",out:"Sam 31",gotcha:"The = sign is not equality \u2014 it means 'put this value into this name'. Equality is ==.",small:"age = age + 1 and age += 1 do exactly the same thing."},
+ "Naming rules":{what:"Names may use letters, digits and underscores, but cannot start with a digit and cannot be a Python keyword like if or class.",why:"A good name saves the next reader \u2014 usually you \u2014 from re-reading the logic to work out what something holds.",code:"case_count = 5      # good\ncaseCount = 5       # works, but not Python style\n# 2nd_case = 5      # error: starts with a digit",out:"",gotcha:"Python style is lower_case_with_underscores for variables. Sticking to it makes your code look professional.",small:"n = 5 versus open_case_count = 5 \u2014 same speed, very different readability."},
+ "str":{what:"Text. Written inside quotes \u2014 single or double, as long as they match.",why:"Almost everything a user types or a file contains arrives as text first. Knowing you have a str explains why \"5\" + 1 fails.",code:"a = \"hello\"\nb = 'world'\nprint(a + \" \" + b)\nprint(len(a))\nprint(a.upper())",out:"hello world\n5\nHELLO",gotcha:"Adding two strings joins them. Adding a string to a number is an error \u2014 convert first with str() or int()."},
+ "int":{what:"A whole number, positive or negative, with no decimal point.",why:"Counting anything \u2014 cases, attempts, items \u2014 uses ints. Division is where they surprise people.",code:"a = 7\nb = 2\nprint(a + b)\nprint(a / b)\nprint(a // b)\nprint(a % b)",out:"9\n3.5\n3\n1",gotcha:"/ always gives a float, even for 4/2. Use // for whole-number division and % for the remainder.",small:"7/2 is 3.5 but 7//2 is 3 \u2014 one character changes the type of the answer."},
+ "float":{what:"A number with a decimal point.",why:"Averages, percentages and money all need decimals. Floats are also where 'wrong' answers come from if you do not round.",code:"price = 19.99\nprint(price * 3)\nprint(round(price * 3, 2))\nprint(0.1 + 0.2)",out:"59.97\n59.97\n0.30000000000000004",gotcha:"0.1 + 0.2 is not exactly 0.3 \u2014 binary cannot store those exactly. Round before showing a float to a person."},
+ "bool":{what:"True or False. The result of every comparison.",why:"Every if, every while, every filter is deciding on a bool. It is the hinge every decision turns on.",code:"print(5 > 3)\nprint(5 == 5)\nprint(bool(0))\nprint(bool(\"\"))\nprint(bool(\"no\"))",out:"True\nTrue\nFalse\nFalse\nTrue",gotcha:"0, empty string, empty list and None are all falsy. Any other value is truthy \u2014 which is why `if items:` works.",small:"if x == True: is the same as if x: \u2014 the shorter form is preferred."},
+ "Type conversion":{what:"Turning one type into another: int(\"5\"), str(5), float(\"2.5\").",why:"input() always gives text. Without conversion, arithmetic on it either fails or silently does the wrong thing.",code:"text = \"25\"\nprint(text + \"5\")\nprint(int(text) + 5)\nprint(str(30) + \" years\")",out:"255\n30\n30 years",gotcha:"\"25\" + \"5\" is \"255\", not 30 \u2014 joining, not adding. Convert BEFORE the arithmetic.",small:"int(text) + 5 gives 30; text + \"5\" gives \"255\". Same data, completely different result."},
+ "input()":{what:"Pauses the program, waits for a line to be typed, and hands it back as a string.",why:"It is how a program becomes interactive rather than fixed. Every question in this app reads with input().",code:"name = input()\nage = int(input())\nprint(\"Hi\", name)\nprint(\"Next year:\", age + 1)",out:"Hi Sam\nNext year: 31",gotcha:"input() ALWAYS returns a string, even when the user types 25. Wrap it in int() or float() to do maths.",small:"age = input() then age + 1 crashes; age = int(input()) then age + 1 works."},
+ "Arithmetic operators":{what:"+ - * / for the basics, // for whole division, % for the remainder, ** for powers.",why:"% is the workhorse behind even/odd, cycling through a list, and extracting digits.",code:"print(7 + 2, 7 - 2, 7 * 2)\nprint(7 / 2)\nprint(7 // 2)\nprint(7 % 2)\nprint(2 ** 8)",out:"9 5 14\n3.5\n3\n1\n256",gotcha:"% on a negative number follows the sign of the right operand in Python: -7 % 3 is 2, not -1.",small:"n % 2 == 0 tests even. n % 10 gives the last digit. n // 10 removes it."},
+ "Comparison operators":{what:"== != > < >= <= \u2014 each gives back True or False.",why:"They turn data into decisions. Every branch in a program starts with one.",code:"print(5 == 5)\nprint(5 != 3)\nprint(\"a\" < \"b\")\nprint(10 <= 10)",out:"True\nTrue\nTrue\nTrue",gotcha:"= assigns, == compares. Using = inside an if is a syntax error in Python \u2014 a helpful one, since other languages let it slip through.",small:"Python allows 10 < n < 20 chained together, which most languages do not."},
+ "Logical operators":{what:"and, or, not \u2014 for combining conditions.",why:"Real rules are rarely a single test. 'Old enough AND has permission' needs both.",code:"age = 25\nhas_id = True\nprint(age >= 18 and has_id)\nprint(age < 13 or age > 60)\nprint(not has_id)",out:"True\nFalse\nFalse",gotcha:"and stops at the first False, or stops at the first True. That short-circuit lets you write `if x and x.count > 0` safely.",small:"Use `and` not `&&` \u2014 Python spells its logic in words."},
+ "if":{what:"Run a block of code only when a condition is True.",why:"The first point where a program stops being a fixed list of steps and starts responding.",code:"n = 5\nif n > 0:\n    print(\"positive\")\n    print(\"still inside the if\")\nprint(\"always runs\")",out:"positive\nstill inside the if\nalways runs",gotcha:"The colon and the indentation are what define the block. Python has no braces \u2014 the spaces ARE the syntax.",small:"Indent by 4 spaces. Everything at that depth belongs to the if."},
+ "elif":{what:"Check another condition, but only if the ones above it were all False.",why:"It stops you writing a nest of ifs. The first match wins and the rest are skipped.",code:"n = 0\nif n > 0:\n    print(\"positive\")\nelif n < 0:\n    print(\"negative\")\nelse:\n    print(\"zero\")",out:"zero",gotcha:"Order matters. Put the narrowest condition first \u2014 a wide one above will swallow the cases below it.",small:"Separate ifs test everything; elif stops at the first match. That difference changes the output."},
+ "else":{what:"The fallback. Runs when every condition above was False.",why:"It guarantees one branch always runs, so nothing falls through silently.",code:"mark = 35\nif mark >= 40:\n    print(\"pass\")\nelse:\n    print(\"fail\")",out:"fail",gotcha:"else takes no condition \u2014 writing `else n < 40:` is a syntax error."},
+ "Nested conditions":{what:"An if inside another if. The inner one is only reached when the outer one passed.",why:"Some rules genuinely have layers. But deep nesting is hard to read \u2014 often `and` is clearer.",code:"age = 25\nhas_id = True\nif age >= 18:\n    if has_id:\n        print(\"allowed\")\n    else:\n        print(\"need id\")\nelse:\n    print(\"too young\")",out:"allowed",gotcha:"Beyond two levels, readability collapses. Combine with `and`, or return early instead.",small:"if a: / if b: is the same logic as if a and b: \u2014 the flat version usually reads better."},
+ "for":{what:"Repeat a block once for every item in a sequence.",why:"Anything you would otherwise copy and paste ten times becomes three lines.",code:"for i in [1, 2, 3]:\n    print(i)\nfor ch in \"abc\":\n    print(ch)",out:"1\n2\n3\na\nb\nc",gotcha:"for walks the ITEMS, not positions. Use enumerate() when you need the index too.",small:"for i in range(3) gives 0,1,2 \u2014 for i in [1,2,3] gives 1,2,3."},
+ "range()":{what:"Produces a run of numbers: range(5) is 0-4, range(1,5) is 1-4, range(0,10,2) steps by 2.",why:"It is how you loop a fixed number of times, or count down.",code:"for i in range(3):\n    print(i)\nfor i in range(1, 4):\n    print(i)\nfor i in range(3, 0, -1):\n    print(i)",out:"0\n1\n2\n1\n2\n3\n3\n2\n1",gotcha:"The end is EXCLUSIVE. range(1,5) stops at 4. To include n, write range(1, n+1).",small:"range(n) starts at 0; range(1, n+1) starts at 1 and includes n. Off-by-one bugs live here."},
+ "Accumulators":{what:"A variable that builds up a result across a loop \u2014 a running total, count or list.",why:"Sums, averages, counts and filters are all the same shape: start empty, add inside the loop.",code:"total = 0\nfor i in range(1, 6):\n    total = total + i\nprint(total)",out:"15",gotcha:"Initialise BEFORE the loop. Inside, it resets every pass and you end up with only the last value.",small:"total = 0 outside gives 15; inside the loop it gives 5."},
+ "while":{what:"Repeat as long as a condition stays True.",why:"Use it when you do not know how many times \u2014 'until valid input' or 'until the user quits'.",code:"n = 3\nwhile n > 0:\n    print(n)\n    n = n - 1\nprint(\"done\")",out:"3\n2\n1\ndone",gotcha:"Something inside must eventually make the condition False, or it runs forever.",small:"Forgetting n = n - 1 turns this into an infinite loop."},
+ "break":{what:"Leave the loop immediately, whatever the condition says.",why:"Perfect for 'stop as soon as you find it' \u2014 no need to walk the rest.",code:"for i in range(10):\n    if i == 3:\n        break\n    print(i)",out:"0\n1\n2",gotcha:"break exits only the innermost loop. In nested loops, the outer one keeps going."},
+ "continue":{what:"Skip the rest of this pass and start the next one.",why:"Cleaner than wrapping the whole body in an if when you just want to ignore some items.",code:"for i in range(5):\n    if i % 2 == 0:\n        continue\n    print(i)",out:"1\n3",gotcha:"continue skips to the next item \u2014 if you forget to advance a while-loop counter first, it hangs."},
+ "Input validation loops":{what:"Keep asking until what you get is usable.",why:"Real users type nonsense. A validation loop is the difference between a crash and a prompt.",code:"while True:\n    value = input()\n    try:\n        n = int(value)\n        break\n    except ValueError:\n        print(\"not a number\")\nprint(n)",out:"not a number\n7",gotcha:"Without break, this never ends. The break belongs on the success path."},
+ "Lists":{what:"An ordered, changeable collection written in square brackets.",why:"The default container. Anything you have several of, in order, goes in a list.",code:"items = [3, 1, 2]\nitems.append(4)\nprint(items)\nprint(len(items))\nprint(sorted(items))",out:"[3, 1, 2, 4]\n4\n[1, 2, 3, 4]",gotcha:"sorted() returns a NEW list; items.sort() changes it in place and returns None.",small:"x = items.sort() leaves x as None \u2014 a very common bug."},
+ "Indexing":{what:"Reach one item by position. Counting starts at 0. Negative counts from the end.",why:"Almost every list operation starts with getting at one element.",code:"items = [\"a\", \"b\", \"c\"]\nprint(items[0])\nprint(items[-1])\nprint(items[0:2])",out:"a\nc\n['a', 'b']",gotcha:"The first item is [0], so the last is [len-1] \u2014 or just [-1]. Going past the end raises IndexError.",small:"items[1:3] takes positions 1 and 2 \u2014 the end is excluded, like range()."},
+ "Methods":{what:"Functions that belong to an object: append, remove, sort, count, index.",why:"They are the verbs of a type. Knowing the list methods removes most manual loops.",code:"items = [1, 2, 2, 3]\nitems.append(4)\nitems.remove(2)\nprint(items)\nprint(items.count(2))\nprint(items.index(3))",out:"[1, 2, 3, 4]\n1\n2",gotcha:"remove() takes the VALUE and deletes only the first match. pop() takes the position."},
+ "Tuples":{what:"Like a list, but written in round brackets and cannot be changed after creation.",why:"Use one when the contents must not change \u2014 coordinates, a fixed record, a dictionary key.",code:"point = (3, 4)\nprint(point[0])\nx, y = point\nprint(x, y)",out:"3\n3 4",gotcha:"A one-item tuple needs a trailing comma: (5,) is a tuple, (5) is just the number 5."},
+ "Dictionaries":{what:"Pairs of key and value, in curly brackets. Look things up by name instead of position.",why:"When 'the third item' means nothing but 'the status' means everything, you want a dict.",code:"case = {\"id\": 1, \"status\": \"Open\"}\nprint(case[\"status\"])\ncase[\"owner\"] = \"Sam\"\nprint(case)\nprint(case.get(\"missing\", \"none\"))",out:"Open\n{'id': 1, 'status': 'Open', 'owner': 'Sam'}\nnone",gotcha:"case[\"missing\"] raises KeyError. case.get(\"missing\") returns None instead \u2014 safer when the key may be absent.",small:"d[k] crashes on a missing key; d.get(k, default) never does."},
+ "Keys and values":{what:"keys() lists the names, values() the contents, items() gives both together.",why:"Looping a dictionary is how you total, count or report on grouped data.",code:"counts = {\"Open\": 2, \"Closed\": 1}\nfor k in counts:\n    print(k, counts[k])\nfor k, v in counts.items():\n    print(k, \"=\", v)",out:"Open 2\nClosed 1\nOpen = 2\nClosed = 1",gotcha:"Looping a dict gives its KEYS, not the values. Use .items() when you need both."},
+ "Sets":{what:"An unordered collection with no duplicates, in curly brackets.",why:"Removing duplicates and asking 'is it in here' are both instant with a set.",code:"a = {1, 2, 2, 3}\nprint(a)\nprint(2 in a)\nprint(sorted(set([3,1,3])))",out:"{1, 2, 3}\nTrue\n[1, 3]",gotcha:"Sets have no order, so printing one may surprise you. Wrap in sorted() for predictable output.",small:"list(set(x)) removes duplicates but scrambles order; a loop with `if v not in seen` keeps it."},
+ "Set operations":{what:"& for what is in both, | for everything, - for what only the first has.",why:"Comparing two groups \u2014 who is in both lists, who is missing \u2014 becomes one line.",code:"a = {1, 2, 3}\nb = {2, 3, 4}\nprint(sorted(a & b))\nprint(sorted(a | b))\nprint(sorted(a - b))",out:"[2, 3]\n[1, 2, 3, 4]\n[1]",gotcha:"a - b is not the same as b - a. Order matters for difference, not for & or |."},
+ "Parameters":{what:"The names a function accepts, listed in its brackets.",why:"They are what make a function reusable \u2014 the same logic on different data.",code:"def greet(name, greeting=\"Hello\"):\n    return greeting + \", \" + name\nprint(greet(\"Sam\"))\nprint(greet(\"Sam\", \"Hi\"))",out:"Hello, Sam\nHi, Sam",gotcha:"Parameters with defaults must come AFTER those without. def f(a=1, b) is a syntax error."},
+ "Return values":{what:"return hands a value back to whoever called the function, and ends it immediately.",why:"A function that prints can only be watched. One that returns can be tested, combined and reused.",code:"def double(n):\n    return n * 2\nresult = double(5)\nprint(result)\nprint(double(double(3)))",out:"10\n12",gotcha:"A function with no return gives back None. print() shows a value; return hands it over \u2014 they are not the same.",small:"print(x) inside a function versus return x \u2014 only the second can be checked by a test."},
+ "Default arguments":{what:"A parameter that has a fallback value when the caller does not supply one.",why:"One function serves several calls without duplicating it.",code:"def power(base, exp=2):\n    return base ** exp\nprint(power(3))\nprint(power(3, 3))",out:"9\n27",gotcha:"Never default to a list or dict \u2014 def f(items=[]) shares that same list across every call. Use None instead."},
+ "Local and global scope":{what:"Names made inside a function exist only there and vanish when it ends.",why:"It is why a variable 'disappears', and why two functions can both use `i` safely.",code:"count = 0\ndef bump():\n    count = 5\n    print(\"inside\", count)\nbump()\nprint(\"outside\", count)",out:"inside 5\noutside 0",gotcha:"Assigning inside a function makes a NEW local name. To change the outer one you must declare `global` \u2014 usually a sign to return a value instead."},
+ "try":{what:"Run code that might fail, with a plan for when it does.",why:"if guards values you can test. try guards operations that can blow up.",code:"try:\n    n = int(\"abc\")\nexcept ValueError:\n    print(\"not a number\")",out:"not a number",gotcha:"Keep the try block short \u2014 wrap only the line that can fail, or you hide unrelated errors.",small:"if int(x): cannot catch a bad conversion \u2014 int() raises before if ever sees a value."},
+ "except":{what:"Catches a specific kind of error and decides what to do.",why:"Naming the error means you handle what you expected and still hear about what you did not.",code:"try:\n    print(10 / 0)\nexcept ZeroDivisionError:\n    print(\"cannot divide by zero\")\nexcept ValueError:\n    print(\"bad value\")",out:"cannot divide by zero",gotcha:"A bare `except:` swallows everything, including typos in your own code. Always name the error."},
+ "finally":{what:"Runs whether or not an error happened.",why:"For cleanup that must happen either way \u2014 closing a file, releasing a lock.",code:"try:\n    n = int(\"5\")\nexcept ValueError:\n    n = 0\nfinally:\n    print(\"checked\")\nprint(n)",out:"checked\n5",gotcha:"finally runs even if you return inside the try. That is the point of it."},
+ "Common exception types":{what:"ValueError for bad content, TypeError for the wrong type, KeyError and IndexError for missing lookups, ZeroDivisionError for /0, FileNotFoundError for a missing file.",why:"Reading the error name tells you what went wrong before you read a single line of your code.",code:"for bad in [lambda: int(\"x\"), lambda: 1 + \"a\", lambda: {}[\"k\"], lambda: [][0]]:\n    try:\n        bad()\n    except Exception as e:\n        print(type(e).__name__)",out:"ValueError\nTypeError\nKeyError\nIndexError",gotcha:"int(\"5.5\") raises ValueError, not a rounded number \u2014 the text must be a whole number."},
+ "open()":{what:"Opens a file and gives you a handle to read from or write to.",why:"The first time your program remembers something after it closes.",code:"with open(\"notes.txt\", \"w\") as f:\n    f.write(\"line one\\n\")\nwith open(\"notes.txt\") as f:\n    print(f.read())",out:"line one",gotcha:"Opening with \"w\" ERASES the file immediately. Use \"a\" to add to the end."},
+ "read / write / append":{what:"\"r\" reads, \"w\" replaces everything, \"a\" adds to the end.",why:"Choosing the wrong mode destroys data. This is worth memorising.",code:"with open(\"log.txt\", \"w\") as f:\n    f.write(\"first\\n\")\nwith open(\"log.txt\", \"a\") as f:\n    f.write(\"second\\n\")\nwith open(\"log.txt\") as f:\n    print(f.read())",out:"first\nsecond",gotcha:"f.read() gives one big string; f.readlines() gives a list; looping the file gives one line at a time and uses least memory.",small:"\"w\" wipes the file; \"a\" keeps it. One letter, all your data."},
+ "Context managers":{what:"The `with` block \u2014 it closes the file for you, even if an error happens.",why:"Forgetting to close a file loses writes. `with` makes that impossible.",code:"with open(\"a.txt\", \"w\") as f:\n    f.write(\"safe\")\n# file is closed here automatically\nprint(\"done\")",out:"done",gotcha:"Without `with` you must call f.close() yourself \u2014 and it will not run if an error jumps past it."},
+ "csv module":{what:"Reads and writes comma-separated files, handling quotes and commas inside fields.",why:"Every export from Excel or a support system is a CSV. Splitting on commas yourself breaks the moment a field contains one.",code:"import csv, io\ntext = 'id,status\\n1,Open\\n2,\"Closed, fixed\"'\nfor row in csv.DictReader(io.StringIO(text)):\n    print(row[\"id\"], row[\"status\"])",out:"1 Open\n2 Closed, fixed",gotcha:"line.split(\",\") looks fine until one field contains a comma. The csv module handles it properly."},
+ "json module":{what:"Converts between JSON text and Python dicts and lists.",why:"Every web API speaks JSON. json.loads turns the reply into something you can use.",code:"import json\ntext = '{\"name\": \"LearnTrack\", \"n\": 2}'\ndata = json.loads(text)\nprint(data[\"name\"])\nprint(json.dumps(data, sort_keys=True))",out:"LearnTrack\n{\"n\": 2, \"name\": \"LearnTrack\"}",gotcha:"loads reads a STRING, load reads a FILE. The missing s catches everyone once."},
+ "DictReader":{what:"Reads each CSV row as a dictionary keyed by the header row.",why:"row[\"status\"] is far clearer than row[1], and survives someone reordering the columns.",code:"import csv, io\ntext = 'id,status\\n1,Open'\nfor row in csv.DictReader(io.StringIO(text)):\n    print(row[\"status\"])",out:"Open",gotcha:"Every value arrives as a STRING, including numbers. Convert with int() before doing maths."},
+ "Serialisation":{what:"Turning data into text you can store, and back again.",why:"A dict lives in memory. Serialising is how it survives to tomorrow.",code:"import json\ndata = {\"open\": 3, \"closed\": 5}\ntext = json.dumps(data)\nback = json.loads(text)\nprint(text)\nprint(back[\"open\"])",out:"{\"open\": 3, \"closed\": 5}\n3",gotcha:"json handles dicts, lists, strings, numbers and booleans \u2014 not sets, dates or your own classes."},
+ "Notebook cells":{what:"A notebook runs code in blocks, keeping variables alive between them.",why:"Ideal for exploring data \u2014 inspect, adjust, re-run one piece without starting over.",code:"# cell 1\ntotal = 10\n# cell 2 (runs later, remembers total)\nprint(total * 2)",out:"20",gotcha:"Cells remember whatever ran, in whatever order you ran it. Re-run from the top before trusting a result."},
+ "Arrays":{what:"NumPy arrays hold numbers and do maths on all of them at once.",why:"A million-item calculation without a loop, and far faster than one.",code:"import numpy as np\na = np.array([1, 2, 3])\nprint(a * 2)\nprint(a + a)\nprint(a.mean())",out:"[2 4 6]\n[2 4 6]\n2.0",gotcha:"[1,2,3] * 2 repeats a plain list; np.array([1,2,3]) * 2 doubles each number.",small:"list * 2 gives [1,2,3,1,2,3]; array * 2 gives [2,4,6]."},
+ "Basic calculations":{what:"Arrays support + - * / element by element, plus sum, mean, max and min.",why:"Aggregating a column becomes one call instead of a loop and an accumulator.",code:"import numpy as np\na = np.array([10, 20, 30])\nprint(a.sum(), a.mean(), a.max())\nprint(a[a > 15])",out:"60 20.0 30\n[20 30]",gotcha:"a[a > 15] filters by condition \u2014 no loop needed. That pattern is everywhere in data work."},
+ "Summary statistics":{what:"mean, median, std and describe() \u2014 the first look at any dataset.",why:"Before analysing anything, you check its shape. A mean far from the median means outliers.",code:"import numpy as np\na = np.array([1, 2, 2, 100])\nprint(a.mean())\nprint(np.median(a))",out:"26.25\n2.0",gotcha:"Mean 26 versus median 2 tells you one value is distorting everything. Always look at both."},
+ "Series":{what:"A pandas Series is one labelled column of data.",why:"It is a single column of a spreadsheet, with the index kept alongside.",code:"import pandas as pd\ns = pd.Series([1, 2, 3], name=\"cases\")\nprint(s.sum())\nprint(s.mean())",out:"6\n2.0",gotcha:"A Series keeps its index through filtering \u2014 so positions may not be 0,1,2 afterwards."},
+ "DataFrame":{what:"A table: rows, named columns, mixed types.",why:"It is the spreadsheet, in code. Almost all data work in Python happens on one.",code:"import pandas as pd\ndf = pd.DataFrame({\"id\": [1, 2], \"status\": [\"Open\", \"Closed\"]})\nprint(df.shape)\nprint(df[\"status\"].tolist())",out:"(2, 2)\n['Open', 'Closed']",gotcha:"df.shape is (rows, columns) \u2014 rows first. Easy to read backwards."},
+ "Reading CSV":{what:"pd.read_csv() loads a file straight into a DataFrame.",why:"One line turns an export into something you can group, filter and total.",code:"import pandas as pd, io\ntext = \"id,status\\n1,Open\\n2,Closed\"\ndf = pd.read_csv(io.StringIO(text))\nprint(df.shape)\nprint(df.columns.tolist())",out:"(2, 2)\n['id', 'status']",gotcha:"read_csv guesses types. A column of IDs with leading zeros becomes numbers and loses them \u2014 pass dtype=str to keep them."},
+ "Selecting rows and columns":{what:"df[\"col\"] takes a column; df[df[\"col\"] == x] filters rows; .head(n) takes the first n.",why:"Nearly every question about data is a selection followed by an aggregation.",code:"import pandas as pd, io\ndf = pd.read_csv(io.StringIO(\"id,status\\n1,Open\\n2,Closed\\n3,Open\"))\nprint(df[df[\"status\"] == \"Open\"].shape[0])\nprint(df[[\"id\"]].head(2).values.tolist())",out:"2\n[[1], [2]]",gotcha:"df[\"a\"] gives a Series; df[[\"a\"]] gives a DataFrame with one column. The double brackets matter."},
+ "Missing values":{what:"Blank cells become NaN. isna() finds them, fillna() replaces them, dropna() removes those rows.",why:"Real exports always have gaps. NaN silently poisons sums and comparisons.",code:"import pandas as pd, numpy as np\ns = pd.Series([1, np.nan, 3])\nprint(s.isna().sum())\nprint(s.fillna(0).tolist())\nprint(s.sum())",out:"1\n[1.0, 0.0, 3.0]\n4.0",gotcha:"NaN == NaN is False. Always test with isna(), never with ==."},
+ "Duplicates":{what:"duplicated() flags repeats, drop_duplicates() removes them.",why:"A join or a double export silently doubles your totals. Checking is a habit worth building.",code:"import pandas as pd\ndf = pd.DataFrame({\"id\": [1, 1, 2]})\nprint(df.duplicated().sum())\nprint(df.drop_duplicates().shape[0])",out:"1\n2",gotcha:"By default it compares WHOLE rows. Pass subset=[\"id\"] to check one column only."},
+ "Data types":{what:"dtypes shows what each column holds. astype() converts between types.",why:"Numbers read as text will not sum, and will sort as \"10\" before \"9\".",code:"import pandas as pd\ndf = pd.DataFrame({\"n\": [\"1\", \"2\"]})\nprint(df[\"n\"].map(type).iloc[0].__name__)\ndf[\"n\"] = df[\"n\"].astype(int)\nprint(df[\"n\"].sum())\nprint(df[\"n\"].map(type).iloc[0].__name__)",out:"str\n3\nint",gotcha:"A column of numbers read as text will not sum and sorts wrongly \u2014 \"10\" comes before \"9\". If df.dtypes shows object (or str), something in that column is not a number."},
+ "Text cleanup":{what:"The .str accessor applies string methods to a whole column: strip, lower, replace.",why:"\" Open\" and \"open\" look identical to a human and different to a computer.",code:"import pandas as pd\ns = pd.Series([\" Open \", \"OPEN\"])\nprint(s.str.strip().str.lower().tolist())",out:"['open', 'open']",gotcha:"Forgetting .str and calling .strip() on the Series itself raises an AttributeError."},
+ "Date conversion":{what:"pd.to_datetime() turns text into real dates you can sort and extract from.",why:"Dates as text sort alphabetically \u2014 which puts December before February.",code:"import pandas as pd\ns = pd.to_datetime(pd.Series([\"2026-03-09\", \"2026-11-02\"]))\nprint(s.dt.month.tolist())\nprint(s.dt.day_name().tolist())",out:"[3, 11]\n['Monday', 'Monday']",gotcha:"Ambiguous formats like 03/04/2026 need dayfirst=True, or you silently get March instead of April."},
+ "groupby()":{what:"Splits rows into groups by a column, then applies a calculation to each.",why:"'How many per status' and 'total per customer' are the same operation.",code:"import pandas as pd, io\ndf = pd.read_csv(io.StringIO(\"s\\nOpen\\nOpen\\nClosed\"))\nprint(df.groupby(\"s\").size().to_dict())",out:"{'Closed': 1, 'Open': 2}",gotcha:"groupby returns a grouped object, not a table. You must follow it with size(), sum(), mean() or agg()."},
+ "value_counts()":{what:"Counts how often each value appears in a column, most common first.",why:"The fastest way to see what is actually in a column.",code:"import pandas as pd\ns = pd.Series([\"a\", \"b\", \"a\"])\nprint(s.value_counts().to_dict())",out:"{'a': 2, 'b': 1}",gotcha:"It EXCLUDES NaN by default. Pass dropna=False when the blanks matter."},
+ "Sorting":{what:"sort_values() orders by a column; ascending=False reverses it.",why:"A report nobody can rank is not a report.",code:"import pandas as pd\ndf = pd.DataFrame({\"n\": [3, 1, 2]})\nprint(df.sort_values(\"n\")[\"n\"].tolist())\nprint(df.sort_values(\"n\", ascending=False)[\"n\"].tolist())",out:"[1, 2, 3]\n[3, 2, 1]",gotcha:"sort_values returns a NEW frame. Assign it back, or nothing changes."},
+ "Filtering":{what:"A condition inside brackets keeps only the rows where it is True.",why:"Half of data work is narrowing to the rows that matter.",code:"import pandas as pd\ndf = pd.DataFrame({\"n\": [1, 5, 9]})\nprint(df[df[\"n\"] > 4][\"n\"].tolist())\nprint(df[(df[\"n\"] > 1) & (df[\"n\"] < 9)][\"n\"].tolist())",out:"[5, 9]\n[5]",gotcha:"Use & and | with brackets around each condition \u2014 `and` and `or` do not work on DataFrames.",small:"(a) & (b) works; a and b raises ValueError."},
+ "Aggregations":{what:"sum, mean, count, min, max \u2014 often combined with groupby via agg().",why:"This is the last step of nearly every report.",code:"import pandas as pd\ndf = pd.DataFrame({\"g\": [\"a\",\"a\",\"b\"], \"v\": [1,2,10]})\nprint(df.groupby(\"g\")[\"v\"].sum().to_dict())\nprint(df[\"v\"].agg([\"sum\",\"mean\"]).to_dict())",out:"{'a': 3, 'b': 10}\n{'sum': 13.0, 'mean': 4.333333333333333}",gotcha:"count() ignores NaN; size() counts every row. The difference matters when data is incomplete."},
+ "SELECT":{what:"Chooses which columns come back from a table.",why:"The first word of nearly every query you will ever write.",code:"-- SELECT id, status FROM cases;\n-- the same idea in Python:\nrows = [{\"id\":1,\"status\":\"Open\",\"owner\":\"Sam\"}]\nprint([{\"id\":r[\"id\"],\"status\":r[\"status\"]} for r in rows])",out:"[{'id': 1, 'status': 'Open'}]",gotcha:"SELECT * fetches every column including ones you do not need. Name them \u2014 it is faster and survives schema changes."},
+ "WHERE":{what:"Keeps only the rows that match a condition.",why:"Without it you pull the whole table across the network to throw most of it away.",code:"-- SELECT id FROM cases WHERE status = 'Open';\nrows = [{\"id\":1,\"status\":\"Open\"},{\"id\":2,\"status\":\"Closed\"}]\nprint([r[\"id\"] for r in rows if r[\"status\"]==\"Open\"])",out:"[1]",gotcha:"SQL uses = for comparison, not ==. And NULL never equals anything \u2014 use IS NULL."},
+ "ORDER BY":{what:"Sorts the result. ASC is default, DESC reverses.",why:"Without it the database may return rows in any order at all.",code:"-- SELECT id FROM cases ORDER BY id DESC;\nrows=[{\"id\":2},{\"id\":1},{\"id\":3}]\nprint([r[\"id\"] for r in sorted(rows,key=lambda r:-r[\"id\"])])",out:"[3, 2, 1]",gotcha:"No ORDER BY means no guaranteed order \u2014 even if it looks sorted today."},
+ "GROUP BY":{what:"Collapses rows into groups so you can count or total each one.",why:"'How many cases per status' is the most common report there is.",code:"-- SELECT status, COUNT(*) FROM cases GROUP BY status;\nrows=[{\"s\":\"Open\"},{\"s\":\"Open\"},{\"s\":\"Closed\"}]\nc={}\nfor r in rows: c[r[\"s\"]]=c.get(r[\"s\"],0)+1\nprint(c)",out:"{'Open': 2, 'Closed': 1}",gotcha:"Every column in the SELECT must either be grouped or aggregated. WHERE filters before grouping; HAVING filters after."},
+ "Basic joins":{what:"Combines rows from two tables using a matching column.",why:"Data is split across tables deliberately. A join puts it back together.",code:"-- SELECT c.id, o.name FROM cases c JOIN owners o ON c.owner_id = o.id;\ncases=[{\"id\":1,\"owner_id\":10}]\nowners={10:\"Ana\"}\nprint([[c[\"id\"],owners[c[\"owner_id\"]]] for c in cases if c[\"owner_id\"] in owners])",out:"[[1, 'Ana']]",gotcha:"INNER JOIN silently DROPS rows with no match. If a report is missing people, this is why \u2014 LEFT JOIN keeps them.",small:"INNER JOIN loses unmatched rows; LEFT JOIN keeps them with NULLs."},
+ "sqlite3":{what:"A database built into Python \u2014 one file, no server to install.",why:"You can practise real SQL without setting anything up.",code:"import sqlite3\ncon = sqlite3.connect(\":memory:\")\ncon.execute(\"CREATE TABLE t (id INTEGER, s TEXT)\")\ncon.execute(\"INSERT INTO t VALUES (?, ?)\", (1, \"Open\"))\nprint(con.execute(\"SELECT s FROM t\").fetchone()[0])",out:"Open",gotcha:"Changes are not saved until con.commit(). Forgetting it loses everything on close."},
+ "CREATE TABLE":{what:"Defines a table: its columns and their types.",why:"The shape you choose now decides which questions are easy later.",code:"import sqlite3\ncon=sqlite3.connect(\":memory:\")\ncon.execute(\"CREATE TABLE cases (id INTEGER PRIMARY KEY, status TEXT NOT NULL)\")\nprint(\"created\")",out:"created",gotcha:"PRIMARY KEY means unique and not null. NOT NULL stops blanks getting in \u2014 cheaper than cleaning them later."},
+ "INSERT":{what:"Adds rows. Always with placeholders, never by pasting values into the string.",why:"String-built SQL is how injection attacks happen. Placeholders make it impossible.",code:"import sqlite3\ncon=sqlite3.connect(\":memory:\")\ncon.execute(\"CREATE TABLE t (s TEXT)\")\ncon.execute(\"INSERT INTO t VALUES (?)\", (\"Open\",))\nprint(con.execute(\"SELECT COUNT(*) FROM t\").fetchone()[0])",out:"1",gotcha:"The parameter must be a TUPLE. (\"Open\") is just a string \u2014 (\"Open\",) with the comma is a tuple.",small:"Use ? placeholders, never f-strings. That single habit prevents SQL injection."},
+ "SELECT from Python":{what:"Run a query, then fetchone() for one row or fetchall() for the lot.",why:"This is how a script turns a database into a report.",code:"import sqlite3\ncon=sqlite3.connect(\":memory:\")\ncon.execute(\"CREATE TABLE t (n INTEGER)\")\ncon.executemany(\"INSERT INTO t VALUES (?)\", [(1,),(2,)])\nprint(con.execute(\"SELECT SUM(n) FROM t\").fetchone()[0])",out:"3",gotcha:"fetchone() returns a TUPLE, so a single value needs [0]. fetchall() on a huge table loads it all into memory."},
+ "HTTP methods":{what:"GET fetches, POST creates, PUT replaces, DELETE removes.",why:"Every web API is these four verbs against addresses.",code:"# requests.get(url), requests.post(url, json=data)\nmethods={\"GET\":\"read\",\"POST\":\"create\",\"PUT\":\"replace\",\"DELETE\":\"remove\"}\nfor k,v in methods.items(): print(k,\"->\",v)",out:"GET -> read\nPOST -> create\nPUT -> replace\nDELETE -> remove",gotcha:"GET should never change anything. An API that deletes on GET will be triggered by a browser prefetch one day."},
+ "Status codes":{what:"2xx worked, 4xx you got it wrong, 5xx the server got it wrong.",why:"The number tells you whose fault it is before you read the message.",code:"def describe(code):\n    if code==200: return \"ok\"\n    if code==404: return \"not found\"\n    if code==401: return \"not authenticated\"\n    if 500<=code<=599: return \"server problem\"\n    return \"unexpected\"\nfor c in [200,404,401,503]: print(c, describe(c))",out:"200 ok\n404 not found\n401 not authenticated\n503 server problem",gotcha:"401 means 'who are you', 403 means 'I know who you are and no'. Different fixes."},
+ "JSON responses":{what:"Most APIs reply with JSON. json.loads or response.json() turns it into a dict.",why:"It is the shared language between systems written in different languages.",code:"import json\nbody='{\"user\":{\"city\":\"Hyderabad\"}}'\ndata=json.loads(body)\nprint(data[\"user\"][\"city\"])\nprint(data.get(\"missing\",\"none\"))",out:"Hyderabad\nnone",gotcha:"Reaching into nested keys that may be absent raises KeyError. Use .get() at each level, or wrap in try."},
+ "Headers":{what:"Extra information sent with a request \u2014 who you are, what format you want.",why:"Authentication almost always travels in a header.",code:"def build(token):\n    h={\"Accept\":\"application/json\"}\n    if token: h[\"Authorization\"]=\"Bearer \"+token\n    return h\nprint(build(\"abc\"))\nprint(build(\"\"))",out:"{'Accept': 'application/json', 'Authorization': 'Bearer abc'}\n{'Accept': 'application/json'}",gotcha:"Never hardcode a token in your source. Read it from an environment variable."},
+ "Authentication concepts":{what:"Authentication is who you are. Authorisation is what you may do.",why:"Confusing them is why 401 and 403 get mixed up.",code:"user={\"name\":\"Sam\",\"role\":\"viewer\"}\nprint(\"authenticated:\", bool(user))\nprint(\"can delete:\", user[\"role\"]==\"admin\")",out:"authenticated: True\ncan delete: False",gotcha:"Being logged in does not mean being allowed. Check both."},
+ "Timeouts and error handling":{what:"Always set a timeout. Always check the status. Always expect the network to fail.",why:"Without a timeout a script can hang forever waiting for a server that will never answer.",code:"def handle(status):\n    if status is None: return \"timed out\"\n    if status==200: return \"ok\"\n    return \"error \"+str(status)\nfor s in [200,500,None]: print(handle(s))",out:"ok\nerror 500\ntimed out",gotcha:"requests.get(url) with no timeout waits indefinitely. Pass timeout=10 every single time."},
+ "os / pathlib":{what:"Tools for working with files and folders: listing, joining paths, checking existence.",why:"Automation is mostly moving and reading files. Doing it portably needs these.",code:"from pathlib import Path\np = Path(\"folder\") / \"file.txt\"\nprint(str(p).replace(chr(92),\"/\"))\nprint(p.suffix)\nprint(p.stem)",out:"folder/file.txt\n.txt\nfile",gotcha:"Never join paths with \"a\" + \"/\" + \"b\" \u2014 it breaks on Windows. Use / with Path or os.path.join."},
+ "Scheduled scripts":{what:"A script run automatically on a timer \u2014 Task Scheduler on Windows, cron on Linux.",why:"This is what turns a one-off script into something that saves you time every day.",code:"def run_note(script, when):\n    return \"Run python {}.py {}.\".format(script, when)\nprint(run_note(\"report\",\"every Monday\"))",out:"Run python report.py every Monday.",gotcha:"A scheduled script runs from a different folder with a different environment. Use absolute paths and log everything."},
+ "Report generation":{what:"Turning processed data into something a person can read \u2014 text, HTML or a spreadsheet.",why:"The analysis is worthless if nobody can see the result.",code:"rows=[[\"Open\",3],[\"Closed\",5]]\nbody=\"\".join(\"<li>{}: {}</li>\".format(l,v) for l,v in rows)\nprint(\"<ul>\"+body+\"</ul>\")",out:"<ul><li>Open: 3</li><li>Closed: 5</li></ul>",gotcha:"Write the report to a NEW file each run, or timestamp it. Overwriting yesterday's loses your history."},
+ "Classes and objects":{what:"A class is the blueprint. An object is one thing built from it.",why:"Once data and the behaviour that belongs to it live together, larger programs stop sprawling.",code:"class Case:\n    def __init__(self, cid, status):\n        self.id = cid\n        self.status = status\nc = Case(1, \"Open\")\nprint(c.id, c.status)",out:"1 Open",gotcha:"self is the object itself, passed in automatically. You never supply it when calling \u2014 but every method must declare it."},
+ "Constructors":{what:"__init__ runs the moment an object is created and sets up its starting state.",why:"It decides what an object needs in order to exist at all.",code:"class Case:\n    def __init__(self, cid, status=\"Open\"):\n        self.id = cid\n        self.status = status\nprint(Case(1).status)\nprint(Case(2, \"Closed\").status)",out:"Open\nClosed",gotcha:"__init__ must not return anything. Returning a value from it raises TypeError."},
+ "Instance methods":{what:"Functions that belong to the object and act on its own data.",why:"Behaviour lives beside the data it uses, so callers do not have to know the internals.",code:"class Case:\n    def __init__(self, cid, status):\n        self.id = cid\n        self.status = status\n    def close(self):\n        self.status = \"Closed\"\n    def summary(self):\n        return \"{} is {}\".format(self.id, self.status)\nc = Case(1, \"Open\")\nc.close()\nprint(c.summary())",out:"1 is Closed",gotcha:"Forgetting self in the definition gives 'takes 0 positional arguments but 1 was given' \u2014 a confusing message for a simple mistake."},
+ "Inheritance":{what:"A class can build on another, keeping its behaviour and adding or changing some.",why:"Shared behaviour is written once. super() calls the parent's version.",code:"class Case:\n    def __init__(self, cid): self.id = cid\n    def summary(self): return \"case \" + str(self.id)\nclass Escalated(Case):\n    def summary(self): return super().summary() + \" [urgent]\"\nprint(Case(1).summary())\nprint(Escalated(2).summary())",out:"case 1\ncase 2 [urgent]",gotcha:"If the child defines __init__, it must call super().__init__() or the parent's setup never runs.",small:"Without super().summary() you would copy the parent's line \u2014 and have to fix it twice later."},
+ "Encapsulation":{what:"Keeping internal state private and exposing controlled ways to reach it.",why:"It stops callers putting an object into an impossible state.",code:"class Case:\n    def __init__(self, status):\n        self._status = status\n    def get_status(self):\n        return self._status\n    def set_status(self, v):\n        if v in (\"Open\", \"Closed\"):\n            self._status = v\nc = Case(\"Open\")\nc.set_status(\"nonsense\")\nprint(c.get_status())",out:"Open",gotcha:"A single underscore is a convention, not enforcement \u2014 Python trusts you. Two underscores mangles the name to make accidents harder."},
+ "Meaningful names":{what:"A name should say what the thing IS, without needing a comment.",why:"You read code far more often than you write it. A good name is the cheapest documentation.",code:"n = 5                 # what is n?\nopen_case_count = 5   # obvious\nprint(open_case_count)",out:"5",gotcha:"If you need a comment to explain a variable, rename the variable instead."},
+ "Small functions":{what:"One function, one job. If you cannot name it simply, it does too much.",why:"Small functions are testable, reusable and easy to reason about.",code:"def total(nums): return sum(nums)\ndef average(nums): return round(total(nums)/len(nums), 2) if nums else 0\nprint(total([1,2,3]), average([1,2,3]))",out:"6 2.0",gotcha:"A function longer than a screen is usually several functions wearing a coat."},
+ "Docstrings":{what:"A string on the first line of a function saying what it does.",why:"Tools read it, help() shows it, and it survives when comments drift out of date.",code:"def double(n):\n    \"\"\"Return n multiplied by two.\"\"\"\n    return n * 2\nprint(double.__doc__)",out:"Return n multiplied by two.",gotcha:"Say what it RETURNS, not how it works. The how is right there in the code."},
+ "Logging":{what:"Recording what happened, with a severity level, instead of printing.",why:"print vanishes when the program is not watched. Logs persist and can be filtered.",code:"def log_line(level, message):\n    return \"{}: {}\".format(level.upper(), message.strip()).rstrip()\nprint(log_line(\"info\",\"started\"))\nprint(log_line(\"error\",\" disk full \"))",out:"INFO: started\nERROR: disk full",gotcha:"Levels exist so you can turn down the noise later. Log at INFO for events, ERROR for failures."},
+ "pytest":{what:"A tool that runs functions named test_* and reports which failed.",why:"Tests let you change code without fear. Without them, every edit is a gamble.",code:"def add(a, b): return a + b\ndef test_add():\n    assert add(2, 3) == 5\ntest_add()\nprint(\"passed\")",out:"passed",gotcha:"Test the edge cases \u2014 empty, zero, one, negative. The happy path rarely breaks."},
+ "Type hints":{what:"Optional notes about what types go in and come out.",why:"Editors catch mistakes before you run anything, and the signature documents itself.",code:"def double(n: int) -> int:\n    return n * 2\nprint(double(5))\nprint(double.__annotations__)",out:"10\n{'n': <class 'int'>, 'return': <class 'int'>}",gotcha:"Python does not ENFORCE them. double(\"a\") still runs and gives \"aa\". They are for people and tools."},
+ "Virtual environments":{what:"A private folder of packages for one project.",why:"Two projects needing different versions of the same library would otherwise collide.",code:"# python -m venv .venv\n# .venv\\\\Scripts\\\\activate    (Windows)\n# source .venv/bin/activate  (Mac/Linux)\nprint(\"one env per project\")",out:"one env per project",gotcha:"Never commit .venv to git. Commit requirements.txt instead \u2014 the recipe, not the meal."},
+ "requirements.txt":{what:"A list of the packages your project needs, with versions.",why:"It is how somebody else \u2014 including future you \u2014 recreates your setup exactly.",code:"packages = {\"requests\": \"2.31.0\", \"pandas\": \"2.2.0\"}\nprint(\"\\n\".join(\"{}=={}\".format(k, packages[k]) for k in sorted(packages)))",out:"pandas==2.2.0\nrequests==2.31.0",gotcha:"Pin exact versions with ==. A loose version means your project breaks when a library updates."},
+ "Repository creation":{what:"git init turns a folder into a tracked repository.",why:"Version control is the difference between 'I broke it' and 'I will undo that'.",code:"def steps(message):\n    return [\"git init\", \"git add .\", 'git commit -m \"{}\"'.format(message)]\nfor s in steps(\"first commit\"): print(s)",out:"git init\ngit add .\ngit commit -m \"first commit\"",gotcha:"git add stages changes; git commit saves them. Two steps, and forgetting the first is the usual mistake."},
+ "Commits":{what:"A saved snapshot with a message explaining why.",why:"Good history lets you find when something broke, and understand why a choice was made.",code:"good = \"Fix overnight shift calculation\"\nbad = \"stuff\"\nprint(good)\nprint(bad, \"<- useless in six months\")",out:"Fix overnight shift calculation\nstuff <- useless in six months",gotcha:"Write the message in the imperative: 'Add X', not 'Added X'. Git's own messages read that way."},
+ "Branches":{what:"A separate line of work you can merge back when it is ready.",why:"You can try something risky without touching the working version.",code:"def steps(name):\n    return [\"git checkout -b \"+name, \"git add .\", \"git checkout main\", \"git merge \"+name]\nfor s in steps(\"feature-notes\"): print(s)",out:"git checkout -b feature-notes\ngit add .\ngit checkout main\ngit merge feature-notes",gotcha:"Commit or stash before switching branches, or your changes come with you unexpectedly."},
+ "README":{what:"The first thing anyone reads: what it does, how to run it, an example.",why:"A project without a README looks abandoned, however good the code is.",code:"for line in [\"# Project\", \"## What it does\", \"## How to run\", \"## Example\", \"## What I learned\"]:\n    print(line)",out:"# Project\n## What it does\n## How to run\n## Example\n## What I learned",gotcha:"Write it for someone who has never seen the project \u2014 including you, in a year."},
+ "gitignore":{what:"A list of files git should not track.",why:"It keeps caches, virtual environments and \u2014 critically \u2014 secrets out of your history.",code:"def ignore(path):\n    parts = path.split(\"/\")\n    if path.endswith(\".pyc\"): return True\n    if any(p in (\"__pycache__\",\"venv\",\".venv\") for p in parts): return True\n    return parts[-1] == \".env\"\nfor p in [\"main.pyc\",\".env\",\"main.py\"]: print(p, ignore(p))",out:"main.pyc True\n.env True\nmain.py False",gotcha:"Once a secret is committed it stays in history even after deletion. Add .gitignore BEFORE the first commit."},
+ "Project structure":{what:"A predictable layout: source in one place, tests in another, README and requirements at the top.",why:"Anyone who has seen one Python project can then find their way around yours.",code:"for line in [\"project/\",\"  README.md\",\"  requirements.txt\",\"  .gitignore\",\"  src/\",\"  tests/\"]:\n    print(line)",out:"project/\n  README.md\n  requirements.txt\n  .gitignore\n  src/\n  tests/",gotcha:"Flat is fine for a small script. Add structure when the flatness starts hurting, not before."},
+ "Problem statement":{what:"One or two sentences on what problem this solves and for whom.",why:"It is the first thing a reviewer reads and the thing most projects omit.",code:"print(\"Support engineers spend 20 minutes a day totalling shift hours by hand.\")\nprint(\"This tool does it in one command, including overnight shifts.\")",out:"Support engineers spend 20 minutes a day totalling shift hours by hand.\nThis tool does it in one command, including overnight shifts.",gotcha:"Describe the problem before the solution. Without it, nobody knows why the project exists."},
+ "Features":{what:"A short list of what it can actually do \u2014 verbs, not adjectives.",why:"It sets expectations honestly and shows the scope at a glance.",code:"for f in [\"Reads a CSV export\",\"Groups cases by status\",\"Writes an HTML summary\"]:\n    print(\"- \"+f)",out:"- Reads a CSV export\n- Groups cases by status\n- Writes an HTML summary",gotcha:"List what it does today, not what you plan. Plans belong under Future improvements."},
+ "Setup instructions":{what:"The exact commands to get it running from nothing.",why:"If someone cannot run it in five minutes, they move on.",code:"for line in [\"python -m venv .venv\",\"pip install -r requirements.txt\",\"python src/main.py cases.csv\"]:\n    print(line)",out:"python -m venv .venv\npip install -r requirements.txt\npython src/main.py cases.csv",gotcha:"Test your own instructions on a clean folder. They are almost always missing a step."},
+ "Example input/output":{what:"A real sample going in and the actual result coming out.",why:"It proves the thing works and shows the shape of the data in one glance.",code:"print(\"Input : 09:00 to 17:00\")\nprint(\"Output: 8.0 hours\")",out:"Input : 09:00 to 17:00\nOutput: 8.0 hours",gotcha:"Paste real output, not what you think it prints. Copying from an actual run catches surprises."},
+ "Known limitations":{what:"An honest list of what it does not handle.",why:"Stating limits builds trust. Hiding them wastes someone's afternoon.",code:"for l in [\"Assumes one shift per row\",\"Does not handle timezones\",\"Tested on exports up to 5000 rows\"]:\n    print(\"- \"+l)",out:"- Assumes one shift per row\n- Does not handle timezones\n- Tested on exports up to 5000 rows",gotcha:"Reviewers respect stated limitations. They lose confidence when they discover unstated ones."},
+ "Future improvements":{what:"What you would do next, given more time.",why:"It shows you know the gaps and have thought past the current version.",code:"for l in [\"Add timezone support\",\"Read directly from the API\",\"Add a summary chart\"]:\n    print(\"- \"+l)",out:"- Add timezone support\n- Read directly from the API\n- Add a summary chart",gotcha:"Keep it short and plausible. A long wish list reads like the project is unfinished."}
+};
 var FIXTURES={
  notes:"with open('notes.txt','w') as f:\n    f.write('line one\\nline two\\nerror here\\nline four')\n",
  log:"with open('app.log','w') as f:\n    f.write('INFO ok\\nERROR bad\\nINFO fine\\nERROR worse\\n')\n",
@@ -9571,6 +9841,53 @@ function renderNextBtn(){
   b.textContent=(nw.fresh?"▶ Start ":"▶ Continue ")+"Week "+nw.w+" · "+nw.title;
   b.title=nw.fresh?("Opens Week "+nw.w+" and takes you to its first question")
                   :("You have "+(nw.left||(nw.total-nw.open))+" left in Week "+nw.w);
+}
+function renderMapBig(){
+  var host=document.getElementById("mapBig"); if(!host) return; clr(host);
+  var wd=(typeof weeksDone==="function")?weeksDone():0;
+  var intro=document.createElement("div"); intro.className="hint"; intro.style.margin="0 0 12px";
+  intro.textContent="Every skill, every week it covers, and exactly where you are. Click any week to open it.";
+  host.appendChild(intro);
+  SKILLMAP.forEach(function(n2){
+    var st=nodeStats(n2);
+    var card=document.createElement("div"); card.className="bigsk";
+    var head=document.createElement("div"); head.className="bigskh";
+    var ic=document.createElement("span"); ic.className="csi";
+    ic.textContent=st.pct>=100?"\u2713":n2.icon;
+    var nm=document.createElement("b"); nm.textContent=n2.name;
+    var sp=document.createElement("span"); sp.className="sp";
+    var bar2=document.createElement("span"); bar2.className="wkbar"; bar2.style.flex="0 0 80px";
+    var bi=document.createElement("i"); bi.style.inlineSize=st.pct+"%";
+    if(st.pct>=100) bi.style.background="#16a34a";
+    bar2.appendChild(bi);
+    var ct=document.createElement("span"); ct.className="wkmeta";
+    ct.textContent=st.total?(st.done+"/"+st.total+" done"):"not started";
+    head.appendChild(ic); head.appendChild(nm); head.appendChild(sp);
+    head.appendChild(bar2); head.appendChild(ct);
+    card.appendChild(head);
+    var tw=document.createElement("div"); tw.className="topics"; tw.style.marginBlockStart="6px";
+    (n2.topics||[]).forEach(function(x){ tw.appendChild(tag(x)); });
+    card.appendChild(tw);
+    var wrap=document.createElement("div"); wrap.className="bigwks";
+    (n2.weeks||[]).forEach(function(w){
+      var W=(typeof weekDef==="function")?weekDef(w):null;
+      var rows=(typeof weekRows==="function")?weekRows(w):[];
+      var done=rows.filter(function(r){return r.done;}).length;
+      var opened=rows.filter(function(r){return r.opened;}).length;
+      var b=document.createElement("button"); b.type="button";
+      b.className="bigwk"+(rows.length&&done===rows.length?" bwdone":opened?" bwopen":"");
+      b.setAttribute("data-do","bigweek"); b.setAttribute("data-id",String(w));
+      var t1=document.createElement("span"); t1.className="bwn"; t1.textContent="Week "+w;
+      var t2=document.createElement("span"); t2.className="bwt";
+      t2.textContent=W?W.title:"";
+      var t3=document.createElement("span"); t3.className="bwm";
+      t3.textContent=rows.length?(done+"/"+rows.length):(w<=wd?"ready":"later");
+      b.appendChild(t1); b.appendChild(t2); b.appendChild(t3);
+      wrap.appendChild(b);
+    });
+    card.appendChild(wrap);
+    host.appendChild(card);
+  });
 }
 function renderMap(){
   renderNextBtn();
@@ -13079,6 +13396,53 @@ function runJS(code,verify){
 function curLine(ta){
   return ta.value.slice(0,ta.selectionStart).split("\n").length;
 }
+/* Turn any indentation style into clean multiples of EDIT_UNIT.
+   Works out the smallest indent step the code uses, then rebuilds each line. */
+function normalizeIndent(text){
+  var lines=String(text).replace(/\r\n?/g,"\n").split("\n");
+  var widths=[];
+  lines.forEach(function(l){
+    if(!l.trim()) return;
+    var m=l.match(/^[ \t]*/)[0];
+    var w=0;
+    for(var i=0;i<m.length;i++) w+=(m[i]==="\t")?4:1;
+    if(w>0) widths.push(w);
+  });
+  var step=0;
+  if(widths.length){
+    step=widths[0];
+    widths.forEach(function(w){
+      var a=step,b=w;
+      while(b){ var t=b; b=a%b; a=t; }
+      step=a;
+    });
+  }
+  if(!step) step=EDIT_UNIT.length;
+  return lines.map(function(l){
+    if(!l.trim()) return "";
+    var m=l.match(/^[ \t]*/)[0], rest=l.slice(m.length);
+    var w=0;
+    for(var i=0;i<m.length;i++) w+=(m[i]==="\t")?4:1;
+    var lvl=Math.round(w/step);
+    return new Array(lvl*EDIT_UNIT.length+1).join(" ")+rest;
+  }).join("\n");
+}
+function indentBadge(){
+  var ta=document.getElementById("editor"), b=document.getElementById("indNow");
+  if(!ta||!b) return;
+  var st=ta.selectionStart||0;
+  var ls=ta.value.lastIndexOf("\n",st-1)+1;
+  var le=ta.value.indexOf("\n",st); if(le<0) le=ta.value.length;
+  var line=ta.value.slice(ls,le);
+  var sp=(line.match(/^ */)||[""])[0].length;
+  var lvl=Math.floor(sp/EDIT_UNIT.length);
+  var body=(typeof codeOnly==="function"?codeOnly(line):line).replace(/\s+$/,"");
+  var opens=/:\s*$/.test(body);
+  var closes=/^\s*(return|break|continue|pass|raise)\b/.test(body);
+  var next=opens?lvl+1:(closes&&lvl>0?lvl-1:lvl);
+  b.textContent="level "+lvl+" ("+sp+" spaces)  →  next line: level "+next+" ("+(next*EDIT_UNIT.length)+" spaces)";
+  b.className="indbadge"+(opens?" opens":closes?" closes":"");
+}
 function gutter(){
   var ta=document.getElementById("editor"), g=document.getElementById("gutter");
   if(!ta||!g) return;
@@ -13093,6 +13457,7 @@ function gutter(){
     }
     g.appendChild(frag);
   }
+
   var kids=g.children;
   for(var k=0;k<kids.length;k++){
     var on=(k+1)===cur;
@@ -13225,6 +13590,47 @@ function renderWkStrip(t){
   foot.appendChild(all);
   el.appendChild(foot);
 }
+function theoryFor(t){
+  if(!t) return null;
+  var name=(t.extra||t.title||"").replace(/^Learn:\s*/,"").trim();
+  return THEORY[name]||null;
+}
+function theoryBlock(th,title){
+  var box=document.createElement("div"); box.className="theory";
+  var h=document.createElement("div"); h.className="thh";
+  h.textContent="\ud83d\udcd6 "+(title||"Theory");
+  box.appendChild(h);
+  function sect(label,text,cls){
+    var l=document.createElement("div"); l.className="thl"; l.textContent=label;
+    var v=document.createElement("div"); v.className=cls||"tht"; v.textContent=text;
+    box.appendChild(l); box.appendChild(v);
+  }
+  sect("What it is",th.what);
+  sect("Why it matters",th.why);
+  var cl=document.createElement("div"); cl.className="thl"; cl.textContent="Example";
+  box.appendChild(cl);
+  var pre=document.createElement("pre"); pre.className="thcode"; pre.textContent=th.code;
+  box.appendChild(pre);
+  if(th.out){
+    var ol=document.createElement("div"); ol.className="thl"; ol.textContent="It prints";
+    var op=document.createElement("pre"); op.className="thout"; op.textContent=th.out;
+    box.appendChild(ol); box.appendChild(op);
+  }
+  if(th.small){
+    var sl=document.createElement("div"); sl.className="thl"; sl.textContent="A small change, a big difference";
+    var sv=document.createElement("div"); sv.className="thsmall"; sv.textContent=th.small;
+    box.appendChild(sl); box.appendChild(sv);
+  }
+  var gl=document.createElement("div"); gl.className="thl"; gl.textContent="What catches people out";
+  var gv=document.createElement("div"); gv.className="thgot"; gv.textContent=th.gotcha;
+  box.appendChild(gl); box.appendChild(gv);
+  return box;
+}
+function solutionFor(t){
+  if(!t) return null;
+  var name=t.extra||t.title||"";
+  return SOLUTIONS[name]||SOLUTIONS[name.replace(/^[^\u2014]*\u2014 /,"").trim()]||null;
+}
 function renderQPanel(t){
   renderQNav(t);
   renderWkStrip(t);
@@ -13242,6 +13648,31 @@ function renderQPanel(t){
   p.appendChild(top);
   var q=document.createElement("div"); q.className="qtext"; q.textContent=displayTitle(t);
   p.appendChild(q);
+  var th0=theoryFor(t);
+  if(th0) p.appendChild(theoryBlock(th0));
+  if(solutionFor(t)){
+    var sw=document.createElement("div"); sw.className="rowb"; sw.style.marginBlockStart="8px";
+    var sb=document.createElement("button"); sb.type="button"; sb.className="btn xs";
+    sb.textContent=(ui.solFor===t.id?"Hide the answer":(t.sawSolution?"\u21bb Show the answer again":"\ud83d\udc41 Show me the answer"));
+    sb.title="Try it yourself first — seeing the answer marks this as assisted";
+    sb.setAttribute("data-do","showsol"); sb.setAttribute("data-id",t.id);
+    sw.appendChild(sb);
+    p.appendChild(sw);
+    if(ui.solFor===t.id){
+      var sbox=document.createElement("div"); sbox.className="solbox";
+      var sh=document.createElement("b"); sh.textContent="One way to solve it";
+      var spre=document.createElement("pre"); spre.className="solcode";
+      spre.textContent=solutionFor(t);
+      var snote=document.createElement("div"); snote.className="hint"; snote.style.margin="7px 0 0";
+      snote.textContent="This is one correct answer, not the only one. Read it, hide it, then write your own version from memory — that is what makes it stick.";
+      var scp=document.createElement("button"); scp.type="button"; scp.className="btn xs";
+      scp.style.marginBlockStart="8px";
+      scp.textContent="Copy into the editor";
+      scp.setAttribute("data-do","solcopy"); scp.setAttribute("data-id",t.id);
+      sbox.appendChild(sh); sbox.appendChild(spre); sbox.appendChild(snote); sbox.appendChild(scp);
+      p.appendChild(sbox);
+    }
+  }
   var io=ioFor(t);
   if(io){
     var ib=document.createElement("div"); ib.className="spec";
@@ -13588,8 +14019,16 @@ function saveCode(){
 }
 function reindent(){
   var ta=document.getElementById("editor");
-  ta.value=ta.value.replace(/\t/g,"    ").replace(/[ \t]+$/gm,"");
-  gutter(); toast("Reindented");
+  var before=ta.value;
+  var after=normalizeIndent(before).replace(/[ \t]+$/gm,"");
+  if(after===before){ toast("Indentation already looks right"); return; }
+  ta.value=after;
+  gutter(); indentBadge(); saveDraft();
+  toast("✓ Indentation fixed — every level is now "+EDIT_UNIT.length+" spaces");
+}
+function saveDraft(){
+  var t=ui.cur?byId(ui.cur):null;
+  if(t){ t.draft=document.getElementById("editor").value; t.draftAt=new Date().toISOString(); save(); }
 }
 function renderCode(){
   var sel=document.getElementById("cbTask"), cur=sel.value; clr(sel);
@@ -13733,7 +14172,7 @@ window.addEventListener("beforeunload",function(){
 
 /* test hook — inert in a browser, used only by the offline harness */
 if(typeof globalThis!=="undefined"&&globalThis.__LT_TEST__){
-  globalThis.__LT__={S:S,ui:ui,setTab:setTab,mpLoad:mpLoad,
+  globalThis.__LT__={S:S,ui:ui,setTab:setTab,mpLoad:mpLoad,THEORY:THEORY,SOLUTIONS:SOLUTIONS,editPlan:editPlan,codeOnly:codeOnly,openerIndent:openerIndent,EDIT_UNIT:EDIT_UNIT,normalizeIndent:normalizeIndent,
     r:{renderDash:renderDash,renderPlanner:renderPlanner,renderBasics:renderBasics,
        renderWeeks:renderWeeks,renderCS:renderCS,renderPrep:renderPrep,
        renderMistakes:renderMistakes,renderSkills:renderSkills,renderRoad:renderRoad,
@@ -13741,7 +14180,7 @@ if(typeof globalThis!=="undefined"&&globalThis.__LT_TEST__){
        renderProjects:renderProjects,renderLangProj:renderLangProj,
        renderReports:renderReports,renderGoals:renderGoals,renderGates:renderGates,
        renderPortfolio:renderPortfolio,renderMock:renderMock,
-       renderGoalPicker:renderGoalPicker,renderPlan:renderPlan,renderNext:renderNext,
+       renderGoalPicker:renderGoalPicker,renderPlan:renderPlan,renderNext:renderNext,renderMapBig:renderMapBig,
        render:render}};
 }
 })();
