@@ -878,6 +878,12 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   input,select,textarea{min-block-size:44px;font-size:16px}
   textarea{min-block-size:88px}
 }
+/* Setting display here beats the browser's own rule for the hidden attribute,
+   so this override is what actually lets the sign-in screen disappear. */
+.auth-gate[hidden]{display:none !important}
+/* Same rule for every other element we hide in code: without this the browser's
+   own "hidden" behaviour loses to the class and the element stays on screen. */
+.pill[hidden],.nxtwrap[hidden],.qnav[hidden]{display:none !important}
 .auth-gate{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;
   padding:20px;background:var(--bg,#12141a);overflow-y:auto}
 .auth-card{inline-size:100%;max-inline-size:400px;background:var(--panel,#1b1e26);
@@ -888,6 +894,11 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
 .auth-in{inline-size:100%;box-sizing:border-box;padding:11px 12px;font-size:15px;
   background:var(--bg,#12141a);color:inherit;border:1px solid var(--line,#2a2f3a);border-radius:8px}
 .auth-in:focus-visible{outline:2px solid var(--pri,#4a8fd4);outline-offset:1px}
+/* Edge and Chrome add their own reveal button; ours is the one that stays. */
+.auth-in::-ms-reveal,.auth-in::-ms-clear{display:none}
+.auth-in::-webkit-credentials-auto-fill-button,
+.auth-in::-webkit-strong-password-auto-fill-button{display:none !important;visibility:hidden;
+  pointer-events:none;position:absolute;inset-inline-end:0}
 .auth-pw{position:relative;display:flex;align-items:center}
 .auth-pw .auth-in{padding-inline-end:44px}
 .auth-eye{position:absolute;inset-inline-end:4px;inset-block-start:50%;transform:translateY(-50%);
@@ -1017,7 +1028,7 @@ LearnTrack needs JavaScript switched on. Please enable it and reload.</div></nos
   <div class="top-in">
     <button class="brand" data-act="home" type="button">
       <span class="mark">LT</span>
-      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v63</span></span></span>
+      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v64</span></span></span>
     </button>
     <span class="langbar" id="langBar"></span>
     <span class="sp"></span>
@@ -1792,7 +1803,7 @@ LearnTrack needs JavaScript switched on. Please enable it and reload.</div></nos
   </div>
 </section>
 
-<footer class="f">LearnTrack <b>v63</b> · built 26 Aug 2026 · local-first learning tracker · single file, zero dependencies · export your backup regularly</footer>
+<footer class="f">LearnTrack <b>v64</b> · built 26 Aug 2026 · local-first learning tracker · single file, zero dependencies · export your backup regularly</footer>
 </div>
 
 <dialog id="acctDlg" aria-labelledby="acctTitle">
@@ -15999,13 +16010,14 @@ function authSetMode(mode){
 }
 function authShow(){
   var e=authEls(); if(!e.gate) return;
-  e.gate.hidden=false;
+  e.gate.hidden=false; e.gate.style.display="flex";
   document.body.style.overflow="hidden";
   authSetMode(listUsers().length?"in":"up");
   setTimeout(function(){ try{ e.u.focus(); }catch(_){}} ,60);
 }
 function authHide(){
-  var e=authEls(); if(e.gate) e.gate.hidden=true;
+  var e=authEls();
+  if(e.gate){ e.gate.hidden=true; e.gate.style.display="none"; }
   document.body.style.overflow="";
 }
 function startAppFor(user,isNew){
@@ -16297,7 +16309,7 @@ window.addEventListener("beforeunload",function(){
 try{ window.__LT_ALIVE__=true; }catch(e){}
 try{
   var __d=document.getElementById("authDiag");
-  if(__d) __d.textContent="v63 \u00b7 ready";
+  if(__d) __d.textContent="v64 \u00b7 ready";
 }catch(e){}
 ensureSeedAccount();
 wireAuth();
