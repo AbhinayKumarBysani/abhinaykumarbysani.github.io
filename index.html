@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="color-scheme" content="light dark">
 <meta name="description" content="LearnTrack — plan programming questions by date, track completion times, study sessions, streaks, weekly goals and performance analytics. Local-first, no account needed.">
 <title>LearnTrack — programming learning tracker</title>
@@ -1004,7 +1007,7 @@ LearnTrack needs JavaScript switched on. Please enable it and reload.</div></nos
   <div class="top-in">
     <button class="brand" data-act="home" type="button">
       <span class="mark">LT</span>
-      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v61</span></span></span>
+      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v62</span></span></span>
     </button>
     <span class="langbar" id="langBar"></span>
     <span class="sp"></span>
@@ -1779,7 +1782,7 @@ LearnTrack needs JavaScript switched on. Please enable it and reload.</div></nos
   </div>
 </section>
 
-<footer class="f">LearnTrack <b>v61</b> · built 26 Aug 2026 · local-first learning tracker · single file, zero dependencies · export your backup regularly</footer>
+<footer class="f">LearnTrack <b>v62</b> · built 26 Aug 2026 · local-first learning tracker · single file, zero dependencies · export your backup regularly</footer>
 </div>
 
 <dialog id="acctDlg" aria-labelledby="acctTitle">
@@ -1889,8 +1892,8 @@ var ACC_KEY="learntrack.accounts", SESSION_KEY="learntrack.session";
 var SEED_ACCOUNT={
   user:"abhinay", display:"Abhinay",
   salt:"7c1f9a4e2b8d6035a1e4c7f20d93b58e",
-  hash:"29132045fcee95b5aebe8cb3a9ca258469512255f4d87685bd25c08e2f07acc1",
-  algo:"pbkdf2", rounds:50000, created:"2026-09-01T00:00:00.000Z",
+  hash:"688c36e2e2b4532785ef830778666ea2a9ae08a4da265ef760e148567da9634a",
+  algo:"pbkdf2", rounds:2000, created:"2026-09-01T00:00:00.000Z",
   dob:"2003-05-29", gender:"Prefer not to say"
 };
 function ensureSeedAccount(){
@@ -1946,24 +1949,18 @@ var GENDERS=["Female","Male","Non-binary","Prefer not to say","Prefer to self-de
 function resetPassword(username,dob,newPass,confirm){
   var a,rec;
   try{ a=accStore(); rec=a.users[normUser(username)]; }
-  catch(e){ return Promise.resolve({ok:false,msg:"This browser is not letting the page save data."}); }
-  if(!rec) return Promise.resolve({ok:false,msg:"No account with that username."});
-  if(!rec.dob) return Promise.resolve({ok:false,msg:"This account has no date of birth saved, so the password cannot be changed this way."});
-  if(String(dob||"").trim()!==rec.dob) return Promise.resolve({ok:false,msg:"That date of birth does not match this account."});
-  var e2=validPassword(newPass); if(e2) return Promise.resolve({ok:false,msg:e2});
-  if(String(newPass)!==String(confirm)) return Promise.resolve({ok:false,msg:"The two passwords do not match."});
+  catch(e){ return {ok:false,msg:"This browser is not letting the page save data."}; }
+  if(!rec) return {ok:false,msg:"No account with that username."};
+  if(!rec.dob) return {ok:false,msg:"This account has no date of birth saved, so the password cannot be changed this way."};
+  if(String(dob||"").trim()!==rec.dob) return {ok:false,msg:"That date of birth does not match this account."};
+  var e2=validPassword(newPass); if(e2) return {ok:false,msg:e2};
+  if(String(newPass)!==String(confirm)) return {ok:false,msg:"The two passwords do not match."};
   var salt=randHex(16);
-  return hashPassword(newPass,salt).then(function(r){
-    if(r.timedOut) return {ok:false,msg:"That took too long and was stopped. Please try again."};
-    var b=accStore(), row=b.users[normUser(username)];
-    if(!row) return {ok:false,msg:"No account with that username."};
-    row.salt=salt; row.hash=r.hash; row.algo=r.algo;
-    row.rounds=(r.algo==="pbkdf2"?PBKDF2_ROUNDS:0);
-    row.userChanged=true;               /* never overwritten by a file update */
-    row.changed=new Date().toISOString();
-    accWrite(b);
-    return {ok:true,user:normUser(username)};
-  }).catch(function(){ return {ok:false,msg:"The password could not be changed. Please try again."}; });
+  rec.salt=salt; rec.hash=hashPw(newPass,salt,PBKDF2_ROUNDS);
+  rec.algo="pbkdf2"; rec.rounds=PBKDF2_ROUNDS;
+  rec.userChanged=true; rec.changed=new Date().toISOString();
+  accWrite(a);
+  return {ok:true,user:normUser(username)};
 }
 function userExists(u){ var a=accStore(); return !!a.users[normUser(u)]; }
 
@@ -2088,40 +2085,17 @@ function pbkdf2Js(password,salt,iterations,dkLenBytes){
   return hex;
 }
 
-var PBKDF2_ROUNDS=50000;
-function hashPassword(pw,salt,rounds){
-  var subtle=subtleCrypto();
-  if(!subtle||typeof TextEncoder==="undefined"){
-    /* No built-in secure hashing here — do the identical calculation in plain
-       JavaScript so the result matches and sign-in still works. */
-    return Promise.resolve({hash:pbkdf2Js(pw,salt,rounds||PBKDF2_ROUNDS,32),algo:"pbkdf2"});
-  }
-  var enc=new TextEncoder(), n=rounds||PBKDF2_ROUNDS;
-  return new Promise(function(resolve){
-    var settled=false;
-    function done(v){ if(!settled){ settled=true; resolve(v); } }
-    /* A browser that never answers must not leave you staring at "Signing in". */
-    var guard=setTimeout(function(){ done({hash:pbkdf2Js(pw,salt,n,32),algo:"pbkdf2"}); },8000);
-    try{
-      subtle.importKey("raw",enc.encode(pw),"PBKDF2",false,["deriveBits"])
-        .then(function(km){
-          return subtle.deriveBits({name:"PBKDF2",salt:enc.encode(salt),iterations:n,hash:"SHA-256"},km,256);
-        })
-        .then(function(bits){
-          clearTimeout(guard);
-          var arr=new Uint8Array(bits);
-          done({hash:Array.prototype.map.call(arr,function(x){return ("0"+x.toString(16)).slice(-2);}).join(""),algo:"pbkdf2"});
-        })
-        .catch(function(err){
-          clearTimeout(guard);
-          done({hash:pbkdf2Js(pw,salt,n,32),algo:"pbkdf2"});
-        });
-    }catch(err){
-      /* some browsers throw here instead of rejecting */
-      clearTimeout(guard);
-      done({hash:pbkdf2Js(pw,salt,n,32),algo:"pbkdf2"});
-    }
-  });
+/* Sign-in is deliberately SYNCHRONOUS. No promises, no timers, no browser
+   crypto API — there is nothing left that can stall, so the screen can never
+   sit on "Signing in" again. 2000 rounds takes about 40ms.
+
+   Trade-off, stated plainly: fewer rounds is weaker than a server-side login.
+   For a personal portfolio site whose source anyone can read, keeping accounts
+   apart and never storing the password is what matters. Do not reuse this
+   password anywhere important. */
+var PBKDF2_ROUNDS=2000;
+function hashPw(pw,salt,rounds){
+  return pbkdf2Js(String(pw),String(salt),rounds||PBKDF2_ROUNDS,32);
 }
 function weakHash(s){
   var h1=0x811c9dc5,h2=0x01000193;
@@ -2136,45 +2110,31 @@ function weakHash(s){
 function userDataKey(u){ return "learntrack.v2."+normUser(u); }
 
 function signUp(username,password,confirm,dob,gender){
-  var e1=validUsername(username); if(e1) return Promise.resolve({ok:false,msg:e1});
-  var e2=validPassword(password); if(e2) return Promise.resolve({ok:false,msg:e2});
-  if(String(password)!==String(confirm)) return Promise.resolve({ok:false,msg:"The two passwords do not match."});
-  var e3=validDob(dob); if(e3) return Promise.resolve({ok:false,msg:e3});
-  if(userExists(username)) return Promise.resolve({ok:false,msg:"That username is already taken. Please choose another."});
-  var salt=randHex(16);
-  return hashPassword(password,salt).then(function(r){
-    if(r.timedOut) return {ok:false,msg:"Creating the account took too long and was stopped. Please try again."};
-    var a=accStore();
-    /* re-check inside the write, so two quick submissions cannot both win */
-    if(a.users[normUser(username)]) return {ok:false,msg:"That username is already taken. Please choose another."};
-    a.users[normUser(username)]={display:String(username).trim(),salt:salt,hash:r.hash,algo:r.algo,
-      rounds:(r.algo==="pbkdf2"?PBKDF2_ROUNDS:0),created:new Date().toISOString(),lastIn:"",
-      dob:String(dob||"").trim(),gender:String(gender||"Prefer not to say")};
-    accWrite(a);
-    return {ok:true,user:normUser(username),first:Object.keys(a.users).length===1};
-  }).catch(function(){
-    return {ok:false,msg:"The account could not be created. Please try again."};
-  });
+  var e1=validUsername(username); if(e1) return {ok:false,msg:e1};
+  var e2=validPassword(password); if(e2) return {ok:false,msg:e2};
+  if(String(password)!==String(confirm)) return {ok:false,msg:"The two passwords do not match."};
+  var e3=validDob(dob); if(e3) return {ok:false,msg:e3};
+  if(userExists(username)) return {ok:false,msg:"That username is already taken. Please choose another."};
+  var salt=randHex(16), a;
+  try{ a=accStore(); }catch(e){ return {ok:false,msg:"This browser is not letting the page save data."}; }
+  if(a.users[normUser(username)]) return {ok:false,msg:"That username is already taken. Please choose another."};
+  a.users[normUser(username)]={display:String(username).trim(),salt:salt,
+    hash:hashPw(password,salt,PBKDF2_ROUNDS),algo:"pbkdf2",rounds:PBKDF2_ROUNDS,
+    created:new Date().toISOString(),lastIn:"",
+    dob:String(dob||"").trim(),gender:String(gender||"Prefer not to say")};
+  accWrite(a);
+  return {ok:true,user:normUser(username),first:Object.keys(a.users).length===1};
 }
-
 function signIn(username,password){
   var a,rec;
   try{ a=accStore(); rec=a.users[normUser(username)]; }
-  catch(e){ return Promise.resolve({ok:false,msg:"This browser is not letting the page save data. Check that cookies and site data are allowed, then try again."}); }
-  if(!rec) return Promise.resolve({ok:false,msg:"No account with that username."});
-  return hashPassword(password,rec.salt,rec.rounds).then(function(r){
-    if(r.timedOut) return {ok:false,msg:"Checking the password took too long and was stopped. Please try again."};
-    if(r.algo==="basic"&&rec.algo==="pbkdf2"){
-      return {ok:false,msg:"This browser cannot check the password securely. Open the site over https:// rather than as a local file, or try a different browser."};
-    }
-    if(r.hash!==rec.hash) return {ok:false,msg:"That password is not right."};
-    try{ rec.lastIn=new Date().toISOString(); accWrite(a); }catch(e){}
-    return {ok:true,user:normUser(username)};
-  }).catch(function(e){
-    return {ok:false,msg:"Sign-in could not finish. Please try again."};
-  });
+  catch(e){ return {ok:false,msg:"This browser is not letting the page save data. Allow cookies and site data, then try again."}; }
+  if(!rec) return {ok:false,msg:"No account with that username."};
+  var got=hashPw(password,rec.salt,rec.rounds);
+  if(got!==rec.hash) return {ok:false,msg:"That password is not right."};
+  try{ rec.lastIn=new Date().toISOString(); accWrite(a); }catch(e){}
+  return {ok:true,user:normUser(username)};
 }
-
 function setSession(u,remember){
   CURRENT_USER=normUser(u);
   KEY=userDataKey(CURRENT_USER);
@@ -16104,69 +16064,53 @@ function wireAuth(){
   });
   e.form.addEventListener("submit",function(ev){
     ev.preventDefault();
-    var user=e.u.value, pass=e.p.value, finished=false;
+    var user=e.u.value, pass=e.p.value;
     e.go.disabled=true;
     authSay(authMode==="reset"?"Changing your password\u2026"
       :(authMode==="up"?"Creating your account\u2026":"Signing in\u2026"),true);
-    /* Never leave this screen sitting on "Signing in" with nothing happening. */
-    var watchdog=setTimeout(function(){
-      if(finished) return;
-      finished=true; e.go.disabled=false;
-      authSay("That is taking longer than it should. Please try again \u2014 if it keeps happening, try another browser.");
-    },15000);
-    function settle(fn){
-      if(finished) return; finished=true;
-      e.go.disabled=false;
-      try{ fn(); }
-      catch(err){
-        /* whatever went wrong, never leave the screen frozen */
-        authShow();
-        authSay("Signed in, but the page could not finish loading: "+
-                ((err&&err.message)||"unknown problem")+". Please reload.");
-        try{
-          var b=document.getElementById("bootError"), m=document.getElementById("bootErrorMsg");
-          if(b&&m){ b.style.display="block";
-            m.textContent="After sign-in: "+((err&&err.message)||"unknown")+
-              (bootProblems.length?"  |  "+bootProblems.join("  |  "):""); }
-        }catch(_){}
-      }
-      clearTimeout(watchdog);
-    }
+
+    var r;
     try{
-      var work;
       if(authMode==="reset"){
-        work=resetPassword(user,e.dob?e.dob.value:"",pass,e.p2?e.p2.value:"");
+        r=resetPassword(user,e.dob?e.dob.value:"",pass,e.p2?e.p2.value:"");
       } else if(authMode==="up"){
         var g=e.gender?e.gender.value:"Prefer not to say";
         if(g==="Prefer to self-describe"&&e.self&&e.self.value.trim()) g=e.self.value.trim();
-        work=signUp(user,pass,e.p2?e.p2.value:"",e.dob?e.dob.value:"",g);
+        r=signUp(user,pass,e.p2?e.p2.value:"",e.dob?e.dob.value:"",g);
       } else {
-        work=signIn(user,pass);
+        r=signIn(user,pass);
       }
-      if(!work||typeof work.then!=="function") throw new Error("no result");
-      work.then(function(r){
-        settle(function(){
-          if(!r||!r.ok){ authSay((r&&r.msg)||"That did not work. Please try again."); try{e.p.focus();e.p.select&&e.p.select();}catch(_){}; return; }
-          if(authMode==="reset"){
-            /* changed, not signed in — send them back to sign in with the new one */
-            authSetMode("in");
-            e.p.value=""; if(e.p2) e.p2.value="";
-            authSay("\u2713 Password changed. Sign in with your new password.",true);
-            try{ e.p.focus(); }catch(_){}
-            return;
-          }
-          try{ startAppFor(r.user,authMode==="up"); }
-          catch(bootErr){
-            /* signed in, but the app failed to start — show it rather than a blank page */
-            authShow();
-            authSay("You are signed in, but the page could not finish loading. Reload and try again.");
-          }
-        });
-      },function(){
-        settle(function(){ authSay("Sign-in could not finish. Please try again."); });
-      });
     }catch(err){
-      settle(function(){ authSay("Sign-in could not start in this browser. Try opening the site over https:// or use a different browser."); });
+      e.go.disabled=false;
+      authSay("Sign-in failed: "+((err&&err.message)||"unknown problem"));
+      return;
+    }
+
+    e.go.disabled=false;
+    if(!r||!r.ok){
+      authSay((r&&r.msg)||"That did not work. Please try again.");
+      try{ e.p.focus(); e.p.select&&e.p.select(); }catch(_){}
+      return;
+    }
+    if(authMode==="reset"){
+      authSetMode("in");
+      e.p.value=""; if(e.p2) e.p2.value="";
+      authSay("\u2713 Password changed. Sign in with your new password.",true);
+      try{ e.p.focus(); }catch(_){}
+      return;
+    }
+    try{
+      startAppFor(r.user,authMode==="up");
+    }catch(bootErr){
+      authShow();
+      authSay("Signed in, but the page could not finish loading: "+
+              ((bootErr&&bootErr.message)||"unknown problem")+". Please reload.");
+      try{
+        var bx=document.getElementById("bootError"), bm=document.getElementById("bootErrorMsg");
+        if(bx&&bm){ bx.style.display="block";
+          bm.textContent="After sign-in: "+((bootErr&&bootErr.message)||"unknown")+
+            (bootProblems.length?"  |  "+bootProblems.join("  |  "):""); }
+      }catch(_){}
     }
   });
 }
@@ -16274,7 +16218,7 @@ window.addEventListener("beforeunload",function(){
 try{ window.__LT_ALIVE__=true; }catch(e){}
 try{
   var __d=document.getElementById("authDiag");
-  if(__d) __d.textContent="v61 \u00b7 ready";
+  if(__d) __d.textContent="v62 \u00b7 ready \u00b7 sign-in is instant";
 }catch(e){}
 ensureSeedAccount();
 wireAuth();
