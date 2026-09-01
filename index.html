@@ -885,6 +885,15 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
 .auth-in{inline-size:100%;box-sizing:border-box;padding:11px 12px;font-size:15px;
   background:var(--bg,#12141a);color:inherit;border:1px solid var(--line,#2a2f3a);border-radius:8px}
 .auth-in:focus-visible{outline:2px solid var(--pri,#4a8fd4);outline-offset:1px}
+.auth-pw{position:relative;display:flex;align-items:center}
+.auth-pw .auth-in{padding-inline-end:44px}
+.auth-eye{position:absolute;inset-inline-end:4px;inset-block-start:50%;transform:translateY(-50%);
+  background:none;border:0;cursor:pointer;font-size:16px;line-height:1;padding:8px;
+  opacity:.6;color:inherit;border-radius:6px;min-inline-size:34px;min-block-size:34px}
+.auth-eye:hover{opacity:1}
+.auth-eye[aria-pressed="true"]{opacity:1}
+.auth-eye:focus-visible{outline:2px solid var(--pri,#4a8fd4);outline-offset:1px}
+.auth-hint{margin:6px 0 0;font-size:12px;opacity:.65;line-height:1.45}
 .auth-check{display:flex;align-items:center;gap:8px;margin-block-start:16px;font-size:13.5px;opacity:.9}
 .auth-check input{inline-size:16px;block-size:16px}
 .auth-msg{min-block-size:20px;margin:12px 0 0;font-size:13.5px;color:var(--bad,#e0645a);font-weight:600}
@@ -915,11 +924,33 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
       <label class="auth-lab" for="authUser">Username</label>
       <input class="auth-in" id="authUser" name="username" type="text" autocomplete="username"
              autocapitalize="none" spellcheck="false" required>
-      <label class="auth-lab" for="authPass">Password</label>
-      <input class="auth-in" id="authPass" name="password" type="password" autocomplete="current-password" required>
+      <label class="auth-lab" for="authPass" id="authPassLabel">Password</label>
+      <div class="auth-pw">
+        <input class="auth-in" id="authPass" name="password" type="password" autocomplete="current-password" required>
+        <button class="auth-eye" id="authEye" type="button" aria-label="Show password" aria-pressed="false" title="Show password">&#128065;</button>
+      </div>
+      <div id="authDobRow" hidden>
+        <label class="auth-lab" for="authDob">Date of birth</label>
+        <input class="auth-in" id="authDob" name="dob" type="date" autocomplete="bday">
+        <p class="auth-hint" id="authDobHint">Used only to let you reset your own password. It is never shown to anyone.</p>
+      </div>
+      <div id="authGenderRow" hidden>
+        <label class="auth-lab" for="authGender">Gender</label>
+        <select class="auth-in" id="authGender" name="gender">
+          <option>Female</option><option>Male</option><option>Non-binary</option>
+          <option selected>Prefer not to say</option><option>Prefer to self-describe</option>
+        </select>
+      </div>
+      <div id="authSelfRow" hidden>
+        <label class="auth-lab" for="authSelf">How would you describe it?</label>
+        <input class="auth-in" id="authSelf" name="selfDescribe" type="text" maxlength="40">
+      </div>
       <div id="authConfirmRow" hidden>
         <label class="auth-lab" for="authPass2">Confirm password</label>
-        <input class="auth-in" id="authPass2" name="confirm" type="password" autocomplete="new-password">
+        <div class="auth-pw">
+          <input class="auth-in" id="authPass2" name="confirm" type="password" autocomplete="new-password">
+          <button class="auth-eye" id="authEye2" type="button" aria-label="Show password" aria-pressed="false" title="Show password">&#128065;</button>
+        </div>
       </div>
       <label class="auth-check"><input type="checkbox" id="authRemember" aria-label="Keep me signed in on this device" checked> Keep me signed in on this device</label>
       <p class="auth-msg" id="authMsg" role="alert" aria-live="assertive"></p>
@@ -928,6 +959,9 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
     <p class="auth-switch">
       <span id="authSwitchText">New here?</span>
       <button type="button" class="auth-link" id="authSwitch">Create an account</button>
+    </p>
+    <p class="auth-switch" id="authForgotRow">
+      <button type="button" class="auth-link" id="authForgot">Forgot your password?</button>
     </p>
     <p class="auth-note">Your work is saved in this browser under your username, and stays separate from anyone else who signs in here. Passwords are never stored — only an unreadable hash.<br><br>
     This is a personal site, not a bank: sign-in keeps accounts apart, but anyone who can open this browser profile can read the stored data. Use a password you do not use anywhere else.</p>
@@ -938,7 +972,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   <div class="top-in">
     <button class="brand" data-act="home" type="button">
       <span class="mark">LT</span>
-      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v58</span></span></span>
+      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v60</span></span></span>
     </button>
     <span class="langbar" id="langBar"></span>
     <span class="sp"></span>
@@ -1713,7 +1747,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   </div>
 </section>
 
-<footer class="f">LearnTrack <b>v58</b> · built 26 Aug 2026 · local-first learning tracker · single file, zero dependencies · export your backup regularly</footer>
+<footer class="f">LearnTrack <b>v60</b> · built 26 Aug 2026 · local-first learning tracker · single file, zero dependencies · export your backup regularly</footer>
 </div>
 
 <dialog id="acctDlg" aria-labelledby="acctTitle">
@@ -1824,15 +1858,27 @@ var SEED_ACCOUNT={
   user:"abhinay", display:"Abhinay",
   salt:"7c1f9a4e2b8d6035a1e4c7f20d93b58e",
   hash:"29132045fcee95b5aebe8cb3a9ca258469512255f4d87685bd25c08e2f07acc1",
-  algo:"pbkdf2", rounds:50000, created:"2026-09-01T00:00:00.000Z"
+  algo:"pbkdf2", rounds:50000, created:"2026-09-01T00:00:00.000Z",
+  dob:"2003-05-29", gender:"Prefer not to say"
 };
 function ensureSeedAccount(){
   try{
-    var a=accStore();
-    if(!a.users[SEED_ACCOUNT.user]){
+    var a=accStore(), cur=a.users[SEED_ACCOUNT.user];
+    /* Create it if missing. Also refresh it when an older copy of this file left
+       a record behind with different settings — otherwise the saved sign-in
+       details stop matching after an update and the password looks wrong. */
+    /* Only the sign-in details force a refresh. A password the user changed
+       themselves is theirs to keep — never overwrite it. */
+    var stale = cur && cur.seeded!==false && !cur.userChanged &&
+      (cur.hash!==SEED_ACCOUNT.hash || cur.salt!==SEED_ACCOUNT.salt || cur.rounds!==SEED_ACCOUNT.rounds);
+    if(cur && !cur.dob && SEED_ACCOUNT.dob && cur.seeded){ cur.dob=SEED_ACCOUNT.dob; accWrite(a); }
+    if(!cur || stale){
       a.users[SEED_ACCOUNT.user]={display:SEED_ACCOUNT.display,salt:SEED_ACCOUNT.salt,
         hash:SEED_ACCOUNT.hash,algo:SEED_ACCOUNT.algo,rounds:SEED_ACCOUNT.rounds,
-        created:SEED_ACCOUNT.created,lastIn:"",seeded:true};
+        created:(cur&&cur.created)||SEED_ACCOUNT.created,
+        dob:(cur&&cur.dob)||SEED_ACCOUNT.dob,
+        gender:(cur&&cur.gender)||SEED_ACCOUNT.gender,
+        lastIn:(cur&&cur.lastIn)||"",seeded:true};
       accWrite(a);
     }
   }catch(e){}
@@ -1849,6 +1895,44 @@ function accWrite(a){ try{ localStorage.setItem(ACC_KEY,JSON.stringify(a)); }cat
    same account and cannot both be registered. */
 function normUser(u){ return String(u||"").trim().toLowerCase(); }
 
+function validDob(d){
+  var v=String(d||"").trim();
+  if(!v) return "Please enter your date of birth.";
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(v)) return "Please enter a valid date of birth.";
+  var t=new Date(v+"T00:00:00");
+  if(isNaN(t.getTime())) return "That date does not look right.";
+  var now=new Date();
+  if(t>now) return "Date of birth cannot be in the future.";
+  var age=(now-t)/(365.25*24*3600*1000);
+  if(age>120) return "Please check the year.";
+  if(age<10) return "You need to be at least 10 to create an account.";
+  return "";
+}
+var GENDERS=["Female","Male","Non-binary","Prefer not to say","Prefer to self-describe"];
+
+/* Changing a password: prove who you are with the date of birth on the account. */
+function resetPassword(username,dob,newPass,confirm){
+  var a,rec;
+  try{ a=accStore(); rec=a.users[normUser(username)]; }
+  catch(e){ return Promise.resolve({ok:false,msg:"This browser is not letting the page save data."}); }
+  if(!rec) return Promise.resolve({ok:false,msg:"No account with that username."});
+  if(!rec.dob) return Promise.resolve({ok:false,msg:"This account has no date of birth saved, so the password cannot be changed this way."});
+  if(String(dob||"").trim()!==rec.dob) return Promise.resolve({ok:false,msg:"That date of birth does not match this account."});
+  var e2=validPassword(newPass); if(e2) return Promise.resolve({ok:false,msg:e2});
+  if(String(newPass)!==String(confirm)) return Promise.resolve({ok:false,msg:"The two passwords do not match."});
+  var salt=randHex(16);
+  return hashPassword(newPass,salt).then(function(r){
+    if(r.timedOut) return {ok:false,msg:"That took too long and was stopped. Please try again."};
+    var b=accStore(), row=b.users[normUser(username)];
+    if(!row) return {ok:false,msg:"No account with that username."};
+    row.salt=salt; row.hash=r.hash; row.algo=r.algo;
+    row.rounds=(r.algo==="pbkdf2"?PBKDF2_ROUNDS:0);
+    row.userChanged=true;               /* never overwritten by a file update */
+    row.changed=new Date().toISOString();
+    accWrite(b);
+    return {ok:true,user:normUser(username)};
+  }).catch(function(){ return {ok:false,msg:"The password could not be changed. Please try again."}; });
+}
 function userExists(u){ var a=accStore(); return !!a.users[normUser(u)]; }
 
 function validUsername(u){
@@ -2019,10 +2103,11 @@ function weakHash(s){
 /* Each account gets its own storage key, so switching user switches data. */
 function userDataKey(u){ return "learntrack.v2."+normUser(u); }
 
-function signUp(username,password,confirm){
+function signUp(username,password,confirm,dob,gender){
   var e1=validUsername(username); if(e1) return Promise.resolve({ok:false,msg:e1});
   var e2=validPassword(password); if(e2) return Promise.resolve({ok:false,msg:e2});
   if(String(password)!==String(confirm)) return Promise.resolve({ok:false,msg:"The two passwords do not match."});
+  var e3=validDob(dob); if(e3) return Promise.resolve({ok:false,msg:e3});
   if(userExists(username)) return Promise.resolve({ok:false,msg:"That username is already taken. Please choose another."});
   var salt=randHex(16);
   return hashPassword(password,salt).then(function(r){
@@ -2031,7 +2116,8 @@ function signUp(username,password,confirm){
     /* re-check inside the write, so two quick submissions cannot both win */
     if(a.users[normUser(username)]) return {ok:false,msg:"That username is already taken. Please choose another."};
     a.users[normUser(username)]={display:String(username).trim(),salt:salt,hash:r.hash,algo:r.algo,
-      rounds:(r.algo==="pbkdf2"?PBKDF2_ROUNDS:0),created:new Date().toISOString(),lastIn:""};
+      rounds:(r.algo==="pbkdf2"?PBKDF2_ROUNDS:0),created:new Date().toISOString(),lastIn:"",
+      dob:String(dob||"").trim(),gender:String(gender||"Prefer not to say")};
     accWrite(a);
     return {ok:true,user:normUser(username),first:Object.keys(a.users).length===1};
   }).catch(function(){
@@ -15844,6 +15930,12 @@ var authMode="in";
 function authEls(){
   return {gate:document.getElementById("authGate"),form:document.getElementById("authForm"),
     u:document.getElementById("authUser"),p:document.getElementById("authPass"),
+    eye:document.getElementById("authEye"),eye2:document.getElementById("authEye2"),
+    dob:document.getElementById("authDob"),dobRow:document.getElementById("authDobRow"),
+    gender:document.getElementById("authGender"),genderRow:document.getElementById("authGenderRow"),
+    self:document.getElementById("authSelf"),selfRow:document.getElementById("authSelfRow"),
+    forgot:document.getElementById("authForgot"),forgotRow:document.getElementById("authForgotRow"),
+    passLab:document.querySelector?null:null,
     p2:document.getElementById("authPass2"),row:document.getElementById("authConfirmRow"),
     msg:document.getElementById("authMsg"),go:document.getElementById("authGo"),
     sub:document.getElementById("authSub"),sw:document.getElementById("authSwitch"),
@@ -15856,14 +15948,32 @@ function authSay(text,ok){
 function authSetMode(mode){
   authMode=mode;
   var e=authEls(); if(!e.gate) return;
-  var creating=(mode==="up");
-  e.row.hidden=!creating;
-  if(e.p2) e.p2.required=creating;
-  e.sub.textContent=creating?"Create an account to start":"Sign in to continue";
-  e.go.textContent=creating?"Create account":"Sign in";
-  e.p.setAttribute("autocomplete",creating?"new-password":"current-password");
-  e.swt.textContent=creating?"Already have an account?":"New here?";
-  e.sw.textContent=creating?"Sign in instead":"Create an account";
+  var creating=(mode==="up"), resetting=(mode==="reset");
+  e.row.hidden=!(creating||resetting);
+  if(e.p2) e.p2.required=creating||resetting;
+  if(e.dobRow) e.dobRow.hidden=!(creating||resetting);
+  if(e.dob) e.dob.required=creating||resetting;
+  if(e.genderRow) e.genderRow.hidden=!creating;
+  if(e.selfRow) e.selfRow.hidden=true;
+  if(e.forgotRow) e.forgotRow.hidden=resetting;
+  if(e.rem&&e.rem.parentNode) e.rem.parentNode.hidden=resetting;
+  var dh=document.getElementById("authDobHint");
+  if(dh) dh.textContent=resetting
+    ? "Enter the date of birth on this account to confirm it is you."
+    : "Used only to let you reset your own password. It is never shown to anyone.";
+  var pl=document.getElementById("authPassLabel");
+  if(pl) pl.textContent=resetting?"New password":"Password";
+  e.sub.textContent=resetting?"Reset your password"
+    :(creating?"Create an account to start":"Sign in to continue");
+  e.go.textContent=resetting?"Change password":(creating?"Create account":"Sign in");
+  e.p.setAttribute("autocomplete",(creating||resetting)?"new-password":"current-password");
+  [[e.eye,e.p],[e.eye2,e.p2]].forEach(function(pair){
+    if(!pair[0]||!pair[1]) return;
+    pair[1].type="password"; pair[0].setAttribute("aria-pressed","false");
+    pair[0].setAttribute("aria-label","Show password"); pair[0].title="Show password";
+  });
+  e.swt.textContent=(creating||resetting)?"Already have an account?":"New here?";
+  e.sw.textContent=(creating||resetting)?"Sign in instead":"Create an account";
   authSay("");
 }
 function authShow(){
@@ -15927,6 +16037,27 @@ function openAccount(){
 function wireAuth(){
   var e=authEls(); if(!e.form) return;
   e.sw.addEventListener("click",function(){ authSetMode(authMode==="in"?"up":"in"); e.u.focus(); });
+  /* let people check what they actually typed */
+  function wireEye(btn,field){
+    if(!btn||!field) return;
+    btn.addEventListener("click",function(){
+      var showing=field.type==="text";
+      field.type=showing?"password":"text";
+      btn.setAttribute("aria-pressed",showing?"false":"true");
+      var lab=showing?"Show password":"Hide password";
+      btn.setAttribute("aria-label",lab); btn.title=lab;
+      try{ field.focus(); var n=field.value.length; field.setSelectionRange&&field.setSelectionRange(n,n); }catch(_){}
+    });
+  }
+  wireEye(e.eye,e.p);
+  wireEye(e.eye2,e.p2);
+  if(e.forgot) e.forgot.addEventListener("click",function(){
+    authSetMode("reset");
+    try{ e.u.focus(); }catch(_){}
+  });
+  if(e.gender) e.gender.addEventListener("change",function(){
+    if(e.selfRow) e.selfRow.hidden=(e.gender.value!=="Prefer to self-describe");
+  });
   e.u.addEventListener("input",function(){
     if(authMode!=="up") return;
     var v=e.u.value.trim();
@@ -15940,7 +16071,8 @@ function wireAuth(){
     ev.preventDefault();
     var user=e.u.value, pass=e.p.value, finished=false;
     e.go.disabled=true;
-    authSay(authMode==="up"?"Creating your account\u2026":"Signing in\u2026",true);
+    authSay(authMode==="reset"?"Changing your password\u2026"
+      :(authMode==="up"?"Creating your account\u2026":"Signing in\u2026"),true);
     /* Never leave this screen sitting on "Signing in" with nothing happening. */
     var watchdog=setTimeout(function(){
       if(finished) return;
@@ -15952,11 +16084,28 @@ function wireAuth(){
       clearTimeout(watchdog); e.go.disabled=false; fn();
     }
     try{
-      var work=(authMode==="up") ? signUp(user,pass,e.p2?e.p2.value:"") : signIn(user,pass);
+      var work;
+      if(authMode==="reset"){
+        work=resetPassword(user,e.dob?e.dob.value:"",pass,e.p2?e.p2.value:"");
+      } else if(authMode==="up"){
+        var g=e.gender?e.gender.value:"Prefer not to say";
+        if(g==="Prefer to self-describe"&&e.self&&e.self.value.trim()) g=e.self.value.trim();
+        work=signUp(user,pass,e.p2?e.p2.value:"",e.dob?e.dob.value:"",g);
+      } else {
+        work=signIn(user,pass);
+      }
       if(!work||typeof work.then!=="function") throw new Error("no result");
       work.then(function(r){
         settle(function(){
           if(!r||!r.ok){ authSay((r&&r.msg)||"That did not work. Please try again."); try{e.p.focus();e.p.select&&e.p.select();}catch(_){}; return; }
+          if(authMode==="reset"){
+            /* changed, not signed in — send them back to sign in with the new one */
+            authSetMode("in");
+            e.p.value=""; if(e.p2) e.p2.value="";
+            authSay("\u2713 Password changed. Sign in with your new password.",true);
+            try{ e.p.focus(); }catch(_){}
+            return;
+          }
           try{ startAppFor(r.user,authMode==="up"); }
           catch(bootErr){
             /* signed in, but the app failed to start — show it rather than a blank page */
@@ -16061,7 +16210,7 @@ else authShow();
 
 /* test hook — inert in a browser, used only by the offline harness */
 if(typeof globalThis!=="undefined"&&globalThis.__LT_TEST__){
-  globalThis.__LT__={S:S,ui:ui,save:save,load:load,get KEY(){return KEY;},signUp:signUp,signIn:signIn,userExists:userExists,validUsername:validUsername,validPassword:validPassword,normUser:normUser,userDataKey:userDataKey,listUsers:listUsers,setSession:setSession,readSession:readSession,accStore:accStore,ACC_KEY:ACC_KEY,claimLegacyData:claimLegacyData,ensureSeedAccount:ensureSeedAccount,SEED_ACCOUNT:SEED_ACCOUNT,SOURCES:SOURCES,srcById:srcById,sourcesForLesson:sourcesForLesson,srcStats:srcStats,SRC_TIERS:SRC_TIERS,SCHEMA:SCHEMA,migrate:migrate,detectVersion:detectVersion,MIGRATIONS:MIGRATIONS,PRE_KEY:PRE_KEY,RECOVER_KEY:RECOVER_KEY,hasRecovery:hasRecovery,clearRecovery:clearRecovery,attemptRepair:attemptRepair,applyRepair:applyRepair,partitionTasks:partitionTasks,validateMigration:validateMigration,keepUnknownFields:keepUnknownFields,enterRecovery:enterRecovery,getMigration:function(){return lastMigration;},applyBackup:applyBackup,backfillSkills:backfillSkills,TOPIC_SKILLS:TOPIC_SKILLS,__skillsForTask:skillsForTask,masteryOf:masteryOf,SKILLS:SKILLS,scorecard:scorecard,gateStatus:gateStatus,setTab:setTab,mpLoad:mpLoad,THEORY:THEORY,SOLUTIONS:SOLUTIONS,editPlan:editPlan,codeOnly:codeOnly,openerIndent:openerIndent,EDIT_UNIT:EDIT_UNIT,normalizeIndent:normalizeIndent,
+  globalThis.__LT__={S:S,ui:ui,save:save,load:load,get KEY(){return KEY;},signUp:signUp,signIn:signIn,userExists:userExists,validUsername:validUsername,validPassword:validPassword,normUser:normUser,userDataKey:userDataKey,listUsers:listUsers,setSession:setSession,readSession:readSession,accStore:accStore,ACC_KEY:ACC_KEY,claimLegacyData:claimLegacyData,resetPassword:resetPassword,validDob:validDob,authSetMode:function(m){return authSetMode(m);},ensureSeedAccount:ensureSeedAccount,SEED_ACCOUNT:SEED_ACCOUNT,SOURCES:SOURCES,srcById:srcById,sourcesForLesson:sourcesForLesson,srcStats:srcStats,SRC_TIERS:SRC_TIERS,SCHEMA:SCHEMA,migrate:migrate,detectVersion:detectVersion,MIGRATIONS:MIGRATIONS,PRE_KEY:PRE_KEY,RECOVER_KEY:RECOVER_KEY,hasRecovery:hasRecovery,clearRecovery:clearRecovery,attemptRepair:attemptRepair,applyRepair:applyRepair,partitionTasks:partitionTasks,validateMigration:validateMigration,keepUnknownFields:keepUnknownFields,enterRecovery:enterRecovery,getMigration:function(){return lastMigration;},applyBackup:applyBackup,backfillSkills:backfillSkills,TOPIC_SKILLS:TOPIC_SKILLS,__skillsForTask:skillsForTask,masteryOf:masteryOf,SKILLS:SKILLS,scorecard:scorecard,gateStatus:gateStatus,setTab:setTab,mpLoad:mpLoad,THEORY:THEORY,SOLUTIONS:SOLUTIONS,editPlan:editPlan,codeOnly:codeOnly,openerIndent:openerIndent,EDIT_UNIT:EDIT_UNIT,normalizeIndent:normalizeIndent,
     r:{renderDash:renderDash,renderPlanner:renderPlanner,renderBasics:renderBasics,
        renderWeeks:renderWeeks,renderCS:renderCS,renderPrep:renderPrep,
        renderMistakes:renderMistakes,renderSkills:renderSkills,renderRoad:renderRoad,
