@@ -955,6 +955,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
       <label class="auth-check"><input type="checkbox" id="authRemember" aria-label="Keep me signed in on this device" checked> Keep me signed in on this device</label>
       <p class="auth-msg" id="authMsg" role="alert" aria-live="assertive"></p>
       <button class="auth-btn" id="authGo" type="submit">Sign in</button>
+      <p class="auth-note" id="authDiag" style="margin-block-start:12px;text-align:center;opacity:.45">loading\u2026</p>
     </form>
     <p class="auth-switch">
       <span id="authSwitchText">New here?</span>
@@ -967,12 +968,43 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
     This is a personal site, not a bank: sign-in keeps accounts apart, but anyone who can open this browser profile can read the stored data. Use a password you do not use anywhere else.</p>
   </div>
 </div>
+<noscript><div style="padding:20px;font:16px system-ui;background:#fee;color:#900">
+LearnTrack needs JavaScript switched on. Please enable it and reload.</div></noscript>
+<div id="bootError" style="display:none;position:fixed;inset-block-start:0;inset-inline:0;z-index:9999;
+  padding:14px 18px;background:#7a1d1d;color:#fff;font:14px/1.5 system-ui">
+  <strong>The page could not start.</strong>
+  <div id="bootErrorMsg" style="margin-block-start:6px;font-family:ui-monospace,monospace;font-size:12.5px"></div>
+  <div style="margin-block-start:8px;opacity:.85">Please send me this message and I will fix it.</div>
+</div>
+<script>
+/* Runs before everything else. If the main script fails for any reason, this
+   puts the reason on the screen instead of leaving a page that does nothing. */
+(function(){
+  function show(msg){
+    var b=document.getElementById("bootError"), m=document.getElementById("bootErrorMsg");
+    if(!b||!m) return;
+    b.style.display="block";
+    m.textContent=String(msg).slice(0,400);
+  }
+  window.addEventListener("error",function(e){
+    show((e.message||"Unknown error")+(e.lineno?"  (line "+e.lineno+")":""));
+  });
+  window.addEventListener("unhandledrejection",function(e){
+    show("Unfinished action: "+((e.reason&&e.reason.message)||e.reason||"unknown"));
+  });
+  window.__LT_ALIVE__=false;
+  /* if the app has not signalled that it started, say so plainly */
+  setTimeout(function(){
+    if(!window.__LT_ALIVE__) show("The app did not finish starting. This is usually a browser or caching problem \u2014 try a hard reload (Ctrl+Shift+R).");
+  },6000);
+})();
+</script>
 <a class="skiplink" href="#mainContent">Skip to main content</a>
 <header class="top">
   <div class="top-in">
     <button class="brand" data-act="home" type="button">
       <span class="mark">LT</span>
-      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v60</span></span></span>
+      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v61</span></span></span>
     </button>
     <span class="langbar" id="langBar"></span>
     <span class="sp"></span>
@@ -1747,7 +1779,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   </div>
 </section>
 
-<footer class="f">LearnTrack <b>v60</b> · built 26 Aug 2026 · local-first learning tracker · single file, zero dependencies · export your backup regularly</footer>
+<footer class="f">LearnTrack <b>v61</b> · built 26 Aug 2026 · local-first learning tracker · single file, zero dependencies · export your backup regularly</footer>
 </div>
 
 <dialog id="acctDlg" aria-labelledby="acctTitle">
@@ -15988,10 +16020,13 @@ function authHide(){
   document.body.style.overflow="";
 }
 function startAppFor(user,isNew){
-  setSession(user,authEls().rem?authEls().rem.checked:true);
+  var e=authEls();
+  setSession(user,e.rem?e.rem.checked:true);
   if(isNew) claimLegacyData(user);
-  authHide();
+  /* Start the app FIRST. Only take the sign-in screen away once it worked,
+     so a failure is visible instead of leaving you on a frozen page. */
   bootApp();
+  authHide();
 }
 function renderWho(){
   var b=document.getElementById("whoBtn");
@@ -16081,7 +16116,21 @@ function wireAuth(){
     },15000);
     function settle(fn){
       if(finished) return; finished=true;
-      clearTimeout(watchdog); e.go.disabled=false; fn();
+      e.go.disabled=false;
+      try{ fn(); }
+      catch(err){
+        /* whatever went wrong, never leave the screen frozen */
+        authShow();
+        authSay("Signed in, but the page could not finish loading: "+
+                ((err&&err.message)||"unknown problem")+". Please reload.");
+        try{
+          var b=document.getElementById("bootError"), m=document.getElementById("bootErrorMsg");
+          if(b&&m){ b.style.display="block";
+            m.textContent="After sign-in: "+((err&&err.message)||"unknown")+
+              (bootProblems.length?"  |  "+bootProblems.join("  |  "):""); }
+        }catch(_){}
+      }
+      clearTimeout(watchdog);
     }
     try{
       var work;
@@ -16123,14 +16172,30 @@ function wireAuth(){
 }
 
 /* ============ boot ============ */
-function bootApp(){
-load();
-document.documentElement.setAttribute("data-theme",S.settings.theme||"dark");
-document.getElementById("rdStart").value=iso(sow());
-if(S.logins.indexOf(today())<0){ S.logins.push(today()); if(S.logins.length>500) S.logins.shift(); }
-if(S.scratchNotes&&S.scratchNotes.trim()&&!(S.stickies&&S.stickies.length)){
-  noteAdd(S.scratchNotes.trim(),"yellow"); S.scratchNotes=""; save();
+var bootProblems=[];
+function bootStep(name,fn){
+  try{ fn(); }
+  catch(err){
+    bootProblems.push(name+": "+((err&&err.message)||"failed"));
+  }
 }
+function bootApp(){
+bootStep("loading your saved work",function(){ load(); });
+bootStep("applying your theme",function(){
+  document.documentElement.setAttribute("data-theme",S.settings.theme||"dark");
+});
+bootStep("setting the week",function(){
+  var rd=document.getElementById("rdStart"); if(rd) rd.value=iso(sow());
+});
+bootStep("recording today's visit",function(){
+  S.logins=S.logins||[];
+  if(S.logins.indexOf(today())<0){ S.logins.push(today()); if(S.logins.length>500) S.logins.shift(); }
+});
+bootStep("moving an old note",function(){
+  if(S.scratchNotes&&S.scratchNotes.trim()&&!(S.stickies&&S.stickies.length)){
+    noteAdd(S.scratchNotes.trim(),"yellow"); S.scratchNotes=""; save();
+  }
+});
 /* Nothing stored here yet? Try the shared copy before showing an empty app. */
 /* The baked-in progress belongs to Abhinay's account only. Anyone else who
    signs up on this site starts with an empty app, as they should. */
@@ -16151,17 +16216,24 @@ setTimeout(function(){
   if(S.gh.auto&&S.gh.token) ghAutoPull();
   else ghPublicPull(gid);
 },600);
-var __rep=repairProgress();
+var __rep={fixed:0,dropped:0};
+bootStep("checking your progress",function(){ __rep=repairProgress()||__rep; });
 var __back=0;
-try{ __back=backfillSkills(); }catch(e){}
+bootStep("crediting your skills",function(){ __back=backfillSkills(); });
 if(__back) setTimeout(function(){
   toast("\u2713 Credited "+__back+" skill"+(__back===1?"":"s")+" from work you had already done");
 },1500);
-try{ renderWho(); }catch(e){}
-var __swept=watchSweep();
-autoTopUp();
-save();
+bootStep("showing your account",function(){ renderWho(); });
+var __swept=0;
+bootStep("checking your watchlist",function(){ __swept=watchSweep(); });
+bootStep("topping up your plan",function(){ autoTopUp(); });
+bootStep("saving",function(){ save(); });
+/* If drawing the page fails there is nothing to look at, so this one is fatal
+   and the sign-in screen stays up with a real explanation. */
 render();
+if(bootProblems.length) setTimeout(function(){
+  toast("Loaded, but "+bootProblems.length+" thing"+(bootProblems.length===1?"":"s")+" did not start correctly");
+},2000);
 if(__rep.fixed||__rep.dropped) setTimeout(function(){
   toast("✓ Progress repaired — "+__rep.fixed+" solved question"+(__rep.fixed===1?"":"s")+" re-ticked"+
         (__rep.dropped?" and "+__rep.dropped+" duplicate"+(__rep.dropped===1?"":"s")+" merged":""));
@@ -16198,6 +16270,12 @@ window.addEventListener("beforeunload",function(){
 
 /* Show the app only once somebody is signed in. A session already open on this
    device skips straight through; everyone else sees the sign-in screen. */
+/* tell the watchdog above that the main script reached the end */
+try{ window.__LT_ALIVE__=true; }catch(e){}
+try{
+  var __d=document.getElementById("authDiag");
+  if(__d) __d.textContent="v61 \u00b7 ready";
+}catch(e){}
 ensureSeedAccount();
 wireAuth();
 var __sess=readSession();
@@ -16210,7 +16288,7 @@ else authShow();
 
 /* test hook — inert in a browser, used only by the offline harness */
 if(typeof globalThis!=="undefined"&&globalThis.__LT_TEST__){
-  globalThis.__LT__={S:S,ui:ui,save:save,load:load,get KEY(){return KEY;},signUp:signUp,signIn:signIn,userExists:userExists,validUsername:validUsername,validPassword:validPassword,normUser:normUser,userDataKey:userDataKey,listUsers:listUsers,setSession:setSession,readSession:readSession,accStore:accStore,ACC_KEY:ACC_KEY,claimLegacyData:claimLegacyData,resetPassword:resetPassword,validDob:validDob,authSetMode:function(m){return authSetMode(m);},ensureSeedAccount:ensureSeedAccount,SEED_ACCOUNT:SEED_ACCOUNT,SOURCES:SOURCES,srcById:srcById,sourcesForLesson:sourcesForLesson,srcStats:srcStats,SRC_TIERS:SRC_TIERS,SCHEMA:SCHEMA,migrate:migrate,detectVersion:detectVersion,MIGRATIONS:MIGRATIONS,PRE_KEY:PRE_KEY,RECOVER_KEY:RECOVER_KEY,hasRecovery:hasRecovery,clearRecovery:clearRecovery,attemptRepair:attemptRepair,applyRepair:applyRepair,partitionTasks:partitionTasks,validateMigration:validateMigration,keepUnknownFields:keepUnknownFields,enterRecovery:enterRecovery,getMigration:function(){return lastMigration;},applyBackup:applyBackup,backfillSkills:backfillSkills,TOPIC_SKILLS:TOPIC_SKILLS,__skillsForTask:skillsForTask,masteryOf:masteryOf,SKILLS:SKILLS,scorecard:scorecard,gateStatus:gateStatus,setTab:setTab,mpLoad:mpLoad,THEORY:THEORY,SOLUTIONS:SOLUTIONS,editPlan:editPlan,codeOnly:codeOnly,openerIndent:openerIndent,EDIT_UNIT:EDIT_UNIT,normalizeIndent:normalizeIndent,
+  globalThis.__LT__={S:S,ui:ui,save:save,load:load,get KEY(){return KEY;},signUp:signUp,signIn:signIn,userExists:userExists,validUsername:validUsername,validPassword:validPassword,normUser:normUser,userDataKey:userDataKey,listUsers:listUsers,setSession:setSession,readSession:readSession,accStore:accStore,ACC_KEY:ACC_KEY,claimLegacyData:claimLegacyData,bootApp:bootApp,getBootProblems:function(){return bootProblems;},resetPassword:resetPassword,validDob:validDob,authSetMode:function(m){return authSetMode(m);},ensureSeedAccount:ensureSeedAccount,SEED_ACCOUNT:SEED_ACCOUNT,SOURCES:SOURCES,srcById:srcById,sourcesForLesson:sourcesForLesson,srcStats:srcStats,SRC_TIERS:SRC_TIERS,SCHEMA:SCHEMA,migrate:migrate,detectVersion:detectVersion,MIGRATIONS:MIGRATIONS,PRE_KEY:PRE_KEY,RECOVER_KEY:RECOVER_KEY,hasRecovery:hasRecovery,clearRecovery:clearRecovery,attemptRepair:attemptRepair,applyRepair:applyRepair,partitionTasks:partitionTasks,validateMigration:validateMigration,keepUnknownFields:keepUnknownFields,enterRecovery:enterRecovery,getMigration:function(){return lastMigration;},applyBackup:applyBackup,backfillSkills:backfillSkills,TOPIC_SKILLS:TOPIC_SKILLS,__skillsForTask:skillsForTask,masteryOf:masteryOf,SKILLS:SKILLS,scorecard:scorecard,gateStatus:gateStatus,setTab:setTab,mpLoad:mpLoad,THEORY:THEORY,SOLUTIONS:SOLUTIONS,editPlan:editPlan,codeOnly:codeOnly,openerIndent:openerIndent,EDIT_UNIT:EDIT_UNIT,normalizeIndent:normalizeIndent,
     r:{renderDash:renderDash,renderPlanner:renderPlanner,renderBasics:renderBasics,
        renderWeeks:renderWeeks,renderCS:renderCS,renderPrep:renderPrep,
        renderMistakes:renderMistakes,renderSkills:renderSkills,renderRoad:renderRoad,
