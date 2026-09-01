@@ -921,7 +921,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
         <label class="auth-lab" for="authPass2">Confirm password</label>
         <input class="auth-in" id="authPass2" name="confirm" type="password" autocomplete="new-password">
       </div>
-      <label class="auth-check"><input type="checkbox" id="authRemember" checked> Keep me signed in on this device</label>
+      <label class="auth-check"><input type="checkbox" id="authRemember" aria-label="Keep me signed in on this device" checked> Keep me signed in on this device</label>
       <p class="auth-msg" id="authMsg" role="alert" aria-live="assertive"></p>
       <button class="auth-btn" id="authGo" type="submit">Sign in</button>
     </form>
@@ -938,7 +938,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   <div class="top-in">
     <button class="brand" data-act="home" type="button">
       <span class="mark">LT</span>
-      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v57</span></span></span>
+      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v58</span></span></span>
     </button>
     <span class="langbar" id="langBar"></span>
     <span class="sp"></span>
@@ -1713,7 +1713,7 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
   </div>
 </section>
 
-<footer class="f">LearnTrack <b>v57</b> · built 26 Aug 2026 · local-first learning tracker · single file, zero dependencies · export your backup regularly</footer>
+<footer class="f">LearnTrack <b>v58</b> · built 26 Aug 2026 · local-first learning tracker · single file, zero dependencies · export your backup regularly</footer>
 </div>
 
 <dialog id="acctDlg" aria-labelledby="acctTitle">
@@ -1823,15 +1823,16 @@ var ACC_KEY="learntrack.accounts", SESSION_KEY="learntrack.session";
 var SEED_ACCOUNT={
   user:"abhinay", display:"Abhinay",
   salt:"7c1f9a4e2b8d6035a1e4c7f20d93b58e",
-  hash:"2c9f0ad8115e0ca52eefa0a52abd7f261a4c64a605c54823b1d5dc0169ee89a2",
-  algo:"pbkdf2", created:"2026-09-01T00:00:00.000Z"
+  hash:"29132045fcee95b5aebe8cb3a9ca258469512255f4d87685bd25c08e2f07acc1",
+  algo:"pbkdf2", rounds:50000, created:"2026-09-01T00:00:00.000Z"
 };
 function ensureSeedAccount(){
   try{
     var a=accStore();
     if(!a.users[SEED_ACCOUNT.user]){
       a.users[SEED_ACCOUNT.user]={display:SEED_ACCOUNT.display,salt:SEED_ACCOUNT.salt,
-        hash:SEED_ACCOUNT.hash,algo:SEED_ACCOUNT.algo,created:SEED_ACCOUNT.created,lastIn:"",seeded:true};
+        hash:SEED_ACCOUNT.hash,algo:SEED_ACCOUNT.algo,rounds:SEED_ACCOUNT.rounds,
+        created:SEED_ACCOUNT.created,lastIn:"",seeded:true};
       accWrite(a);
     }
   }catch(e){}
@@ -1879,22 +1880,132 @@ function subtleCrypto(){
 
 /* PBKDF2 where the browser supports it. Older browsers fall back to a simpler
    salted hash — weaker, and labelled as such rather than hidden. */
-function hashPassword(pw,salt){
+/* PBKDF2-HMAC-SHA256 in plain JavaScript.
+   Used when the browser has no secure crypto (opening the file directly, or an
+   older browser). Produces exactly the same result, so an account made in one
+   place still signs in everywhere. */
+function shaK(){return [0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
+0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
+0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
+0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
+0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];}
+function sha256Bytes(bytes){
+  var K=shaK();
+  var H=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];
+  var l=bytes.length, bitLen=l*8;
+  var withPad=new Uint8Array((((l+9)+63)>>6)<<6);
+  withPad.set(bytes); withPad[l]=0x80;
+  var hi=Math.floor(bitLen/4294967296), lo=bitLen>>>0;
+  var p=withPad.length;
+  withPad[p-8]=(hi>>>24)&255; withPad[p-7]=(hi>>>16)&255; withPad[p-6]=(hi>>>8)&255; withPad[p-5]=hi&255;
+  withPad[p-4]=(lo>>>24)&255; withPad[p-3]=(lo>>>16)&255; withPad[p-2]=(lo>>>8)&255; withPad[p-1]=lo&255;
+  var w=new Uint32Array(64);
+  for(var off=0;off<withPad.length;off+=64){
+    for(var i=0;i<16;i++){
+      w[i]=(withPad[off+i*4]<<24)|(withPad[off+i*4+1]<<16)|(withPad[off+i*4+2]<<8)|withPad[off+i*4+3];
+    }
+    for(i=16;i<64;i++){
+      var s0=((w[i-15]>>>7)|(w[i-15]<<25))^((w[i-15]>>>18)|(w[i-15]<<14))^(w[i-15]>>>3);
+      var s1=((w[i-2]>>>17)|(w[i-2]<<15))^((w[i-2]>>>19)|(w[i-2]<<13))^(w[i-2]>>>10);
+      w[i]=(w[i-16]+s0+w[i-7]+s1)>>>0;
+    }
+    var a=H[0],b=H[1],c=H[2],d=H[3],e=H[4],f=H[5],g=H[6],h=H[7];
+    for(i=0;i<64;i++){
+      var S1=((e>>>6)|(e<<26))^((e>>>11)|(e<<21))^((e>>>25)|(e<<7));
+      var ch=(e&f)^((~e)&g);
+      var t1=(h+S1+ch+K[i]+w[i])>>>0;
+      var S0=((a>>>2)|(a<<30))^((a>>>13)|(a<<19))^((a>>>22)|(a<<10));
+      var mj=(a&b)^(a&c)^(b&c);
+      var t2=(S0+mj)>>>0;
+      h=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=b;b=a;a=(t1+t2)>>>0;
+    }
+    H[0]=(H[0]+a)>>>0;H[1]=(H[1]+b)>>>0;H[2]=(H[2]+c)>>>0;H[3]=(H[3]+d)>>>0;
+    H[4]=(H[4]+e)>>>0;H[5]=(H[5]+f)>>>0;H[6]=(H[6]+g)>>>0;H[7]=(H[7]+h)>>>0;
+  }
+  var out=new Uint8Array(32);
+  for(i=0;i<8;i++){ out[i*4]=(H[i]>>>24)&255; out[i*4+1]=(H[i]>>>16)&255; out[i*4+2]=(H[i]>>>8)&255; out[i*4+3]=H[i]&255; }
+  return out;
+}
+function utf8Bytes(str){
+  var out=[],i,c;
+  for(i=0;i<str.length;i++){
+    c=str.charCodeAt(i);
+    if(c<128) out.push(c);
+    else if(c<2048){ out.push(192|(c>>6),128|(c&63)); }
+    else if(c<55296||c>=57344){ out.push(224|(c>>12),128|((c>>6)&63),128|(c&63)); }
+    else { i++; var cp=65536+(((c&1023)<<10)|(str.charCodeAt(i)&1023));
+      out.push(240|(cp>>18),128|((cp>>12)&63),128|((cp>>6)&63),128|(cp&63)); }
+  }
+  return new Uint8Array(out);
+}
+function hmacSha256(keyBytes,msgBytes){
+  var block=64, k=keyBytes;
+  if(k.length>block) k=sha256Bytes(k);
+  var pad=new Uint8Array(block); pad.set(k);
+  var ip=new Uint8Array(block+msgBytes.length), op=new Uint8Array(block+32);
+  for(var i=0;i<block;i++){ ip[i]=pad[i]^0x36; op[i]=pad[i]^0x5c; }
+  ip.set(msgBytes,block);
+  var inner=sha256Bytes(ip);
+  op.set(inner,block);
+  return sha256Bytes(op);
+}
+function pbkdf2Js(password,salt,iterations,dkLenBytes){
+  var pw=utf8Bytes(password), sa=utf8Bytes(salt);
+  var blocks=Math.ceil(dkLenBytes/32), out=new Uint8Array(blocks*32);
+  for(var b=1;b<=blocks;b++){
+    var msg=new Uint8Array(sa.length+4);
+    msg.set(sa);
+    msg[sa.length]=(b>>>24)&255; msg[sa.length+1]=(b>>>16)&255;
+    msg[sa.length+2]=(b>>>8)&255; msg[sa.length+3]=b&255;
+    var u=hmacSha256(pw,msg), acc=u.slice(0);
+    for(var i=1;i<iterations;i++){
+      u=hmacSha256(pw,u);
+      for(var j=0;j<32;j++) acc[j]^=u[j];
+    }
+    out.set(acc,(b-1)*32);
+  }
+  var hex="";
+  for(var n=0;n<dkLenBytes;n++) hex+=("0"+out[n].toString(16)).slice(-2);
+  return hex;
+}
+
+var PBKDF2_ROUNDS=50000;
+function hashPassword(pw,salt,rounds){
   var subtle=subtleCrypto();
   if(!subtle||typeof TextEncoder==="undefined"){
-    return Promise.resolve({hash:weakHash(salt+"|"+pw),algo:"basic"});
+    /* No built-in secure hashing here — do the identical calculation in plain
+       JavaScript so the result matches and sign-in still works. */
+    return Promise.resolve({hash:pbkdf2Js(pw,salt,rounds||PBKDF2_ROUNDS,32),algo:"pbkdf2"});
   }
-  var enc=new TextEncoder();
-  return subtle.importKey("raw",enc.encode(pw),"PBKDF2",false,["deriveBits"])
-    .then(function(km){
-      return subtle.deriveBits(
-        {name:"PBKDF2",salt:enc.encode(salt),iterations:200000,hash:"SHA-256"},km,256);
-    })
-    .then(function(bits){
-      var arr=new Uint8Array(bits);
-      return {hash:Array.prototype.map.call(arr,function(x){return ("0"+x.toString(16)).slice(-2);}).join(""),algo:"pbkdf2"};
-    })
-    .catch(function(){ return {hash:weakHash(salt+"|"+pw),algo:"basic"}; });
+  var enc=new TextEncoder(), n=rounds||PBKDF2_ROUNDS;
+  return new Promise(function(resolve){
+    var settled=false;
+    function done(v){ if(!settled){ settled=true; resolve(v); } }
+    /* A browser that never answers must not leave you staring at "Signing in". */
+    var guard=setTimeout(function(){ done({hash:pbkdf2Js(pw,salt,n,32),algo:"pbkdf2"}); },8000);
+    try{
+      subtle.importKey("raw",enc.encode(pw),"PBKDF2",false,["deriveBits"])
+        .then(function(km){
+          return subtle.deriveBits({name:"PBKDF2",salt:enc.encode(salt),iterations:n,hash:"SHA-256"},km,256);
+        })
+        .then(function(bits){
+          clearTimeout(guard);
+          var arr=new Uint8Array(bits);
+          done({hash:Array.prototype.map.call(arr,function(x){return ("0"+x.toString(16)).slice(-2);}).join(""),algo:"pbkdf2"});
+        })
+        .catch(function(err){
+          clearTimeout(guard);
+          done({hash:pbkdf2Js(pw,salt,n,32),algo:"pbkdf2"});
+        });
+    }catch(err){
+      /* some browsers throw here instead of rejecting */
+      clearTimeout(guard);
+      done({hash:pbkdf2Js(pw,salt,n,32),algo:"pbkdf2"});
+    }
+  });
 }
 function weakHash(s){
   var h1=0x811c9dc5,h2=0x01000193;
@@ -1915,23 +2026,34 @@ function signUp(username,password,confirm){
   if(userExists(username)) return Promise.resolve({ok:false,msg:"That username is already taken. Please choose another."});
   var salt=randHex(16);
   return hashPassword(password,salt).then(function(r){
+    if(r.timedOut) return {ok:false,msg:"Creating the account took too long and was stopped. Please try again."};
     var a=accStore();
     /* re-check inside the write, so two quick submissions cannot both win */
     if(a.users[normUser(username)]) return {ok:false,msg:"That username is already taken. Please choose another."};
     a.users[normUser(username)]={display:String(username).trim(),salt:salt,hash:r.hash,algo:r.algo,
-      created:new Date().toISOString(),lastIn:""};
+      rounds:(r.algo==="pbkdf2"?PBKDF2_ROUNDS:0),created:new Date().toISOString(),lastIn:""};
     accWrite(a);
     return {ok:true,user:normUser(username),first:Object.keys(a.users).length===1};
+  }).catch(function(){
+    return {ok:false,msg:"The account could not be created. Please try again."};
   });
 }
 
 function signIn(username,password){
-  var a=accStore(), rec=a.users[normUser(username)];
+  var a,rec;
+  try{ a=accStore(); rec=a.users[normUser(username)]; }
+  catch(e){ return Promise.resolve({ok:false,msg:"This browser is not letting the page save data. Check that cookies and site data are allowed, then try again."}); }
   if(!rec) return Promise.resolve({ok:false,msg:"No account with that username."});
-  return hashPassword(password,rec.salt).then(function(r){
+  return hashPassword(password,rec.salt,rec.rounds).then(function(r){
+    if(r.timedOut) return {ok:false,msg:"Checking the password took too long and was stopped. Please try again."};
+    if(r.algo==="basic"&&rec.algo==="pbkdf2"){
+      return {ok:false,msg:"This browser cannot check the password securely. Open the site over https:// rather than as a local file, or try a different browser."};
+    }
     if(r.hash!==rec.hash) return {ok:false,msg:"That password is not right."};
-    rec.lastIn=new Date().toISOString(); accWrite(a);
+    try{ rec.lastIn=new Date().toISOString(); accWrite(a); }catch(e){}
     return {ok:true,user:normUser(username)};
+  }).catch(function(e){
+    return {ok:false,msg:"Sign-in could not finish. Please try again."};
   });
 }
 
@@ -9781,7 +9903,7 @@ function javaCheck(){
   S.javaTraceAns=S.javaTraceAns||{}; S.javaTraceAns[idx]=ta.value;
   var got=normOut(ta.value), want=normOut(Q.a);
   var ok=got===want;
-  var host=document.getElementById("jtResult"); clr(host);
+  var host=document.getElementById("jtResult"); if(!host) return; clr(host);
   var box=document.createElement("div"); box.className="vbox "+(ok?"vok":"vno");
   box.style.marginBlockStart="11px";
   var h=document.createElement("div"); h.className="vh";
@@ -15816,17 +15938,38 @@ function wireAuth(){
   });
   e.form.addEventListener("submit",function(ev){
     ev.preventDefault();
-    var user=e.u.value, pass=e.p.value;
-    e.go.disabled=true; authSay(authMode==="up"?"Creating your account\u2026":"Signing in\u2026",true);
-    var work=(authMode==="up") ? signUp(user,pass,e.p2.value) : signIn(user,pass);
-    work.then(function(r){
-      e.go.disabled=false;
-      if(!r.ok){ authSay(r.msg); e.p.focus(); e.p.select&&e.p.select(); return; }
-      startAppFor(r.user,authMode==="up");
-    }).catch(function(){
-      e.go.disabled=false;
-      authSay("Something went wrong. Please try again.");
-    });
+    var user=e.u.value, pass=e.p.value, finished=false;
+    e.go.disabled=true;
+    authSay(authMode==="up"?"Creating your account\u2026":"Signing in\u2026",true);
+    /* Never leave this screen sitting on "Signing in" with nothing happening. */
+    var watchdog=setTimeout(function(){
+      if(finished) return;
+      finished=true; e.go.disabled=false;
+      authSay("That is taking longer than it should. Please try again \u2014 if it keeps happening, try another browser.");
+    },15000);
+    function settle(fn){
+      if(finished) return; finished=true;
+      clearTimeout(watchdog); e.go.disabled=false; fn();
+    }
+    try{
+      var work=(authMode==="up") ? signUp(user,pass,e.p2?e.p2.value:"") : signIn(user,pass);
+      if(!work||typeof work.then!=="function") throw new Error("no result");
+      work.then(function(r){
+        settle(function(){
+          if(!r||!r.ok){ authSay((r&&r.msg)||"That did not work. Please try again."); try{e.p.focus();e.p.select&&e.p.select();}catch(_){}; return; }
+          try{ startAppFor(r.user,authMode==="up"); }
+          catch(bootErr){
+            /* signed in, but the app failed to start — show it rather than a blank page */
+            authShow();
+            authSay("You are signed in, but the page could not finish loading. Reload and try again.");
+          }
+        });
+      },function(){
+        settle(function(){ authSay("Sign-in could not finish. Please try again."); });
+      });
+    }catch(err){
+      settle(function(){ authSay("Sign-in could not start in this browser. Try opening the site over https:// or use a different browser."); });
+    }
   });
 }
 
