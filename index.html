@@ -967,6 +967,16 @@ svg.maplines{position:absolute; inset:0; inline-size:100%; block-size:100%; poin
     <p class="auth-switch" id="authForgotRow">
       <button type="button" class="auth-link" id="authForgot">Forgot your password?</button>
     </p>
+    <p class="auth-switch">
+      <button type="button" class="auth-link" id="authTrouble" style="opacity:.7;font-weight:400">Trouble signing in?</button>
+    </p>
+    <div id="authTroubleBox" hidden style="margin-block-start:12px;padding:12px;border:1px solid var(--line,#2a2f3a);border-radius:8px">
+      <p style="margin:0 0 10px;font-size:13px;line-height:1.5">
+        This resets the saved sign-in details on this device back to the ones built into the site.
+        <strong>Your questions, code and progress are not touched</strong> \u2014 they are stored separately.
+      </p>
+      <button class="btn" type="button" id="authTroubleGo">Reset sign-in details</button>
+    </div>
     <p class="auth-note">Your work is saved in this browser under your username, and stays separate from anyone else who signs in here. Passwords are never stored — only an unreadable hash.<br><br>
     This is a personal site, not a bank: sign-in keeps accounts apart, but anyone who can open this browser profile can read the stored data. Use a password you do not use anywhere else.</p>
   </div>
@@ -1007,7 +1017,7 @@ LearnTrack needs JavaScript switched on. Please enable it and reload.</div></nos
   <div class="top-in">
     <button class="brand" data-act="home" type="button">
       <span class="mark">LT</span>
-      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v62</span></span></span>
+      <span><span class="nm">LearnTrack</span><br><span class="tg">Learn · Build · Prove <span class="ver">v63</span></span></span>
     </button>
     <span class="langbar" id="langBar"></span>
     <span class="sp"></span>
@@ -1782,7 +1792,7 @@ LearnTrack needs JavaScript switched on. Please enable it and reload.</div></nos
   </div>
 </section>
 
-<footer class="f">LearnTrack <b>v62</b> · built 26 Aug 2026 · local-first learning tracker · single file, zero dependencies · export your backup regularly</footer>
+<footer class="f">LearnTrack <b>v63</b> · built 26 Aug 2026 · local-first learning tracker · single file, zero dependencies · export your backup regularly</footer>
 </div>
 
 <dialog id="acctDlg" aria-labelledby="acctTitle">
@@ -2130,9 +2140,28 @@ function signIn(username,password){
   try{ a=accStore(); rec=a.users[normUser(username)]; }
   catch(e){ return {ok:false,msg:"This browser is not letting the page save data. Allow cookies and site data, then try again."}; }
   if(!rec) return {ok:false,msg:"No account with that username."};
-  var got=hashPw(password,rec.salt,rec.rounds);
-  if(got!==rec.hash) return {ok:false,msg:"That password is not right."};
-  try{ rec.lastIn=new Date().toISOString(); accWrite(a); }catch(e){}
+  var storedRounds=rec.rounds||PBKDF2_ROUNDS;
+  var got=hashPw(password,rec.salt,storedRounds);
+  var matched=(got===rec.hash);
+  /* Some older copies of this file saved the password a different way.
+     Accept that too, then bring the record up to date below. */
+  if(!matched && rec.algo==="basic"){
+    matched=(weakHash(rec.salt+"|"+String(password))===rec.hash);
+    if(matched) storedRounds=-1;
+  }
+  if(!matched) return {ok:false,msg:"That password is not right."};
+  try{
+    rec.lastIn=new Date().toISOString();
+    /* An older copy of this file saved a much slower setting. Now that the
+       password is confirmed, store it again at the fast setting so signing in
+       is instant from here on. */
+    if(storedRounds!==PBKDF2_ROUNDS){
+      var ns=randHex(16);
+      rec.salt=ns; rec.hash=hashPw(password,ns,PBKDF2_ROUNDS);
+      rec.rounds=PBKDF2_ROUNDS; rec.algo="pbkdf2";
+    }
+    accWrite(a);
+  }catch(e){}
   return {ok:true,user:normUser(username)};
 }
 function setSession(u,remember){
@@ -15983,10 +16012,43 @@ function startAppFor(user,isNew){
   var e=authEls();
   setSession(user,e.rem?e.rem.checked:true);
   if(isNew) claimLegacyData(user);
-  /* Start the app FIRST. Only take the sign-in screen away once it worked,
-     so a failure is visible instead of leaving you on a frozen page. */
-  bootApp();
+  /* The password was right, so the sign-in screen goes NOW. Loading your work
+     and drawing the page takes a moment and must never happen behind a screen
+     that still says "Signing in". */
   authHide();
+  showLoading("Loading your work\u2026");
+  /* Let the browser paint before the heavy part starts. */
+  setTimeout(function(){
+    try{ bootApp(); }
+    catch(err){
+      showBootError("The page could not finish loading: "+((err&&err.message)||"unknown problem"));
+    }
+    hideLoading();
+  },30);
+}
+function showLoading(msg){
+  var b=document.getElementById("loadingVeil");
+  if(!b){
+    b=document.createElement("div"); b.id="loadingVeil";
+    b.style.cssText="position:fixed;inset:0;z-index:150;display:flex;align-items:center;"+
+      "justify-content:center;background:var(--bg,#12141a);font:15px system-ui;color:inherit";
+    document.body.appendChild(b);
+  }
+  b.textContent=msg||"Loading\u2026";
+  b.style.display="flex";
+}
+function hideLoading(){
+  var b=document.getElementById("loadingVeil");
+  if(b) b.style.display="none";
+}
+function showBootError(msg){
+  try{
+    var bx=document.getElementById("bootError"), bm=document.getElementById("bootErrorMsg");
+    if(bx&&bm){
+      bx.style.display="block";
+      bm.textContent=msg+(bootProblems.length?"  |  "+bootProblems.join("  |  "):"");
+    }
+  }catch(e){}
 }
 function renderWho(){
   var b=document.getElementById("whoBtn");
@@ -16046,6 +16108,23 @@ function wireAuth(){
   }
   wireEye(e.eye,e.p);
   wireEye(e.eye2,e.p2);
+  var tb=document.getElementById("authTrouble"), tbox=document.getElementById("authTroubleBox"),
+      tgo=document.getElementById("authTroubleGo");
+  if(tb&&tbox) tb.addEventListener("click",function(){ tbox.hidden=!tbox.hidden; });
+  if(tgo) tgo.addEventListener("click",function(){
+    try{
+      /* Only the sign-in records go. Every account's saved work stays where it is. */
+      localStorage.removeItem(ACC_KEY);
+      localStorage.removeItem(SESSION_KEY);
+      sessionStorage.removeItem(SESSION_KEY);
+    }catch(_){}
+    ensureSeedAccount();
+    if(tbox) tbox.hidden=true;
+    authSetMode("in");
+    e.u.value="Abhinay"; e.p.value="";
+    authSay("\u2713 Sign-in details reset. Use your original password.",true);
+    try{ e.p.focus(); }catch(_){}
+  });
   if(e.forgot) e.forgot.addEventListener("click",function(){
     authSetMode("reset");
     try{ e.u.focus(); }catch(_){}
@@ -16218,12 +16297,19 @@ window.addEventListener("beforeunload",function(){
 try{ window.__LT_ALIVE__=true; }catch(e){}
 try{
   var __d=document.getElementById("authDiag");
-  if(__d) __d.textContent="v62 \u00b7 ready \u00b7 sign-in is instant";
+  if(__d) __d.textContent="v63 \u00b7 ready";
 }catch(e){}
 ensureSeedAccount();
 wireAuth();
 var __sess=readSession();
-if(__sess){ setSession(__sess,true); authHide(); bootApp(); }
+if(__sess){
+  setSession(__sess,true); authHide(); showLoading("Loading your work\u2026");
+  setTimeout(function(){
+    try{ bootApp(); }
+    catch(err){ showBootError("The page could not finish loading: "+((err&&err.message)||"unknown problem")); }
+    hideLoading();
+  },30);
+}
 else if(typeof globalThis!=="undefined"&&globalThis.__LT_TEST__){
   /* the offline harness runs headless with no sign-in step */
   setSession(globalThis.__LT_AS_USER__||"test-harness",true); authHide(); bootApp();
@@ -16232,7 +16318,7 @@ else authShow();
 
 /* test hook — inert in a browser, used only by the offline harness */
 if(typeof globalThis!=="undefined"&&globalThis.__LT_TEST__){
-  globalThis.__LT__={S:S,ui:ui,save:save,load:load,get KEY(){return KEY;},signUp:signUp,signIn:signIn,userExists:userExists,validUsername:validUsername,validPassword:validPassword,normUser:normUser,userDataKey:userDataKey,listUsers:listUsers,setSession:setSession,readSession:readSession,accStore:accStore,ACC_KEY:ACC_KEY,claimLegacyData:claimLegacyData,bootApp:bootApp,getBootProblems:function(){return bootProblems;},resetPassword:resetPassword,validDob:validDob,authSetMode:function(m){return authSetMode(m);},ensureSeedAccount:ensureSeedAccount,SEED_ACCOUNT:SEED_ACCOUNT,SOURCES:SOURCES,srcById:srcById,sourcesForLesson:sourcesForLesson,srcStats:srcStats,SRC_TIERS:SRC_TIERS,SCHEMA:SCHEMA,migrate:migrate,detectVersion:detectVersion,MIGRATIONS:MIGRATIONS,PRE_KEY:PRE_KEY,RECOVER_KEY:RECOVER_KEY,hasRecovery:hasRecovery,clearRecovery:clearRecovery,attemptRepair:attemptRepair,applyRepair:applyRepair,partitionTasks:partitionTasks,validateMigration:validateMigration,keepUnknownFields:keepUnknownFields,enterRecovery:enterRecovery,getMigration:function(){return lastMigration;},applyBackup:applyBackup,backfillSkills:backfillSkills,TOPIC_SKILLS:TOPIC_SKILLS,__skillsForTask:skillsForTask,masteryOf:masteryOf,SKILLS:SKILLS,scorecard:scorecard,gateStatus:gateStatus,setTab:setTab,mpLoad:mpLoad,THEORY:THEORY,SOLUTIONS:SOLUTIONS,editPlan:editPlan,codeOnly:codeOnly,openerIndent:openerIndent,EDIT_UNIT:EDIT_UNIT,normalizeIndent:normalizeIndent,
+  globalThis.__LT__={S:S,ui:ui,save:save,load:load,get KEY(){return KEY;},signUp:signUp,signIn:signIn,userExists:userExists,validUsername:validUsername,validPassword:validPassword,normUser:normUser,userDataKey:userDataKey,listUsers:listUsers,setSession:setSession,readSession:readSession,accStore:accStore,ACC_KEY:ACC_KEY,claimLegacyData:claimLegacyData,bootApp:bootApp,hashPwFor:hashPw,getBootProblems:function(){return bootProblems;},resetPassword:resetPassword,validDob:validDob,authSetMode:function(m){return authSetMode(m);},ensureSeedAccount:ensureSeedAccount,SEED_ACCOUNT:SEED_ACCOUNT,SOURCES:SOURCES,srcById:srcById,sourcesForLesson:sourcesForLesson,srcStats:srcStats,SRC_TIERS:SRC_TIERS,SCHEMA:SCHEMA,migrate:migrate,detectVersion:detectVersion,MIGRATIONS:MIGRATIONS,PRE_KEY:PRE_KEY,RECOVER_KEY:RECOVER_KEY,hasRecovery:hasRecovery,clearRecovery:clearRecovery,attemptRepair:attemptRepair,applyRepair:applyRepair,partitionTasks:partitionTasks,validateMigration:validateMigration,keepUnknownFields:keepUnknownFields,enterRecovery:enterRecovery,getMigration:function(){return lastMigration;},applyBackup:applyBackup,backfillSkills:backfillSkills,TOPIC_SKILLS:TOPIC_SKILLS,__skillsForTask:skillsForTask,masteryOf:masteryOf,SKILLS:SKILLS,scorecard:scorecard,gateStatus:gateStatus,setTab:setTab,mpLoad:mpLoad,THEORY:THEORY,SOLUTIONS:SOLUTIONS,editPlan:editPlan,codeOnly:codeOnly,openerIndent:openerIndent,EDIT_UNIT:EDIT_UNIT,normalizeIndent:normalizeIndent,
     r:{renderDash:renderDash,renderPlanner:renderPlanner,renderBasics:renderBasics,
        renderWeeks:renderWeeks,renderCS:renderCS,renderPrep:renderPrep,
        renderMistakes:renderMistakes,renderSkills:renderSkills,renderRoad:renderRoad,
